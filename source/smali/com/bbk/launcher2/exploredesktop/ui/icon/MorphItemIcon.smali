@@ -1834,10 +1834,26 @@
 
     move-result-object v1
 
+    invoke-static {}, Lcom/bbk/launcher2/launcherCommon/BaseApplication;->d()Lcom/bbk/launcher2/launcherCommon/BaseApplication;
+
+    move-result-object v2
+
+    invoke-static {v2, v0}, Lcom/bbk/launcher2/IosIconOverride;->get(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v2
+
+    if-eqz v2, :morph_l9_keep
+
+    move-object v0, v2
+
+    goto :morph_l9_done
+
+    :morph_l9_keep
     invoke-virtual {v1, v0}, Landroid/content/pm/PackageManager;->getApplicationIcon(Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
 
     move-result-object v0
 
+    :morph_l9_done
     new-instance v1, Ljava/lang/StringBuilder;
 
     invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V

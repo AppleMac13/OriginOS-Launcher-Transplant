@@ -232,6 +232,38 @@
 .method public da(Landroid/graphics/Bitmap;IIIZ)V
     .locals 10
 
+    :try_start_ios
+    invoke-virtual {p0}, Lcom/bbk/launcher2/launcherIcon/ui/icon/ItemIcon;->getInfo()Lc8/g;
+
+    move-result-object v0
+
+    if-eqz v0, :ios_da_no
+
+    invoke-virtual {v0}, Lcom/bbk/launcher2/data/info/ItemViewAttributeMessage;->getComponentName()Landroid/content/ComponentName;
+
+    move-result-object v1
+
+    if-eqz v1, :ios_da_no
+
+    invoke-virtual {v1}, Landroid/content/ComponentName;->getPackageName()Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-static {v1}, Lcom/bbk/launcher2/IosIconOverride;->getBitmap(Ljava/lang/String;)Landroid/graphics/Bitmap;
+
+    move-result-object v2
+
+    if-eqz v2, :ios_da_no
+
+    move-object/from16 p1, v2
+    :try_end_ios
+    .catch Ljava/lang/Throwable; {:try_start_ios .. :try_end_ios} :ios_da_catch
+
+    :ios_da_no
+    goto :ios_da_body
+
+    :ios_da_catch
+    :ios_da_body
     new-instance v0, Ljava/lang/StringBuilder;
 
     invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V

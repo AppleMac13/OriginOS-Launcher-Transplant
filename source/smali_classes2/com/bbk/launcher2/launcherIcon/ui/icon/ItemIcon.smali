@@ -3602,6 +3602,39 @@
 .method public I(Landroid/graphics/Bitmap;Lcom/bbk/launcher2/launcherCommon/mode/e;)V
     .locals 38
 
+    move-object/from16 v0, p2
+
+    if-eqz v0, :ios_ii_no
+
+    invoke-interface {v0}, Lcom/bbk/launcher2/launcherCommon/mode/f;->T4()Landroid/content/ComponentName;
+
+    move-result-object v1
+
+    if-eqz v1, :ios_ii_no
+
+    invoke-virtual {v1}, Landroid/content/ComponentName;->getPackageName()Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-static {v1}, Lcom/bbk/launcher2/IosIconOverride;->getBitmap(Ljava/lang/String;)Landroid/graphics/Bitmap;
+
+    move-result-object v0
+
+    if-eqz v0, :ios_ii_no
+
+    invoke-static {}, Lt8/q;->i()I
+
+    move-result v1
+
+    const/4 v2, 0x1
+
+    invoke-static {v0, v1, v1, v2}, Landroid/graphics/Bitmap;->createScaledBitmap(Landroid/graphics/Bitmap;IIZ)Landroid/graphics/Bitmap;
+
+    move-result-object v0
+
+    move-object/from16 p1, v0
+
+    :ios_ii_no
     move-object/from16 v6, p0
 
     move-object/from16 v1, p1

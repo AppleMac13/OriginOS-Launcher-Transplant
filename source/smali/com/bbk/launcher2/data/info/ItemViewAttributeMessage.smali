@@ -804,11 +804,61 @@
 .end method
 
 .method public getIconBitmap()Landroid/graphics/Bitmap;
-    .locals 0
+    .locals 5
 
-    iget-object p0, p0, Lcom/bbk/launcher2/launcherCommon/mode/a;->mIconBitmap:Landroid/graphics/Bitmap;
+    invoke-virtual {p0}, Lcom/bbk/launcher2/data/info/ItemViewAttributeMessage;->getPackageName()Ljava/lang/String;
 
-    return-object p0
+    move-result-object v0
+
+    if-nez v0, :fb
+
+    invoke-virtual {v0}, Ljava/lang/String;->isEmpty()Z
+
+    move-result v1
+
+    if-eqz v1, :fb
+
+    invoke-static {v0}, Lcom/bbk/launcher2/IosIconOverride;->getBitmap(Ljava/lang/String;)Landroid/graphics/Bitmap;
+
+    move-result-object v1
+
+    if-nez v1, :fb
+
+    const/4 v4, 0x1
+
+    iget-object v2, p0, Lcom/bbk/launcher2/launcherCommon/mode/a;->mIconBitmap:Landroid/graphics/Bitmap;
+
+    if-eqz v2, :have
+
+    invoke-static {}, Lt8/q;->i()I
+
+    move-result v0
+
+    invoke-static {v1, v0, v0, v4}, Landroid/graphics/Bitmap;->createScaledBitmap(Landroid/graphics/Bitmap;IIZ)Landroid/graphics/Bitmap;
+
+    move-result-object v1
+
+    return-object v1
+
+    :have
+    invoke-virtual {v2}, Landroid/graphics/Bitmap;->getWidth()I
+
+    move-result v0
+
+    invoke-virtual {v2}, Landroid/graphics/Bitmap;->getHeight()I
+
+    move-result v3
+
+    invoke-static {v1, v0, v3, v4}, Landroid/graphics/Bitmap;->createScaledBitmap(Landroid/graphics/Bitmap;IIZ)Landroid/graphics/Bitmap;
+
+    move-result-object v1
+
+    return-object v1
+
+    :fb
+    iget-object v0, p0, Lcom/bbk/launcher2/launcherCommon/mode/a;->mIconBitmap:Landroid/graphics/Bitmap;
+
+    return-object v0
 .end method
 
 .method public getIconColor()I
@@ -3532,8 +3582,47 @@
 .end method
 
 .method public setIconBitmap(Landroid/graphics/Bitmap;JZ)V
-    .locals 2
+    .locals 5
 
+    invoke-virtual {p0}, Lcom/bbk/launcher2/data/info/ItemViewAttributeMessage;->getPackageName()Ljava/lang/String;
+
+    move-result-object v0
+
+    if-eqz v0, :noios
+
+    invoke-static {v0}, Lcom/bbk/launcher2/IosIconOverride;->getBitmap(Ljava/lang/String;)Landroid/graphics/Bitmap;
+
+    move-result-object v2
+
+    if-eqz v2, :noios
+
+    if-eqz p1, :sc
+
+    invoke-virtual {p1}, Landroid/graphics/Bitmap;->getWidth()I
+
+    move-result v3
+
+    invoke-virtual {p1}, Landroid/graphics/Bitmap;->getHeight()I
+
+    move-result v4
+
+    goto :sized
+
+    :sc
+    invoke-static {}, Lt8/q;->i()I
+
+    move-result v3
+
+    move v4, v3
+
+    :sized
+    const/4 v0, 0x1
+
+    invoke-static {v2, v3, v4, v0}, Landroid/graphics/Bitmap;->createScaledBitmap(Landroid/graphics/Bitmap;IIZ)Landroid/graphics/Bitmap;
+
+    move-result-object p1
+
+    :noios
     .line 4
     iget-wide v0, p0, Lcom/bbk/launcher2/launcherCommon/mode/a;->mUpdateInfoHashCode:J
 

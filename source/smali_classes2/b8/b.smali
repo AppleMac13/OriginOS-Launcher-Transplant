@@ -1041,6 +1041,35 @@
     const/4 v1, 0x0
 
     if-nez p1, :cond_0
+    invoke-interface {p1}, Lcom/bbk/launcher2/launcherCommon/mode/f;->getComponentName()Landroid/content/ComponentName;
+
+    move-result-object v2
+
+    if-eqz v2, :ios_e_skip
+
+    invoke-virtual {v2}, Landroid/content/ComponentName;->getPackageName()Ljava/lang/String;
+
+    move-result-object v3
+
+    invoke-static {}, Lcom/bbk/launcher2/launcherCommon/BaseApplication;->d()Lcom/bbk/launcher2/launcherCommon/BaseApplication;
+
+    move-result-object v4
+
+    invoke-static {v4, v3}, Lcom/bbk/launcher2/IosIconOverride;->get(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v3
+
+    if-eqz v3, :ios_e_skip
+
+    invoke-static {v3}, Lt8/j;->g(Landroid/graphics/drawable/Drawable;)Landroid/graphics/Bitmap;
+
+    move-result-object v3
+
+    if-eqz v3, :ios_e_skip
+
+    return-object v3
+
+    :ios_e_skip
 
     const-string p0, "itemInfo is null , getIconBitmapForOriginFolderMode failed."
 
@@ -2138,6 +2167,32 @@
 
 .method public J(Lcom/bbk/launcher2/launcherCommon/mode/e;Z)Landroid/graphics/drawable/Drawable;
     .locals 10
+
+    invoke-interface {p1}, Lcom/bbk/launcher2/launcherCommon/mode/f;->getComponentName()Landroid/content/ComponentName;
+    move-result-object v0
+
+    if-nez v0, :ios_use_i
+
+    invoke-virtual {v0}, Landroid/content/ComponentName;->getPackageName()Ljava/lang/String;
+    move-result-object v0
+
+    goto :ios_have_pkg
+
+    :ios_use_i
+    invoke-interface {p1}, Lcom/bbk/launcher2/launcherCommon/mode/f;->I()Ljava/lang/String;
+    move-result-object v0
+
+    :ios_have_pkg
+    iget-object v1, p0, Lb8/b;->d:Landroid/content/Context;
+
+    invoke-static {v1, v0}, Lcom/bbk/launcher2/IosIconOverride;->get(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+    move-result-object v0
+
+    if-eqz v0, :ios_ret_skip
+
+    return-object v0
+
+    :ios_ret_skip
 
     invoke-interface {p1}, Lcom/bbk/launcher2/launcherCommon/mode/f;->getItemType()I
 

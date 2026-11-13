@@ -2607,6 +2607,36 @@
 .method public final E8(Landroid/graphics/drawable/Drawable;)V
     .locals 10
 
+    invoke-virtual {p0}, Lcom/bbk/launcher2/launcherIcon/ui/icon/ItemIcon;->getPresenter()Lz7/b;
+    move-result-object v0
+
+    if-eqz v0, :ios_skip
+
+    invoke-interface {v0}, Lz7/b;->getInfo()Lcom/bbk/launcher2/launcherCommon/mode/e;
+    move-result-object v0
+
+    if-eqz v0, :ios_skip
+
+    invoke-interface {v0}, Lcom/bbk/launcher2/launcherCommon/mode/f;->getComponentName()Landroid/content/ComponentName;
+    move-result-object v0
+
+    if-eqz v0, :ios_skip
+
+    invoke-virtual {v0}, Landroid/content/ComponentName;->getPackageName()Ljava/lang/String;
+    move-result-object v0
+
+    invoke-static {}, Lcom/bbk/launcher2/launcherCommon/BaseApplication;->d()Lcom/bbk/launcher2/launcherCommon/BaseApplication;
+    move-result-object v1
+
+    invoke-static {v1, v0}, Lcom/bbk/launcher2/IosIconOverride;->get(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+    move-result-object v1
+
+    if-eqz v1, :ios_skip
+
+    move-object p1, v1
+
+    :ios_skip
+
     const/4 v0, 0x1
 
     const-string v1, "Launcher.ComponentIcon"

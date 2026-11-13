@@ -1037,6 +1037,28 @@
 
     move-result-object p0
 
+    :try_start_ns
+    invoke-virtual {v1}, Lc8/b;->getComponentName()Landroid/content/ComponentName;
+
+    move-result-object v2
+
+    if-eqz v2, :ns_ios_skip
+
+    invoke-virtual {v2}, Landroid/content/ComponentName;->getPackageName()Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-static {v2}, Lcom/bbk/launcher2/IosIconOverride;->getBitmap(Ljava/lang/String;)Landroid/graphics/Bitmap;
+
+    move-result-object v2
+
+    if-eqz v2, :ns_ios_skip
+
+    move-object p0, v2
+    :try_end_ns
+    .catch Ljava/lang/Throwable; {:try_start_ns .. :try_end_ns} :ns_ios_skip
+
+    :ns_ios_skip
     invoke-virtual {v1, p0}, Ln9/n;->i(Landroid/graphics/Bitmap;)V
 
     invoke-static {}, Lt8/d;->s()Lt6/n;

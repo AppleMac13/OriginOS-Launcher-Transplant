@@ -86,30 +86,7 @@
 
 # virtual methods
 .method public a()V
-    .locals 2
+    .locals 0
 
-    iget-object v0, p0, Lgj/g;->a:Landroid/app/KeyguardManager;
-
-    if-eqz v0, :cond_0
-
-    iget-object v1, p0, Lgj/g;->b:Landroid/app/KeyguardManager$KeyguardLockedStateListener;
-
-    if-eqz v1, :cond_0
-
-    :try_start_0
-    invoke-static {}, Ls6/l;->a()Ljava/util/concurrent/Executor;
-
-    move-result-object v1
-
-    iget-object p0, p0, Lgj/g;->b:Landroid/app/KeyguardManager$KeyguardLockedStateListener;
-
-    invoke-virtual {v0, v1, p0}, Landroid/app/KeyguardManager;->addKeyguardLockedStateListener(Ljava/util/concurrent/Executor;Landroid/app/KeyguardManager$KeyguardLockedStateListener;)V
-    :try_end_0
-    .catch Ljava/lang/RuntimeException; {:try_start_0 .. :try_end_0} :catch_0
-
-    :cond_0
-    return-void
-
-    :catch_0
     return-void
 .end method

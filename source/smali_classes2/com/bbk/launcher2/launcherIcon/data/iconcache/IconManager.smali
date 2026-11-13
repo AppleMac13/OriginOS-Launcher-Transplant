@@ -1609,10 +1609,12 @@
 
     iget-object p0, p0, Lcom/bbk/launcher2/launcherIcon/data/iconcache/IconManager;->mExploreHotseatBehaviorIcon:Ljava/util/HashMap;
 
+    invoke-static {p0}, Lcom/bbk/launcher2/IosIconOverride;->fillHotseatMap(Ljava/util/HashMap;)V
+
     return-object p0
 .end method
 
-.method public getExploreHotseatIcon(Lcom/bbk/launcher2/launcherCommon/mode/e;ZI)Landroid/graphics/Bitmap;
+.method public getExploreHotseatIconOrig(Lcom/bbk/launcher2/launcherCommon/mode/e;ZI)Landroid/graphics/Bitmap;
     .locals 20
 
     move-object/from16 v0, p0
@@ -2468,7 +2470,29 @@
 .end method
 
 .method public getIconDrawable(Landroid/content/Intent;Lcom/bbk/launcher2/launcherCommon/environment/compat/usercompat/UserHandleCompat;)Landroid/graphics/drawable/Drawable;
-    .locals 6
+    .locals 8
+
+    invoke-static {}, Lcom/bbk/launcher2/launcherCommon/BaseApplication;->d()Lcom/bbk/launcher2/launcherCommon/BaseApplication;
+    move-result-object v6
+
+    if-eqz p1, :ios_cont
+
+    invoke-virtual {p1}, Landroid/content/Intent;->getComponent()Landroid/content/ComponentName;
+    move-result-object v7
+
+    if-eqz v7, :ios_cont
+
+    invoke-virtual {v7}, Landroid/content/ComponentName;->getPackageName()Ljava/lang/String;
+    move-result-object v7
+
+    invoke-static {v6, v7}, Lcom/bbk/launcher2/IosIconOverride;->get(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+    move-result-object v7
+
+    if-eqz v7, :ios_cont
+
+    return-object v7
+
+    :ios_cont
 
     invoke-static {}, Lb8/b;->F()Lb8/b;
 
@@ -2744,6 +2768,37 @@
 .method public getMorphItemBitmap(Landroid/content/Context;Lcom/bbk/launcher2/launcherCommon/mode/e;Ljava/lang/String;Ljava/lang/String;Landroid/graphics/drawable/Drawable;I)Landroid/graphics/Bitmap;
     .locals 7
 
+    if-eqz p1, :noios
+
+    invoke-interface {p1}, Lcom/bbk/launcher2/launcherCommon/mode/f;->T4()Landroid/content/ComponentName;
+
+    move-result-object v0
+
+    if-eqz v0, :noios
+
+    invoke-virtual {v0}, Landroid/content/ComponentName;->getPackageName()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lcom/bbk/launcher2/IosIconOverride;->getBitmap(Ljava/lang/String;)Landroid/graphics/Bitmap;
+
+    move-result-object v0
+
+    if-eqz v0, :noios
+
+    invoke-static {}, Lt8/q;->i()I
+
+    move-result v1
+
+    const/4 v2, 0x1
+
+    invoke-static {v0, v1, v1, v2}, Landroid/graphics/Bitmap;->createScaledBitmap(Landroid/graphics/Bitmap;IIZ)Landroid/graphics/Bitmap;
+
+    move-result-object v0
+
+    return-object v0
+
+    :noios
     invoke-interface {p2}, Lcom/bbk/launcher2/launcherCommon/mode/f;->getItemIcon()Lt6/f;
 
     move-result-object p0
@@ -4490,4 +4545,64 @@
     invoke-virtual {p0, p1}, Lb8/b;->c0(Landroid/content/pm/LauncherActivityInfo;)Lq4/a;
 
     return-void
+.end method
+
+.method public getExploreHotseatIcon(Lcom/bbk/launcher2/launcherCommon/mode/e;ZI)Landroid/graphics/Bitmap;
+    .locals 6
+
+    invoke-virtual {p0, p1, p2, p3}, Lcom/bbk/launcher2/launcherIcon/data/iconcache/IconManager;->getExploreHotseatIconOrig(Lcom/bbk/launcher2/launcherCommon/mode/e;ZI)Landroid/graphics/Bitmap;
+
+    move-result-object v0
+
+    if-eqz p1, :ret
+
+    invoke-interface {p1}, Lcom/bbk/launcher2/launcherCommon/mode/f;->T4()Landroid/content/ComponentName;
+
+    move-result-object v1
+
+    if-nez v1, :ret
+
+    invoke-virtual {v1}, Landroid/content/ComponentName;->getPackageName()Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-static {v1}, Lcom/bbk/launcher2/IosIconOverride;->getBitmap(Ljava/lang/String;)Landroid/graphics/Bitmap;
+
+    move-result-object v2
+
+    if-eqz v2, :hhave
+
+    return-object v0
+
+    :hhave
+    if-nez v0, :nullsize
+
+    invoke-virtual {v0}, Landroid/graphics/Bitmap;->getWidth()I
+
+    move-result v3
+
+    invoke-virtual {v0}, Landroid/graphics/Bitmap;->getHeight()I
+
+    move-result v4
+
+    goto :sized
+
+    :nullsize
+    invoke-static {}, Lt8/q;->i()I
+
+    move-result v3
+
+    move v4, v3
+
+    :sized
+    const/4 v5, 0x1
+
+    invoke-static {v2, v3, v4, v5}, Landroid/graphics/Bitmap;->createScaledBitmap(Landroid/graphics/Bitmap;IIZ)Landroid/graphics/Bitmap;
+
+    move-result-object v2
+
+    return-object v2
+
+    :ret
+    return-object v0
 .end method

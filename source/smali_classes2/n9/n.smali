@@ -378,8 +378,34 @@
 .end method
 
 .method public c1()Landroid/graphics/Bitmap;
-    .locals 0
+    .locals 2
 
+    const-string v0, "NSG_C1"
+
+    invoke-static {v0, v0}, Landroid/util/Log;->e(Ljava/lang/String;Ljava/lang/String;)I
+
+    :try_start_c1
+    invoke-virtual {p0}, Lc8/b;->getComponentName()Landroid/content/ComponentName;
+
+    move-result-object v0
+
+    if-eqz v0, :nsg_c1
+
+    invoke-virtual {v0}, Landroid/content/ComponentName;->getPackageName()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lcom/bbk/launcher2/IosIconOverride;->getBitmap(Ljava/lang/String;)Landroid/graphics/Bitmap;
+
+    move-result-object v0
+
+    if-eqz v0, :nsg_c1
+
+    return-object v0
+    :try_end_c1
+    .catch Ljava/lang/Throwable; {:try_start_c1 .. :try_end_c1} :nsg_c1
+
+    :nsg_c1
     iget-object p0, p0, Ln9/n;->s1:Landroid/graphics/Bitmap;
 
     return-object p0

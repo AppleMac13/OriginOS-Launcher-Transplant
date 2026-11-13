@@ -388,7 +388,7 @@
 
     iget-object v1, p1, Lcom/android/launcher3/icons/BitmapInfo;->icon:Landroid/graphics/Bitmap;
 
-    invoke-static {v1}, Lcom/android/launcher3/icons/GraphicsUtils;->flattenBitmap(Landroid/graphics/Bitmap;)[B
+    invoke-static {p2, p3, p4, v1}, Lcom/bbk/launcher2/IosIconOverride;->flattenOr(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroid/graphics/Bitmap;)[B
 
     move-result-object v1
 
