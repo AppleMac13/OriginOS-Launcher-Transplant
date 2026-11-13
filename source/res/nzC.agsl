@@ -1,0 +1,16 @@
+uniform vec2 u_resolution;      // 屏幕分辨率
+uniform float u_rotateAngle;    // 边缘光动画alpha
+
+uniform vec3 u_gradientColor;      // 渐变层颜色
+uniform vec2 u_gradientAlpha;      // 渐变层起始透明度
+
+half4 main(vec2 fragCoord) {
+    vec2 uv = (fragCoord - 0.5 * u_resolution.xy) / u_resolution.y;
+    float rad = radians(u_rotateAngle);
+    vec4 gradientColor = vec4(0.0);
+    vec2 dir = vec2(cos(rad + 90.0), sin(rad + 90.0));
+    float projection = dot(uv, dir);
+    float alpha = mix(u_gradientAlpha.x, u_gradientAlpha.y, smoothstep(0.0, 1.0,  (projection + 1.0) * 0.5));
+    gradientColor = vec4(u_gradientColor * alpha, alpha);
+    return gradientColor;
+}

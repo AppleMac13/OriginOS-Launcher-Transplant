@@ -1,0 +1,189 @@
+uniform float2 resolution;
+uniform float progress;
+uniform float2 rectTopLeft;
+uniform float2 rectTopRight;
+uniform float2 rectBottomRight;
+uniform float2 rectBottomLeft;
+
+uniform float2 rect2TopLeft;
+uniform float2 rect2TopRight;
+uniform float2 rect2BottomRight;
+uniform float2 rect2BottomLeft;
+
+uniform float borderWidth;
+uniform float rectBorderWidth;
+uniform float cornerRadius;
+
+const int BALL_NUM = 5;
+uniform vec3 uBallPos[BALL_NUM];
+uniform vec4 uBallCenterColor[BALL_NUM];
+uniform vec4 uBallEdgeColor[BALL_NUM];
+uniform vec4 uBackColor;
+//uniform vec2 uSize;
+
+
+
+vec4 computeAddColor(vec4 curColor[BALL_NUM], int ballColorNum) {
+    if (ballColorNum <= 0) {
+        return uBackColor;
+    } else {
+        vec4 ballColor = vec4(0);
+        for (int i=0; i<BALL_NUM; i++) {
+            float a = smoothstep(0.0, 1.0, curColor[i].a / (curColor[i].a + ballColor.a));
+            ballColor = mix(ballColor, curColor[i], a);
+        }
+        return ballColor;
+    }
+}
+
+vec4 computeBallColor(vec2 uv,vec2 uSize) {
+    vec4 curColor[BALL_NUM];
+    int colorNum = 0;
+    for (int i=0; i<BALL_NUM; i++) {
+        vec2 ballPos = uBallPos[i].xy * uSize.xy;
+        float dis = distance(uv, ballPos);
+        float ballR = uBallPos[i].z * uSize.x;
+        if (dis <= ballR) {
+            float a = smoothstep(0.0, 1.0, dis / ballR);
+            curColor[i] = mix(uBallCenterColor[i], uBallEdgeColor[i], a);
+            colorNum += 1;
+        }
+    }
+    return computeAddColor(curColor, colorNum);
+}
+
+
+float variation(vec2 v1, vec2 v2, float strength, float speed) {
+    return sin(dot(normalize(v1), normalize(v2)) * strength + 500 * speed) / 20.0;
+}
+
+
+//
+half4 main(float2 fragCoord) {
+        // ===== 1. 计算形状参数 =====
+        float2 center1 = 0.25 * (rectTopLeft + rectTopRight + rectBottomRight + rectBottomLeft);
+
+         float2 uSize = float2(
+                length(rectTopRight - rectTopLeft),
+                length(rectBottomRight - rectTopRight)
+            );
+
+        float2 size1 = float2(
+            length(rectTopRight - rectTopLeft)*0.5,
+            length(rectBottomRight - rectTopRight)*0.5
+        );
+
+        float2 center2 = 0.25 * (rectTopLeft + rectTopRight + rectBottomRight + rectBottomLeft);
+        float2 size2 = float2(
+              length(rect2TopRight - rect2TopLeft)*0.5,
+              length(rect2BottomRight - rect2TopRight)*0.5
+        );
+
+        // ===== 2. 动态插值 =====
+        float shapeLerp = smoothstep(0.0, 1.0, progress);
+        // 控制缩放更慢或更快
+        float sizeLerp = pow(progress, 0.5);
+
+        float2 center = mix(center1, center2, progress);
+        float2 size = mix(size1, size2, sizeLerp);
+
+        // ===== 3. 形状计算 =====
+        // 3.1 起始形状（带边框的扰动椭圆）
+        float2 p = fragCoord - center;
+        float2 pEllipseOut = p / size;
+        float2 pEllipseIn = p / (size-float2(borderWidth,borderWidth));
+        float angle = atan(pEllipseOut.y, pEllipseOut.x);
+        float noise = variation(pEllipseOut, float2(cos(angle*2.4), sin(angle*2.4)), 6.0, 2.0);
+        float ellipseDistOut = length(pEllipseOut)-(1.0 + noise);
+        float ellipseDistIn = length(pEllipseIn) - (1.0 + noise);
+
+        // 3.2 最后形状（带边框的矩形）
+        float2 centerOffset = abs(fragCoord - center);
+        float2 cornerDistOut = max(centerOffset - (size - cornerRadius), 0.0);
+        float rectDistOut = length(cornerDistOut) - cornerRadius;
+        float2 cornerDistIn = max(centerOffset - (size-float2(rectBorderWidth,rectBorderWidth)- cornerRadius), 0.0);
+        float rectDistIn = length(cornerDistIn) - cornerRadius;
+
+//        float2 pRect = abs(fragCoord - center);
+//        float2 pRectOut = pRect - size;
+//        float rectDistOut = length(max(pRectOut, 0.0)) + min(max(pRectOut.x, pRectOut.y), 0.0);
+//        float2 pRectInt = p / (size-float2(rectBorderWidth,rectBorderWidth));
+//        float rectDistIn = length(pRectInt)-1.0;
+
+
+        // 3.3 混合
+        float disOut = mix(ellipseDistOut, rectDistOut, shapeLerp);
+        float distIn = mix(ellipseDistIn, rectDistIn, shapeLerp);
+
+        float alphaShape  = smoothstep(0.005, -0.005,max(disOut, -distIn));
+        //float alphaShape = (1.0 - smoothstep(-0.5, 0.0, disOut)) * step(disOut, 0.0);
+        //float alphaShape  = 1.0 - smoothstep(0,-0.5,disOut);
+
+//        float alphaShape;
+//        if(rectDistOut>0){
+//            alphaShape=0.0;
+//        }else if(rectDistOut<-0.3){
+//            alphaShape=0.0;
+//        }else{
+//            alphaShape = smoothstep(-0.3,0,rectDistOut);
+//        }
+
+
+        float2 offset = fragCoord - center;
+        float distToCenter = length(offset);
+        float maxDist = length(size);
+        float minDist = length(0.4*size);
+        //float fade = clamp(distToCenter / maxDist, 0.0, 1.0);
+        float fade = smoothstep(minDist,maxDist,distToCenter);
+        //float fade = 1.0;
+
+
+
+//        float borderAlpha = smoothstep(-aaWidth, 0.0, max(rectDistOut, -rectDistIn)); // aaWidth 控制抗锯齿
+//        float finalAlpha = borderAlpha * fade;
+
+        //float alphaShape  = smoothstep(0,-0.2,disOut);
+
+        // ===== 4. 渲染颜色输出 =====
+
+        vec2 uv = fragCoord-rectTopLeft;
+        vec4 resultColor = computeBallColor(uv,uSize);
+//        if(alphaShape<=0){
+//            return half4(0.0, 0.0, 0.0, 0.0);
+//        }
+//        resultColor.a = alphaShape;
+//        return resultColor;
+
+        // 距离中心归一化，用于控制中心透明（越靠近中心越透明）
+        //float distToCenter = length(fragCoord - center) / length(size); // 0~1
+        // 计算一个从中心=0 到边缘=1 的渐变透明度
+        //float alphaCenterFade = smoothstep(0.35, 1, distToCenter);
+        // 计算分段渐变透明度
+        // 组合最终透明度
+        //float alpha = alphaShape * alphaCenterFade;
+        //resultColor.a = alpha;
+        //return half4(computeBallColor(uv), alpha);
+
+//        if(alphaCenterFade==1){
+//            return half4(1.0, 0.5, 0.0, alphaCenterFade); // 橙色边框test
+//        }else{
+//            return half4(0.0, 0.0, 0.0, 0.0);
+//        }
+
+        if(alphaShape<=0){
+            return half4(0.0, 0.0, 0.0, 0.0);
+        }
+        resultColor *= fade;
+        //return half4(1.0, 1.0, 1.0, 0.0);
+        return resultColor;
+        //return half4(vec3(max(rectDistOut,-rectDistIn)), 1.0);
+    }
+
+
+
+
+
+
+
+
+

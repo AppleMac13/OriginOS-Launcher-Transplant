@@ -1,0 +1,5125 @@
+{
+  "v": "5.7.1",
+  "fr": 60,
+  "ip": 0,
+  "op": 300,
+  "w": 456,
+  "h": 984,
+  "nm": "布局2-json",
+  "ddd": 0,
+  "assets": [
+    {
+      "id": "image_0",
+      "w": 72,
+      "h": 72,
+      "u": "",
+      "p": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABIBAMAAACnw650AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAkelRYdENyZWF0b3IAAAiZc0zJT0pVcEwrSS1ScE1LS00uKQYAQXoGzmp6FcUAAAAJcEhZcwAAAAEAAAABAE8lxNYAAAAqUExURf///0dwTP///////////////////////////////////////////////zbjKbUAAAAOdFJOU0wA5jse3MEPi1afeypfDEt+kwAAAaxJREFUSMetlr9Lw1AQx6+kaIsKLRa6OD1I8MeSUsHFocXBPZuIIBk6W/QPKG5uIgji6CYuIrg4Kf4DXfx/TL17SV5zD78Vv1Ny+STv3uXe3VHb0cVnn6i/f+haqXzTiUkUDH3QAZW0q0MOQ1TXoAGRj8qhc6pobx7aIEUfLtSNNSgYO9AZqVouQx3yaFiCBj6oXkDeD8mnyPWo+TZKwtHTtevVDOrmprvU/Ci6yk1jgdat4T4xovDR2noCvct9I2cyaiLGVYbsamupKSmaFutRsdqrcXRcrEd5kBpmTpM8VBkkb1zOQ5vyYAZJJFdMRc82ntRu8eVXFTrhJ7UMEpfSKhRZp6gd624XrgcZxPitBh2J5yR+P2jQtnhOHMpmokEhZ0OPWn6XrFM14lxa0qFTziniCNzo0BbHgDhPXnRoh7OFYv/m7PYCgVIdihaBWIkOhc7xMh4tDv2y3P/tDgom9FugHwylCpR0UPpCBwE6UtjhhI45VDCg0gMVMawcQoUVKtFQscfaBtSAoFaGNUWovWKNGmr52PAAjSHYQIONRhWq/vdxDRv8vCPkN0ie1yy/DeBLAAAAAElFTkSuQmCC",
+      "e": 1
+    },
+    {
+      "id": "image_1",
+      "w": 396,
+      "h": 840,
+      "u": "",
+      "p": "data:image/png;base64,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",
+      "e": 1
+    },
+    {
+      "id": "image_2",
+      "w": 348,
+      "h": 906,
+      "u": "",
+      "p": "data:image/png;base64,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",
+      "e": 1
+    },
+    {
+      "id": "image_3",
+      "w": 30,
+      "h": 9,
+      "u": "",
+      "p": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAJBAMAAADXzYGyAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAkelRYdENyZWF0b3IAAAiZc0zJT0pVcEwrSS1ScE1LS00uKQYAQXoGzmp6FcUAAAAJcEhZcwAAAAEAAAABAE8lxNYAAAAbUExURf///////////////////////////////////wcFFt8AAAAIdFJOUwFMQSeD39HgDhMaEQAAAE1JREFUCNdjYDASMmCAAJaIEAYGJkFBISg/o6MjgcFQUFAQooClo6OjhUERyFcA81mB/FYGIFdQAMznAPI7kOTZwfLo+tHNR7a/IoQBADblE5frmzFkAAAAAElFTkSuQmCC",
+      "e": 1
+    },
+    {
+      "id": "image_4",
+      "w": 348,
+      "h": 540,
+      "u": "",
+      "p": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVwAAAIcBAMAAABIiAvuAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAkelRYdENyZWF0b3IAAAiZc0zJT0pVcEwrSS1ScE1LS00uKQYAQXoGzmp6FcUAAAAJcEhZcwAAAAEAAAABAE8lxNYAAAAYUExURUdwTP///////////////////////////x1LVb4AAAAHdFJOUwDlmMFAeBC2oeuBAAAEdElEQVR42u3dsWpUURAG4CSQ1ILKbQWLW2uzdQq5rYJwW18hUdnXF9vs7oGzO2dz//D99ZDzEYzFnWHm5uZ/vn3+sr8o77/+vGnk4OdfUv/wY1+Qj79OPX78559d/7gvyYdTzz+W1t/ti/Lp+Ot3tfVzFff5+PNzaX3ZL/fEr+uutn6p4/459vxSWv8w1XGfjvyxt37+GfX3+8J8P3z+vrb+tpL77vD529r6pZL7p+uf4jn1ayX37+Hza239XMl97vhf9Lz6XSX39+Hzu9r6MO40mDvV1u9Lc/h8cT0uLi4uLi4uLi4uLi4uLi4uLm4ct/mJ7qm7fjS3+IMp7siP/aO5a6u8v5Uymru0yvsbVaO5xW3A0dziJutobnELezS3eEBgOLd2/GI4t3a4ZTy3dHRoPLd0MOsK3MqxtytwK4cKr8KtCy4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u7htrpYQ1qrLagGFN1qwWdtiAwHK6eoPjF2HDLWGjQ2GDWUurfHtjb2urfHtDhXOrfHsjm7tWufndC7lTJ3d6XW5xPS4uLi4uLi4uLi4uLi4uLi4ubjl3qtT271vord9Vcu3ffVE/V3LHL2NeK7njV10vldzxi8TD1rSHLcEPOzEQdsAh7TxG2PGRtNMuYYdz0s4ShR19EhERERERERERERERuW6iWilhjaqsNmBYkzWrhR02IJA1fhE23BI2OhQ2mBU29hY2VBg2sml+dyR3GsydauvDRuVxcXFxcXFxcXFxcXFxcXFxcXHjuM1PdP37GUZziz+Y4o782D+au7bKt7fqemmVb2+ReNia9rAl+GEnBsIOOKSdxwg7PpJ22iXscE7aWaKwo0+VwcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFfWOtlLBGVVYbMKzJmtXCDhsQWE5Xb3D8Imy4JWx0KGwwa2mVb2/sbW2Vb2+ocG6Vb29kc9cqN797IXfq5E6vyy2ux8XFxcXFxcXFxcXFxcXFxcXFLedOldr+fQu99btKrv27L+rnSu74ZcxrJXf8quulkjt+kXjYmvawJfhhJwbCDjiknccIOz6Sdtol7HBO2lmisKNPIiIiIiIiIiIiIiIi101UKyWsUZXVBgxrsma1sMMGBLLGL8KGW8JGh8IGs8LG3sKGCsNGNs3vjuROg7lTbX3YqDwuLi4uLi4uLi4uLi4uLi4uLm4ct/mJrn8/w2hu8QdT3JEf+0dz11b59lZdL63y7S0SD1vTHrYEP+zEQNgBh7TzGGHHR9JOu4Qdzkk7SxR29KkyuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4b6yVEtaoymoDhjVZs1rYYQMCy+nqDY5fhA23hI0OhQ1mLa3y7Y29ra3y7Q0Vzq3y7Y1s7lrl5ncv5E6d3Ol1ucX1uLi4uLi4uLi4uLi4uLi4uLi45dypUtu/b6G3flfJtX/3Rf1cyR2/jHmt5I5fdb1UcscvEg9b0x62BD/sxEDYAYe08xhhx0fSTruEHc5JO0sUdPTpH18qlFdNGC/GAAAAAElFTkSuQmCC",
+      "e": 1
+    },
+    {
+      "id": "image_5",
+      "w": 390,
+      "h": 90,
+      "u": "",
+      "p": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYYAAABaBAMAAABOJew2AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAkelRYdENyZWF0b3IAAAiZc0zJT0pVcEwrSS1ScE1LS00uKQYAQXoGzmp6FcUAAAAJcEhZcwAAAAEAAAABAE8lxNYAAAAeUExURf///0dwTP///////////////////////////////wQgx4MAAAAJdFJOU0wAlt33XzizG2/1NEMAAALpSURBVHja3Vw9b9tADKWdWnE2azE8FmiCwpvRtCi8FQ2KwluRBii6KVvGIGmHbvaSuYhcFPdva8uRrFgkT6/QQnLy8E58j7yjT/chSvc2ecjIhiU3qxpv2v98IEt2w2iYZGTLktWhBnMSaiJKDfYkbEQ817AkizasaxiTTbuuaciMakj2GkZk1XqVhsysBio1jO1KKEYE2U5DMSI2GiZk2VaFhpFpDb1CQ2ZaQ7LVYLsrbTsTma5Ku8pERqdK9UkTGR8O2wFBKVm3lCbmNaxIGNKD1+eL9fndl5bPubx/Gy7en7X2i+F1MtfE/8NdzkNheSs3g1c7dHjTTjOIj5DpEVuWvi2enIT1zxaUfpTo8LkNKRAfIzNkNfSrVpt2L6NOTvfo8LGFBgwfJTMkprQO5jUnIY+F6msdHd5FSWH4OJmE03D6zEksVPU4tckbiI+TSTgn4cB0L9MD9GNEA4YHyUhOdC8NJxEvIB4jIztRvTScRLxgeJBMaVfNZp+UIbdooNdaEQDxGJnK5s1muYw+aqLDjDrDY2RKO2achFsR/otB/1Uej+FBMkr2lPwxXUPtHCAeI6MGSo4UGyglUiAeI6MGSo4UGyglUhgeJKMUM62gTVn0I1BZNTxIRqsbSumYs+gcqTMKHiRT2ne+2R8h2Tw6SNkG8RiZSLKlbAvJFrMN4jEyeiUQa8GxwOmWOsFjZCIdNlxAHXY9o07wGJlYsxziFEANYdYFmcoWQqR49AuB0wfqBI+RqUxwEnj0iYD+TZ3gMTKuNHjoSx7GtAcNHv7jPMw1PMz5PMy9PbwDeXgX9bAm4GJtpo/1wClY+zB8/3+Gg4+1Shdrxh7W7j3soRjcy/Kwp+hhb3cZCZWFPXZOg7WzDiO2na0zJx7O/ng4g+XhLJyLM4lL4xqGTs7oejgr7eHMejoyraHn5g6Hh7s0Lu40pbbTsNMwtjyiHd21dHHn1cPdYxd3wF3cxffwTQQX36Yw/I2Qf1C4jFHqRUbMAAAAAElFTkSuQmCC",
+      "e": 1
+    },
+    {
+      "id": "comp_0",
+      "layers": [
+        {
+          "ddd": 0,
+          "ind": 4,
+          "ty": 2,
+          "nm": "触点.png",
+          "cl": "png",
+          "parent": 7,
+          "refId": "image_0",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": {
+                    "x": [
+                      0.667
+                    ],
+                    "y": [
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.333
+                    ],
+                    "y": [
+                      0
+                    ]
+                  },
+                  "t": 96,
+                  "s": [
+                    0
+                  ],
+                  "e": [
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.667
+                    ],
+                    "y": [
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.333
+                    ],
+                    "y": [
+                      0
+                    ]
+                  },
+                  "t": 107,
+                  "s": [
+                    100
+                  ],
+                  "e": [
+                    60
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.667
+                    ],
+                    "y": [
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.167
+                    ],
+                    "y": [
+                      0
+                    ]
+                  },
+                  "t": 200,
+                  "s": [
+                    60
+                  ],
+                  "e": [
+                    0
+                  ]
+                },
+                {
+                  "t": 220
+                }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": {
+                    "x": 0.25,
+                    "y": 1
+                  },
+                  "o": {
+                    "x": 0.25,
+                    "y": 0.059
+                  },
+                  "t": 160,
+                  "s": [
+                    1248.578,
+                    1548.578,
+                    0
+                  ],
+                  "e": [
+                    1232.618,
+                    1406.825,
+                    0
+                  ],
+                  "to": [
+                    -2.66,
+                    -23.626,
+                    0
+                  ],
+                  "ti": [
+                    2.66,
+                    23.626,
+                    0
+                  ]
+                },
+                {
+                  "i": {
+                    "x": 0.58,
+                    "y": 0.58
+                  },
+                  "o": {
+                    "x": 0.42,
+                    "y": 0.42
+                  },
+                  "t": 184,
+                  "s": [
+                    1232.618,
+                    1406.825,
+                    0
+                  ],
+                  "e": [
+                    1232.618,
+                    1406.825,
+                    0
+                  ],
+                  "to": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "ti": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "t": 204
+                }
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                36,
+                36,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 0,
+              "k": [
+                242.246,
+                242.246,
+                100
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 87,
+          "op": 292,
+          "st": 51,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 5,
+          "ty": 2,
+          "nm": "触点.png",
+          "cl": "png",
+          "parent": 6,
+          "refId": "image_0",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": {
+                    "x": [
+                      0.667
+                    ],
+                    "y": [
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.333
+                    ],
+                    "y": [
+                      0
+                    ]
+                  },
+                  "t": 31,
+                  "s": [
+                    0
+                  ],
+                  "e": [
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.667
+                    ],
+                    "y": [
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.333
+                    ],
+                    "y": [
+                      0
+                    ]
+                  },
+                  "t": 37,
+                  "s": [
+                    100
+                  ],
+                  "e": [
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.667
+                    ],
+                    "y": [
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.167
+                    ],
+                    "y": [
+                      0
+                    ]
+                  },
+                  "t": 61,
+                  "s": [
+                    100
+                  ],
+                  "e": [
+                    0
+                  ]
+                },
+                {
+                  "t": 71
+                }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 0,
+              "k": [
+                1248.578,
+                1548.578,
+                0
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                36,
+                36,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 0,
+              "k": [
+                242.246,
+                242.246,
+                100
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 31,
+          "op": 78,
+          "st": -38,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 6,
+          "ty": 3,
+          "nm": "上滑",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": {
+                    "x": [
+                      0.667
+                    ],
+                    "y": [
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.333
+                    ],
+                    "y": [
+                      0
+                    ]
+                  },
+                  "t": 31,
+                  "s": [
+                    0
+                  ],
+                  "e": [
+                    60
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.667
+                    ],
+                    "y": [
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.333
+                    ],
+                    "y": [
+                      0
+                    ]
+                  },
+                  "t": 37,
+                  "s": [
+                    60
+                  ],
+                  "e": [
+                    60
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.667
+                    ],
+                    "y": [
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.167
+                    ],
+                    "y": [
+                      0
+                    ]
+                  },
+                  "t": 61,
+                  "s": [
+                    60
+                  ],
+                  "e": [
+                    0
+                  ]
+                },
+                {
+                  "t": 71
+                }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": {
+                    "x": 0.2,
+                    "y": 1
+                  },
+                  "o": {
+                    "x": 0.001,
+                    "y": 0.36
+                  },
+                  "t": 31,
+                  "s": [
+                    200.188,
+                    692.456,
+                    0
+                  ],
+                  "e": [
+                    200.188,
+                    647.456,
+                    0
+                  ],
+                  "to": [
+                    0,
+                    -7.5,
+                    0
+                  ],
+                  "ti": [
+                    0,
+                    7.5,
+                    0
+                  ]
+                },
+                {
+                  "i": {
+                    "x": 0.833,
+                    "y": 0.833
+                  },
+                  "o": {
+                    "x": 0.167,
+                    "y": 0.167
+                  },
+                  "t": 37,
+                  "s": [
+                    200.188,
+                    647.456,
+                    0
+                  ],
+                  "e": [
+                    200.188,
+                    647.456,
+                    0
+                  ],
+                  "to": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "ti": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "i": {
+                    "x": 0,
+                    "y": 1
+                  },
+                  "o": {
+                    "x": 0.167,
+                    "y": 0.167
+                  },
+                  "t": 38,
+                  "s": [
+                    200.188,
+                    647.456,
+                    0
+                  ],
+                  "e": [
+                    200.188,
+                    219.456,
+                    0
+                  ],
+                  "to": [
+                    0,
+                    -71.333,
+                    0
+                  ],
+                  "ti": [
+                    0,
+                    71.333,
+                    0
+                  ]
+                },
+                {
+                  "t": 65
+                }
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                1245,
+                1548,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": {
+                    "x": [
+                      0.667,
+                      0.667,
+                      0.667
+                    ],
+                    "y": [
+                      1,
+                      1,
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.333,
+                      0.333,
+                      0.333
+                    ],
+                    "y": [
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  "t": 34,
+                  "s": [
+                    60,
+                    60,
+                    100
+                  ],
+                  "e": [
+                    40,
+                    40,
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.667,
+                      0.667,
+                      0.667
+                    ],
+                    "y": [
+                      1,
+                      1,
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.333,
+                      0.333,
+                      0.333
+                    ],
+                    "y": [
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  "t": 40,
+                  "s": [
+                    40,
+                    40,
+                    100
+                  ],
+                  "e": [
+                    40,
+                    40,
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.833,
+                      0.833,
+                      0.833
+                    ],
+                    "y": [
+                      1,
+                      1,
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.333,
+                      0.333,
+                      0.333
+                    ],
+                    "y": [
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  "t": 61,
+                  "s": [
+                    40,
+                    40,
+                    100
+                  ],
+                  "e": [
+                    60,
+                    60,
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.833,
+                      0.833,
+                      0.833
+                    ],
+                    "y": [
+                      1,
+                      1,
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.167,
+                      0.167,
+                      0.167
+                    ],
+                    "y": [
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  "t": 71,
+                  "s": [
+                    60,
+                    60,
+                    100
+                  ],
+                  "e": [
+                    60,
+                    60,
+                    100
+                  ]
+                },
+                {
+                  "t": 92
+                }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "hasMask": true,
+          "masksProperties": [
+            {
+              "inv": false,
+              "mode": "a",
+              "pt": {
+                "a": 0,
+                "k": {
+                  "i": [
+                    [
+                      41.102,
+                      0
+                    ],
+                    [
+                      0,
+                      -41.102
+                    ],
+                    [
+                      -41.102,
+                      0
+                    ],
+                    [
+                      0,
+                      41.102
+                    ]
+                  ],
+                  "o": [
+                    [
+                      -41.102,
+                      0
+                    ],
+                    [
+                      0,
+                      41.102
+                    ],
+                    [
+                      41.102,
+                      0
+                    ],
+                    [
+                      0,
+                      -41.102
+                    ]
+                  ],
+                  "v": [
+                    [
+                      1248.578,
+                      1474.156
+                    ],
+                    [
+                      1174.156,
+                      1548.578
+                    ],
+                    [
+                      1248.578,
+                      1623
+                    ],
+                    [
+                      1323,
+                      1548.578
+                    ]
+                  ],
+                  "c": true
+                },
+                "ix": 1
+              },
+              "o": {
+                "a": 0,
+                "k": 100,
+                "ix": 3
+              },
+              "x": {
+                "a": 0,
+                "k": 0,
+                "ix": 4
+              },
+              "nm": "Mask 1"
+            }
+          ],
+          "sy": [
+            {
+              "c": {
+                "a": 0,
+                "k": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "ix": 2
+              },
+              "o": {
+                "a": 0,
+                "k": 17,
+                "ix": 3
+              },
+              "a": {
+                "a": 0,
+                "k": 0,
+                "ix": 5
+              },
+              "s": {
+                "a": 0,
+                "k": 22,
+                "ix": 8
+              },
+              "d": {
+                "a": 0,
+                "k": 0,
+                "ix": 6
+              },
+              "ch": {
+                "a": 0,
+                "k": 41,
+                "ix": 7
+              },
+              "bm": {
+                "a": 0,
+                "k": 5,
+                "ix": 1
+              },
+              "no": {
+                "a": 0,
+                "k": 0,
+                "ix": 9
+              },
+              "lc": {
+                "a": 0,
+                "k": 1,
+                "ix": 10
+              },
+              "ty": 1,
+              "nm": "投影"
+            },
+            {
+              "c": {
+                "a": 0,
+                "k": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "ix": 2
+              },
+              "s": {
+                "a": 0,
+                "k": 1,
+                "ix": 3
+              },
+              "ty": 0,
+              "nm": "描边"
+            }
+          ],
+          "ip": 31,
+          "op": 77,
+          "st": 31,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 7,
+          "ty": 3,
+          "nm": "长按",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": {
+                    "x": [
+                      0.667
+                    ],
+                    "y": [
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.333
+                    ],
+                    "y": [
+                      0
+                    ]
+                  },
+                  "t": 96,
+                  "s": [
+                    0
+                  ],
+                  "e": [
+                    60
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.667
+                    ],
+                    "y": [
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.333
+                    ],
+                    "y": [
+                      0
+                    ]
+                  },
+                  "t": 107,
+                  "s": [
+                    60
+                  ],
+                  "e": [
+                    60
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.667
+                    ],
+                    "y": [
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.167
+                    ],
+                    "y": [
+                      0
+                    ]
+                  },
+                  "t": 200,
+                  "s": [
+                    60
+                  ],
+                  "e": [
+                    0
+                  ]
+                },
+                {
+                  "t": 220
+                }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": {
+                    "x": 0.2,
+                    "y": 1
+                  },
+                  "o": {
+                    "x": 0.001,
+                    "y": 0.36
+                  },
+                  "t": 96,
+                  "s": [
+                    327.353,
+                    643.403,
+                    0
+                  ],
+                  "e": [
+                    327.353,
+                    598.403,
+                    0
+                  ],
+                  "to": [
+                    0,
+                    -7.5,
+                    0
+                  ],
+                  "ti": [
+                    0,
+                    7.5,
+                    0
+                  ]
+                },
+                {
+                  "t": 107
+                }
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                1245,
+                1548,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": {
+                    "x": [
+                      0.833,
+                      0.833,
+                      0.833
+                    ],
+                    "y": [
+                      1,
+                      1,
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.167,
+                      0.167,
+                      0.167
+                    ],
+                    "y": [
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  "t": 92,
+                  "s": [
+                    60,
+                    60,
+                    100
+                  ],
+                  "e": [
+                    60,
+                    60,
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.667,
+                      0.667,
+                      0.667
+                    ],
+                    "y": [
+                      1,
+                      1,
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.333,
+                      0.333,
+                      0.333
+                    ],
+                    "y": [
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  "t": 111,
+                  "s": [
+                    60,
+                    60,
+                    100
+                  ],
+                  "e": [
+                    40,
+                    40,
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.667,
+                      0.667,
+                      0.667
+                    ],
+                    "y": [
+                      1,
+                      1,
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.333,
+                      0.333,
+                      0.333
+                    ],
+                    "y": [
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  "t": 117,
+                  "s": [
+                    40,
+                    40,
+                    100
+                  ],
+                  "e": [
+                    40,
+                    40,
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.833,
+                      0.833,
+                      0.833
+                    ],
+                    "y": [
+                      1,
+                      1,
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.333,
+                      0.333,
+                      0.333
+                    ],
+                    "y": [
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  "t": 200,
+                  "s": [
+                    40,
+                    40,
+                    100
+                  ],
+                  "e": [
+                    60,
+                    60,
+                    100
+                  ]
+                },
+                {
+                  "t": 220
+                }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "hasMask": true,
+          "masksProperties": [
+            {
+              "inv": false,
+              "mode": "a",
+              "pt": {
+                "a": 0,
+                "k": {
+                  "i": [
+                    [
+                      41.102,
+                      0
+                    ],
+                    [
+                      0,
+                      -41.102
+                    ],
+                    [
+                      -41.102,
+                      0
+                    ],
+                    [
+                      0,
+                      41.102
+                    ]
+                  ],
+                  "o": [
+                    [
+                      -41.102,
+                      0
+                    ],
+                    [
+                      0,
+                      41.102
+                    ],
+                    [
+                      41.102,
+                      0
+                    ],
+                    [
+                      0,
+                      -41.102
+                    ]
+                  ],
+                  "v": [
+                    [
+                      1248.578,
+                      1474.156
+                    ],
+                    [
+                      1174.156,
+                      1548.578
+                    ],
+                    [
+                      1248.578,
+                      1623
+                    ],
+                    [
+                      1323,
+                      1548.578
+                    ]
+                  ],
+                  "c": true
+                },
+                "ix": 1
+              },
+              "o": {
+                "a": 0,
+                "k": 100,
+                "ix": 3
+              },
+              "x": {
+                "a": 0,
+                "k": 0,
+                "ix": 4
+              },
+              "nm": "Mask 1"
+            }
+          ],
+          "sy": [
+            {
+              "c": {
+                "a": 0,
+                "k": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "ix": 2
+              },
+              "o": {
+                "a": 0,
+                "k": 17,
+                "ix": 3
+              },
+              "a": {
+                "a": 0,
+                "k": 0,
+                "ix": 5
+              },
+              "s": {
+                "a": 0,
+                "k": 22,
+                "ix": 8
+              },
+              "d": {
+                "a": 0,
+                "k": 0,
+                "ix": 6
+              },
+              "ch": {
+                "a": 0,
+                "k": 41,
+                "ix": 7
+              },
+              "bm": {
+                "a": 0,
+                "k": 5,
+                "ix": 1
+              },
+              "no": {
+                "a": 0,
+                "k": 0,
+                "ix": 9
+              },
+              "lc": {
+                "a": 0,
+                "k": 1,
+                "ix": 10
+              },
+              "ty": 1,
+              "nm": "投影"
+            },
+            {
+              "c": {
+                "a": 0,
+                "k": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "ix": 2
+              },
+              "s": {
+                "a": 0,
+                "k": 1,
+                "ix": 3
+              },
+              "ty": 0,
+              "nm": "描边"
+            }
+          ],
+          "ip": 88,
+          "op": 120,
+          "st": 101,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 8,
+          "ty": 2,
+          "nm": "抽屉.png",
+          "cl": "png",
+          "refId": "image_1",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": {
+                    "x": [
+                      0.833
+                    ],
+                    "y": [
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.3
+                    ],
+                    "y": [
+                      0
+                    ]
+                  },
+                  "t": 204,
+                  "s": [
+                    100
+                  ],
+                  "e": [
+                    100
+                  ]
+                },
+                {
+                  "t": 224
+                }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": {
+                    "x": 0.3,
+                    "y": 0.3
+                  },
+                  "o": {
+                    "x": 0.42,
+                    "y": 0.42
+                  },
+                  "t": 120,
+                  "s": [
+                    320.485,
+                    573.5,
+                    0
+                  ],
+                  "e": [
+                    320.485,
+                    573.5,
+                    0
+                  ],
+                  "to": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "ti": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "i": {
+                    "x": 0.25,
+                    "y": 1
+                  },
+                  "o": {
+                    "x": 0.25,
+                    "y": 0.061
+                  },
+                  "t": 160,
+                  "s": [
+                    320.485,
+                    573.5,
+                    0
+                  ],
+                  "e": [
+                    317.65,
+                    519.622,
+                    0
+                  ],
+                  "to": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "ti": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "i": {
+                    "x": 0.58,
+                    "y": 0.58
+                  },
+                  "o": {
+                    "x": 0.3,
+                    "y": 0.3
+                  },
+                  "t": 184,
+                  "s": [
+                    317.65,
+                    519.622,
+                    0
+                  ],
+                  "e": [
+                    317.65,
+                    519.622,
+                    0
+                  ],
+                  "to": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "ti": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "i": {
+                    "x": 0.3,
+                    "y": 1
+                  },
+                  "o": {
+                    "x": 0.3,
+                    "y": 0
+                  },
+                  "t": 204,
+                  "s": [
+                    317.65,
+                    519.622,
+                    0
+                  ],
+                  "e": [
+                    320.485,
+                    506.46,
+                    0
+                  ],
+                  "to": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "ti": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "i": {
+                    "x": 0.3,
+                    "y": 0.3
+                  },
+                  "o": {
+                    "x": 0.3,
+                    "y": 0.3
+                  },
+                  "t": 224,
+                  "s": [
+                    320.485,
+                    506.46,
+                    0
+                  ],
+                  "e": [
+                    320.485,
+                    506.46,
+                    0
+                  ],
+                  "to": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "ti": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "t": 244
+                }
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                328.5,
+                598.5,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": {
+                    "x": [
+                      0.833,
+                      0.833,
+                      0.833
+                    ],
+                    "y": [
+                      1,
+                      1,
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.167,
+                      0.167,
+                      0.167
+                    ],
+                    "y": [
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  "t": 92,
+                  "s": [
+                    81,
+                    81,
+                    100
+                  ],
+                  "e": [
+                    81,
+                    81,
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.3,
+                      0.3,
+                      0.3
+                    ],
+                    "y": [
+                      1,
+                      1,
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.3,
+                      0.3,
+                      0.3
+                    ],
+                    "y": [
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  "t": 120,
+                  "s": [
+                    81,
+                    81,
+                    100
+                  ],
+                  "e": [
+                    75,
+                    75,
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.3,
+                      0.3,
+                      0.3
+                    ],
+                    "y": [
+                      1,
+                      1,
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.3,
+                      0.3,
+                      0.3
+                    ],
+                    "y": [
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  "t": 140,
+                  "s": [
+                    75,
+                    75,
+                    100
+                  ],
+                  "e": [
+                    90,
+                    90,
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.3,
+                      0.3,
+                      0.3
+                    ],
+                    "y": [
+                      1,
+                      1,
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.167,
+                      0.167,
+                      0.167
+                    ],
+                    "y": [
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  "t": 160,
+                  "s": [
+                    90,
+                    90,
+                    100
+                  ],
+                  "e": [
+                    90,
+                    90,
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.635,
+                      0.635,
+                      0.535
+                    ],
+                    "y": [
+                      1,
+                      1,
+                      9.921
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.402,
+                      0.402,
+                      0.402
+                    ],
+                    "y": [
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  "t": 204,
+                  "s": [
+                    90,
+                    90,
+                    100
+                  ],
+                  "e": [
+                    73,
+                    73,
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.397,
+                      0.397,
+                      0.538
+                    ],
+                    "y": [
+                      1,
+                      1,
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.296,
+                      0.296,
+                      0.229
+                    ],
+                    "y": [
+                      0,
+                      0,
+                      -4.389
+                    ]
+                  },
+                  "t": 224,
+                  "s": [
+                    73,
+                    73,
+                    100
+                  ],
+                  "e": [
+                    81,
+                    81,
+                    100
+                  ]
+                },
+                {
+                  "t": 244
+                }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "hasMask": true,
+          "masksProperties": [
+            {
+              "inv": false,
+              "mode": "a",
+              "pt": {
+                "a": 0,
+                "k": {
+                  "i": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ]
+                  ],
+                  "o": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ]
+                  ],
+                  "v": [
+                    [
+                      360,
+                      566.969
+                    ],
+                    [
+                      297,
+                      566.969
+                    ],
+                    [
+                      297,
+                      630.031
+                    ],
+                    [
+                      360,
+                      630.031
+                    ]
+                  ],
+                  "c": true
+                },
+                "ix": 1
+              },
+              "o": {
+                "a": 0,
+                "k": 100,
+                "ix": 3
+              },
+              "x": {
+                "a": 0,
+                "k": 0,
+                "ix": 4
+              },
+              "nm": "蒙版 1"
+            }
+          ],
+          "ip": 91,
+          "op": 301,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 9,
+          "ty": 4,
+          "nm": "蒙版 4",
+          "td": 1,
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 0,
+              "k": 100,
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 0,
+              "k": [
+                198,
+                420,
+                0
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                0,
+                0,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 0,
+              "k": [
+                33.333,
+                33.333,
+                100
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "shapes": [
+            {
+              "ty": "gr",
+              "it": [
+                {
+                  "ind": 0,
+                  "ty": "sh",
+                  "ix": 1,
+                  "ks": {
+                    "a": 0,
+                    "k": {
+                      "i": [
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ]
+                      ],
+                      "o": [
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ]
+                      ],
+                      "v": [
+                        [
+                          -198,
+                          -420
+                        ],
+                        [
+                          198,
+                          -420
+                        ],
+                        [
+                          198,
+                          420
+                        ],
+                        [
+                          -198,
+                          420
+                        ]
+                      ],
+                      "c": true
+                    },
+                    "ix": 2
+                  },
+                  "nm": "路径 1",
+                  "mn": "ADBE Vector Shape - Group",
+                  "hd": false
+                },
+                {
+                  "ty": "rd",
+                  "nm": "圆角 1",
+                  "r": {
+                    "a": 0,
+                    "k": 51,
+                    "ix": 1
+                  },
+                  "ix": 2,
+                  "mn": "ADBE Vector Filter - RC",
+                  "hd": false
+                },
+                {
+                  "ty": "gf",
+                  "o": {
+                    "a": 0,
+                    "k": 100,
+                    "ix": 10
+                  },
+                  "r": 1,
+                  "bm": 0,
+                  "g": {
+                    "p": 2,
+                    "k": {
+                      "a": 0,
+                      "k": [
+                        0,
+                        1,
+                        1,
+                        1,
+                        1,
+                        0,
+                        0,
+                        0
+                      ],
+                      "ix": 9
+                    }
+                  },
+                  "s": {
+                    "a": 0,
+                    "k": [
+                      0,
+                      -420
+                    ],
+                    "ix": 5
+                  },
+                  "e": {
+                    "a": 0,
+                    "k": [
+                      0,
+                      655.804
+                    ],
+                    "ix": 6
+                  },
+                  "t": 1,
+                  "nm": "渐变填充 1",
+                  "mn": "ADBE Vector Graphic - G-Fill",
+                  "hd": false
+                },
+                {
+                  "ty": "tr",
+                  "p": {
+                    "a": 0,
+                    "k": [
+                      0,
+                      0
+                    ],
+                    "ix": 2
+                  },
+                  "a": {
+                    "a": 0,
+                    "k": [
+                      0,
+                      0
+                    ],
+                    "ix": 1
+                  },
+                  "s": {
+                    "a": 0,
+                    "k": [
+                      300,
+                      300
+                    ],
+                    "ix": 3
+                  },
+                  "r": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 6
+                  },
+                  "o": {
+                    "a": 0,
+                    "k": 100,
+                    "ix": 7
+                  },
+                  "sk": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 4
+                  },
+                  "sa": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 5
+                  },
+                  "nm": "变换"
+                }
+              ],
+              "nm": "蒙版",
+              "np": 3,
+              "cix": 2,
+              "bm": 0,
+              "ix": 1,
+              "mn": "ADBE Vector Group",
+              "hd": false
+            }
+          ],
+          "ip": 0,
+          "op": 300,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 10,
+          "ty": 2,
+          "nm": "抽屉.png",
+          "cl": "png",
+          "parent": 15,
+          "tt": 1,
+          "refId": "image_1",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 0,
+              "k": 100,
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 0,
+              "k": [
+                320.515,
+                573.54,
+                0
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                328.5,
+                598.5,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 0,
+              "k": [
+                81,
+                81,
+                100
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "hasMask": true,
+          "masksProperties": [
+            {
+              "inv": false,
+              "mode": "a",
+              "pt": {
+                "a": 0,
+                "k": {
+                  "i": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ]
+                  ],
+                  "o": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ]
+                  ],
+                  "v": [
+                    [
+                      360,
+                      566.969
+                    ],
+                    [
+                      297,
+                      566.969
+                    ],
+                    [
+                      297,
+                      630.031
+                    ],
+                    [
+                      360,
+                      630.031
+                    ]
+                  ],
+                  "c": true
+                },
+                "ix": 1
+              },
+              "o": {
+                "a": 0,
+                "k": 100,
+                "ix": 3
+              },
+              "x": {
+                "a": 0,
+                "k": 0,
+                "ix": 4
+              },
+              "nm": "蒙版 1"
+            }
+          ],
+          "ip": 0,
+          "op": 91,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 15,
+          "ty": 3,
+          "nm": "编组 10备份 31b.png",
+          "cl": "png",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 0,
+              "k": 100,
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "s": true,
+              "x": {
+                "a": 0,
+                "k": 198,
+                "ix": 3
+              },
+              "y": {
+                "a": 1,
+                "k": [
+                  {
+                    "i": {
+                      "x": [
+                        0.25
+                      ],
+                      "y": [
+                        1
+                      ]
+                    },
+                    "o": {
+                      "x": [
+                        0.25
+                      ],
+                      "y": [
+                        0.086
+                      ]
+                    },
+                    "t": 40,
+                    "s": [
+                      1260
+                    ],
+                    "e": [
+                      420
+                    ]
+                  },
+                  {
+                    "i": {
+                      "x": [
+                        0.25
+                      ],
+                      "y": [
+                        1
+                      ]
+                    },
+                    "o": {
+                      "x": [
+                        0.167
+                      ],
+                      "y": [
+                        0
+                      ]
+                    },
+                    "t": 70,
+                    "s": [
+                      420
+                    ],
+                    "e": [
+                      420
+                    ]
+                  },
+                  {
+                    "i": {
+                      "x": [
+                        0.25
+                      ],
+                      "y": [
+                        1
+                      ]
+                    },
+                    "o": {
+                      "x": [
+                        0.25
+                      ],
+                      "y": [
+                        0.086
+                      ]
+                    },
+                    "t": 140,
+                    "s": [
+                      420
+                    ],
+                    "e": [
+                      1260
+                    ]
+                  },
+                  {
+                    "t": 170
+                  }
+                ],
+                "ix": 4
+              }
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                198,
+                420,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 0,
+              "k": [
+                100,
+                100,
+                100
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 300,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 16,
+          "ty": 3,
+          "nm": "调整图层 4",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 0,
+              "k": 100,
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 0,
+              "k": [
+                198,
+                420,
+                0
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                198,
+                420,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": {
+                    "x": [
+                      0.25,
+                      0.25,
+                      0.25
+                    ],
+                    "y": [
+                      1,
+                      1,
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.25,
+                      0.25,
+                      0.25
+                    ],
+                    "y": [
+                      0.1,
+                      0.1,
+                      0
+                    ]
+                  },
+                  "t": 40,
+                  "s": [
+                    100,
+                    100,
+                    100
+                  ],
+                  "e": [
+                    85,
+                    85,
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.534,
+                      0.534,
+                      0.534
+                    ],
+                    "y": [
+                      1,
+                      1,
+                      -2.554
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.303,
+                      0.303,
+                      0.303
+                    ],
+                    "y": [
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  "t": 75,
+                  "s": [
+                    85,
+                    85,
+                    100
+                  ],
+                  "e": [
+                    85,
+                    85,
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.467,
+                      0.467,
+                      0.467
+                    ],
+                    "y": [
+                      1,
+                      1,
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.183,
+                      0.183,
+                      0.183
+                    ],
+                    "y": [
+                      0,
+                      0,
+                      3.927
+                    ]
+                  },
+                  "t": 92,
+                  "s": [
+                    85,
+                    85,
+                    100
+                  ],
+                  "e": [
+                    85,
+                    85,
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.25,
+                      0.25,
+                      0.25
+                    ],
+                    "y": [
+                      1,
+                      1,
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.25,
+                      0.25,
+                      0.25
+                    ],
+                    "y": [
+                      0.1,
+                      0.1,
+                      0
+                    ]
+                  },
+                  "t": 140,
+                  "s": [
+                    85,
+                    85,
+                    100
+                  ],
+                  "e": [
+                    100,
+                    100,
+                    100
+                  ]
+                },
+                {
+                  "t": 175
+                }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 300,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 17,
+          "ty": 4,
+          "nm": "矩形备份 112",
+          "parent": 23,
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": {
+                    "x": [
+                      0.52
+                    ],
+                    "y": [
+                      0.936
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.48
+                    ],
+                    "y": [
+                      0.064
+                    ]
+                  },
+                  "t": 40,
+                  "s": [
+                    0
+                  ],
+                  "e": [
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.51
+                    ],
+                    "y": [
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.167
+                    ],
+                    "y": [
+                      0
+                    ]
+                  },
+                  "t": 56,
+                  "s": [
+                    100
+                  ],
+                  "e": [
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.52
+                    ],
+                    "y": [
+                      0.937
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.48
+                    ],
+                    "y": [
+                      0.063
+                    ]
+                  },
+                  "t": 145,
+                  "s": [
+                    100
+                  ],
+                  "e": [
+                    0
+                  ]
+                },
+                {
+                  "t": 170
+                }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 0,
+              "k": [
+                -0.349,
+                -156.512,
+                0
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                0,
+                0,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 0,
+              "k": [
+                60.93,
+                60.93,
+                100
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "shapes": [
+            {
+              "ty": "gr",
+              "it": [
+                {
+                  "ty": "rc",
+                  "d": 1,
+                  "s": {
+                    "a": 0,
+                    "k": [
+                      75,
+                      11
+                    ],
+                    "ix": 2
+                  },
+                  "p": {
+                    "a": 0,
+                    "k": [
+                      0,
+                      0
+                    ],
+                    "ix": 3
+                  },
+                  "r": {
+                    "a": 0,
+                    "k": 6,
+                    "ix": 4
+                  },
+                  "nm": "矩形路径 1",
+                  "mn": "ADBE Vector Shape - Rect",
+                  "hd": false
+                },
+                {
+                  "ty": "fl",
+                  "c": {
+                    "a": 0,
+                    "k": [
+                      1,
+                      1,
+                      1,
+                      0.300000011921
+                    ],
+                    "ix": 4
+                  },
+                  "o": {
+                    "a": 0,
+                    "k": 30,
+                    "ix": 5
+                  },
+                  "r": 1,
+                  "bm": 0,
+                  "nm": "填充 1",
+                  "mn": "ADBE Vector Graphic - Fill",
+                  "hd": false
+                },
+                {
+                  "ty": "tr",
+                  "p": {
+                    "a": 0,
+                    "k": [
+                      0,
+                      0
+                    ],
+                    "ix": 2
+                  },
+                  "a": {
+                    "a": 0,
+                    "k": [
+                      0,
+                      0
+                    ],
+                    "ix": 1
+                  },
+                  "s": {
+                    "a": 0,
+                    "k": [
+                      300,
+                      300
+                    ],
+                    "ix": 3
+                  },
+                  "r": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 6
+                  },
+                  "o": {
+                    "a": 0,
+                    "k": 100,
+                    "ix": 7
+                  },
+                  "sk": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 4
+                  },
+                  "sa": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 5
+                  },
+                  "nm": "变换"
+                }
+              ],
+              "nm": "矩形备份 112",
+              "np": 2,
+              "cix": 2,
+              "bm": 0,
+              "ix": 1,
+              "mn": "ADBE Vector Group",
+              "hd": false
+            }
+          ],
+          "ip": 0,
+          "op": 720,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 18,
+          "ty": 4,
+          "nm": "机模边框 5",
+          "td": 1,
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 0,
+              "k": 100,
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 0,
+              "k": [
+                198.1,
+                419.25,
+                0
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                0,
+                0,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 0,
+              "k": [
+                215,
+                215,
+                100
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "shapes": [
+            {
+              "ty": "gr",
+              "it": [
+                {
+                  "ind": 0,
+                  "ty": "sh",
+                  "ix": 1,
+                  "ks": {
+                    "a": 0,
+                    "k": {
+                      "i": [
+                        [
+                          0,
+                          -9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          9.389,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          -9.389,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ]
+                      ],
+                      "o": [
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          -9.389,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          -9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          9.389,
+                          0
+                        ]
+                      ],
+                      "v": [
+                        [
+                          72,
+                          -146.189
+                        ],
+                        [
+                          71.92,
+                          146.788
+                        ],
+                        [
+                          54.92,
+                          163.788
+                        ],
+                        [
+                          -55.08,
+                          163.788
+                        ],
+                        [
+                          -72.08,
+                          146.788
+                        ],
+                        [
+                          -72,
+                          -146.189
+                        ],
+                        [
+                          -55,
+                          -163.189
+                        ],
+                        [
+                          55,
+                          -163.189
+                        ]
+                      ],
+                      "c": true
+                    },
+                    "ix": 2
+                  },
+                  "nm": "路径 1",
+                  "mn": "ADBE Vector Shape - Group",
+                  "hd": false
+                },
+                {
+                  "ty": "fl",
+                  "c": {
+                    "a": 0,
+                    "k": [
+                      0.603921568627,
+                      0.76862745098,
+                      0.98431372549,
+                      1
+                    ],
+                    "ix": 4
+                  },
+                  "o": {
+                    "a": 0,
+                    "k": 100,
+                    "ix": 5
+                  },
+                  "r": 1,
+                  "bm": 0,
+                  "nm": "填充 1",
+                  "mn": "ADBE Vector Graphic - Fill",
+                  "hd": false
+                },
+                {
+                  "ty": "tr",
+                  "p": {
+                    "a": 0,
+                    "k": [
+                      0,
+                      0
+                    ],
+                    "ix": 2
+                  },
+                  "a": {
+                    "a": 0,
+                    "k": [
+                      0,
+                      0
+                    ],
+                    "ix": 1
+                  },
+                  "s": {
+                    "a": 0,
+                    "k": [
+                      116.667,
+                      116.667
+                    ],
+                    "ix": 3
+                  },
+                  "r": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 6
+                  },
+                  "o": {
+                    "a": 0,
+                    "k": 100,
+                    "ix": 7
+                  },
+                  "sk": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 4
+                  },
+                  "sa": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 5
+                  },
+                  "nm": "变换"
+                }
+              ],
+              "nm": "机模边框",
+              "np": 2,
+              "cix": 2,
+              "bm": 0,
+              "ix": 1,
+              "mn": "ADBE Vector Group",
+              "hd": false
+            }
+          ],
+          "ip": 0,
+          "op": 900,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 19,
+          "ty": 2,
+          "nm": "抽屉图标.png",
+          "cl": "png",
+          "parent": 23,
+          "tt": 1,
+          "refId": "image_2",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": {
+                    "x": [
+                      0.52
+                    ],
+                    "y": [
+                      0.936
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.48
+                    ],
+                    "y": [
+                      0.064
+                    ]
+                  },
+                  "t": 40,
+                  "s": [
+                    0
+                  ],
+                  "e": [
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.51
+                    ],
+                    "y": [
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.167
+                    ],
+                    "y": [
+                      0
+                    ]
+                  },
+                  "t": 56,
+                  "s": [
+                    100
+                  ],
+                  "e": [
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.52
+                    ],
+                    "y": [
+                      0.937
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.48
+                    ],
+                    "y": [
+                      0.063
+                    ]
+                  },
+                  "t": 145,
+                  "s": [
+                    100
+                  ],
+                  "e": [
+                    0
+                  ]
+                },
+                {
+                  "t": 170
+                }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 0,
+              "k": [
+                -54.279,
+                -154.547,
+                0
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                23.176,
+                16.206,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 0,
+              "k": [
+                39.535,
+                39.535,
+                100
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "hasMask": true,
+          "masksProperties": [
+            {
+              "inv": false,
+              "mode": "a",
+              "pt": {
+                "a": 0,
+                "k": {
+                  "i": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ]
+                  ],
+                  "o": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ]
+                  ],
+                  "v": [
+                    [
+                      46.353,
+                      -12.294
+                    ],
+                    [
+                      -8.353,
+                      -12.294
+                    ],
+                    [
+                      -8.353,
+                      32.412
+                    ],
+                    [
+                      46.353,
+                      32.412
+                    ]
+                  ],
+                  "c": true
+                },
+                "ix": 1
+              },
+              "o": {
+                "a": 0,
+                "k": 100,
+                "ix": 3
+              },
+              "x": {
+                "a": 0,
+                "k": 0,
+                "ix": 4
+              },
+              "nm": "蒙版 1"
+            }
+          ],
+          "ip": 0,
+          "op": 300,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 20,
+          "ty": 4,
+          "nm": "机模边框 4",
+          "td": 1,
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 0,
+              "k": 100,
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 0,
+              "k": [
+                198.1,
+                419.25,
+                0
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                0,
+                0,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 0,
+              "k": [
+                215,
+                215,
+                100
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "shapes": [
+            {
+              "ty": "gr",
+              "it": [
+                {
+                  "ind": 0,
+                  "ty": "sh",
+                  "ix": 1,
+                  "ks": {
+                    "a": 0,
+                    "k": {
+                      "i": [
+                        [
+                          0,
+                          -9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          9.389,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          -9.389,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ]
+                      ],
+                      "o": [
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          -9.389,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          -9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          9.389,
+                          0
+                        ]
+                      ],
+                      "v": [
+                        [
+                          72,
+                          -146.189
+                        ],
+                        [
+                          71.92,
+                          146.788
+                        ],
+                        [
+                          54.92,
+                          163.788
+                        ],
+                        [
+                          -55.08,
+                          163.788
+                        ],
+                        [
+                          -72.08,
+                          146.788
+                        ],
+                        [
+                          -72,
+                          -146.189
+                        ],
+                        [
+                          -55,
+                          -163.189
+                        ],
+                        [
+                          55,
+                          -163.189
+                        ]
+                      ],
+                      "c": true
+                    },
+                    "ix": 2
+                  },
+                  "nm": "路径 1",
+                  "mn": "ADBE Vector Shape - Group",
+                  "hd": false
+                },
+                {
+                  "ty": "fl",
+                  "c": {
+                    "a": 0,
+                    "k": [
+                      0.603921568627,
+                      0.76862745098,
+                      0.98431372549,
+                      1
+                    ],
+                    "ix": 4
+                  },
+                  "o": {
+                    "a": 0,
+                    "k": 100,
+                    "ix": 5
+                  },
+                  "r": 1,
+                  "bm": 0,
+                  "nm": "填充 1",
+                  "mn": "ADBE Vector Graphic - Fill",
+                  "hd": false
+                },
+                {
+                  "ty": "tr",
+                  "p": {
+                    "a": 0,
+                    "k": [
+                      0,
+                      0
+                    ],
+                    "ix": 2
+                  },
+                  "a": {
+                    "a": 0,
+                    "k": [
+                      0,
+                      0
+                    ],
+                    "ix": 1
+                  },
+                  "s": {
+                    "a": 0,
+                    "k": [
+                      116.667,
+                      116.667
+                    ],
+                    "ix": 3
+                  },
+                  "r": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 6
+                  },
+                  "o": {
+                    "a": 0,
+                    "k": 100,
+                    "ix": 7
+                  },
+                  "sk": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 4
+                  },
+                  "sa": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 5
+                  },
+                  "nm": "变换"
+                }
+              ],
+              "nm": "机模边框",
+              "np": 2,
+              "cix": 2,
+              "bm": 0,
+              "ix": 1,
+              "mn": "ADBE Vector Group",
+              "hd": false
+            }
+          ],
+          "ip": 0,
+          "op": 900,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 21,
+          "ty": 2,
+          "nm": "抽屉图标.png",
+          "cl": "png",
+          "parent": 23,
+          "tt": 1,
+          "refId": "image_2",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": {
+                    "x": [
+                      0.52
+                    ],
+                    "y": [
+                      0.936
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.48
+                    ],
+                    "y": [
+                      0.064
+                    ]
+                  },
+                  "t": 40,
+                  "s": [
+                    0
+                  ],
+                  "e": [
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.51
+                    ],
+                    "y": [
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.167
+                    ],
+                    "y": [
+                      0
+                    ]
+                  },
+                  "t": 56,
+                  "s": [
+                    100
+                  ],
+                  "e": [
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.52
+                    ],
+                    "y": [
+                      0.937
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.48
+                    ],
+                    "y": [
+                      0.063
+                    ]
+                  },
+                  "t": 145,
+                  "s": [
+                    100
+                  ],
+                  "e": [
+                    0
+                  ]
+                },
+                {
+                  "t": 170
+                }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 0,
+              "k": [
+                0,
+                18.14,
+                0
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                174,
+                453,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 0,
+              "k": [
+                39.535,
+                39.535,
+                100
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "hasMask": true,
+          "masksProperties": [
+            {
+              "inv": true,
+              "mode": "a",
+              "pt": {
+                "a": 0,
+                "k": {
+                  "i": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ]
+                  ],
+                  "o": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ]
+                  ],
+                  "v": [
+                    [
+                      361.706,
+                      551.235
+                    ],
+                    [
+                      280.765,
+                      551.235
+                    ],
+                    [
+                      280.765,
+                      627.432
+                    ],
+                    [
+                      361.706,
+                      627.432
+                    ]
+                  ],
+                  "c": true
+                },
+                "ix": 1
+              },
+              "o": {
+                "a": 0,
+                "k": 100,
+                "ix": 3
+              },
+              "x": {
+                "a": 0,
+                "k": 0,
+                "ix": 4
+              },
+              "nm": "蒙版 1"
+            },
+            {
+              "inv": false,
+              "mode": "s",
+              "pt": {
+                "a": 0,
+                "k": {
+                  "i": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ]
+                  ],
+                  "o": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ]
+                  ],
+                  "v": [
+                    [
+                      360.471,
+                      31.824
+                    ],
+                    [
+                      -9.529,
+                      31.824
+                    ],
+                    [
+                      -9.529,
+                      55.353
+                    ],
+                    [
+                      360.471,
+                      55.353
+                    ]
+                  ],
+                  "c": true
+                },
+                "ix": 1
+              },
+              "o": {
+                "a": 0,
+                "k": 100,
+                "ix": 3
+              },
+              "x": {
+                "a": 0,
+                "k": 0,
+                "ix": 4
+              },
+              "nm": "蒙版 2"
+            },
+            {
+              "inv": false,
+              "mode": "s",
+              "pt": {
+                "a": 0,
+                "k": {
+                  "i": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ]
+                  ],
+                  "o": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ]
+                  ],
+                  "v": [
+                    [
+                      32.235,
+                      -6.706
+                    ],
+                    [
+                      -0.118,
+                      -6.706
+                    ],
+                    [
+                      -0.118,
+                      32.118
+                    ],
+                    [
+                      32.235,
+                      32.118
+                    ]
+                  ],
+                  "c": true
+                },
+                "ix": 1
+              },
+              "o": {
+                "a": 0,
+                "k": 100,
+                "ix": 3
+              },
+              "x": {
+                "a": 0,
+                "k": 0,
+                "ix": 4
+              },
+              "nm": "蒙版 3"
+            }
+          ],
+          "ip": 0,
+          "op": 300,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 22,
+          "ty": 4,
+          "nm": "机模边框 3",
+          "td": 1,
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 0,
+              "k": 100,
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 0,
+              "k": [
+                198.1,
+                419.25,
+                0
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                0,
+                0,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 0,
+              "k": [
+                215,
+                215,
+                100
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "shapes": [
+            {
+              "ty": "gr",
+              "it": [
+                {
+                  "ind": 0,
+                  "ty": "sh",
+                  "ix": 1,
+                  "ks": {
+                    "a": 0,
+                    "k": {
+                      "i": [
+                        [
+                          0,
+                          -9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          9.389,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          -9.389,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ]
+                      ],
+                      "o": [
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          -9.389,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          -9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          9.389,
+                          0
+                        ]
+                      ],
+                      "v": [
+                        [
+                          72,
+                          -146.189
+                        ],
+                        [
+                          71.92,
+                          146.788
+                        ],
+                        [
+                          54.92,
+                          163.788
+                        ],
+                        [
+                          -55.08,
+                          163.788
+                        ],
+                        [
+                          -72.08,
+                          146.788
+                        ],
+                        [
+                          -72,
+                          -146.189
+                        ],
+                        [
+                          -55,
+                          -163.189
+                        ],
+                        [
+                          55,
+                          -163.189
+                        ]
+                      ],
+                      "c": true
+                    },
+                    "ix": 2
+                  },
+                  "nm": "路径 1",
+                  "mn": "ADBE Vector Shape - Group",
+                  "hd": false
+                },
+                {
+                  "ty": "fl",
+                  "c": {
+                    "a": 0,
+                    "k": [
+                      0.603921568627,
+                      0.76862745098,
+                      0.98431372549,
+                      1
+                    ],
+                    "ix": 4
+                  },
+                  "o": {
+                    "a": 0,
+                    "k": 100,
+                    "ix": 5
+                  },
+                  "r": 1,
+                  "bm": 0,
+                  "nm": "填充 1",
+                  "mn": "ADBE Vector Graphic - Fill",
+                  "hd": false
+                },
+                {
+                  "ty": "tr",
+                  "p": {
+                    "a": 0,
+                    "k": [
+                      0,
+                      0
+                    ],
+                    "ix": 2
+                  },
+                  "a": {
+                    "a": 0,
+                    "k": [
+                      0,
+                      0
+                    ],
+                    "ix": 1
+                  },
+                  "s": {
+                    "a": 0,
+                    "k": [
+                      116.667,
+                      116.667
+                    ],
+                    "ix": 3
+                  },
+                  "r": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 6
+                  },
+                  "o": {
+                    "a": 0,
+                    "k": 100,
+                    "ix": 7
+                  },
+                  "sk": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 4
+                  },
+                  "sa": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 5
+                  },
+                  "nm": "变换"
+                }
+              ],
+              "nm": "机模边框",
+              "np": 2,
+              "cix": 2,
+              "bm": 0,
+              "ix": 1,
+              "mn": "ADBE Vector Group",
+              "hd": false
+            }
+          ],
+          "ip": 0,
+          "op": 900,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 23,
+          "ty": 4,
+          "nm": "机模边框 2",
+          "parent": 15,
+          "tt": 1,
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": {
+                    "x": [
+                      0.567
+                    ],
+                    "y": [
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.48
+                    ],
+                    "y": [
+                      0.064
+                    ]
+                  },
+                  "t": 40,
+                  "s": [
+                    0
+                  ],
+                  "e": [
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.51
+                    ],
+                    "y": [
+                      1
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.167
+                    ],
+                    "y": [
+                      0
+                    ]
+                  },
+                  "t": 56,
+                  "s": [
+                    100
+                  ],
+                  "e": [
+                    100
+                  ]
+                },
+                {
+                  "i": {
+                    "x": [
+                      0.52
+                    ],
+                    "y": [
+                      0.937
+                    ]
+                  },
+                  "o": {
+                    "x": [
+                      0.48
+                    ],
+                    "y": [
+                      0.063
+                    ]
+                  },
+                  "t": 145,
+                  "s": [
+                    100
+                  ],
+                  "e": [
+                    0
+                  ]
+                },
+                {
+                  "t": 170
+                }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 0,
+              "k": [
+                198,
+                420,
+                0
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                0,
+                0,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 0,
+              "k": [
+                215,
+                215,
+                100
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "shapes": [
+            {
+              "ty": "gr",
+              "it": [
+                {
+                  "ind": 0,
+                  "ty": "sh",
+                  "ix": 1,
+                  "ks": {
+                    "a": 0,
+                    "k": {
+                      "i": [
+                        [
+                          0,
+                          -9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          9.389,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          -9.389,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ]
+                      ],
+                      "o": [
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          -9.389,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          -9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          9.389,
+                          0
+                        ]
+                      ],
+                      "v": [
+                        [
+                          72,
+                          -146.189
+                        ],
+                        [
+                          71.92,
+                          146.788
+                        ],
+                        [
+                          54.92,
+                          163.788
+                        ],
+                        [
+                          -55.08,
+                          163.788
+                        ],
+                        [
+                          -72.08,
+                          146.788
+                        ],
+                        [
+                          -72,
+                          -146.189
+                        ],
+                        [
+                          -55,
+                          -163.189
+                        ],
+                        [
+                          55,
+                          -163.189
+                        ]
+                      ],
+                      "c": true
+                    },
+                    "ix": 2
+                  },
+                  "nm": "路径 1",
+                  "mn": "ADBE Vector Shape - Group",
+                  "hd": false
+                },
+                {
+                  "ty": "fl",
+                  "c": {
+                    "a": 0,
+                    "k": [
+                      0.603921568627,
+                      0.76862745098,
+                      0.98431372549,
+                      1
+                    ],
+                    "ix": 4
+                  },
+                  "o": {
+                    "a": 0,
+                    "k": 100,
+                    "ix": 5
+                  },
+                  "r": 1,
+                  "bm": 0,
+                  "nm": "填充 1",
+                  "mn": "ADBE Vector Graphic - Fill",
+                  "hd": false
+                },
+                {
+                  "ty": "tr",
+                  "p": {
+                    "a": 0,
+                    "k": [
+                      0,
+                      0
+                    ],
+                    "ix": 2
+                  },
+                  "a": {
+                    "a": 0,
+                    "k": [
+                      0,
+                      0
+                    ],
+                    "ix": 1
+                  },
+                  "s": {
+                    "a": 0,
+                    "k": [
+                      116.667,
+                      116.667
+                    ],
+                    "ix": 3
+                  },
+                  "r": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 6
+                  },
+                  "o": {
+                    "a": 0,
+                    "k": 100,
+                    "ix": 7
+                  },
+                  "sk": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 4
+                  },
+                  "sa": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 5
+                  },
+                  "nm": "变换"
+                }
+              ],
+              "nm": "机模边框",
+              "np": 2,
+              "cix": 2,
+              "bm": 0,
+              "ix": 1,
+              "mn": "ADBE Vector Group",
+              "hd": false
+            }
+          ],
+          "ip": 0,
+          "op": 900,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 28,
+          "ty": 2,
+          "nm": "翻页指示器.png",
+          "cl": "png",
+          "refId": "image_3",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 0,
+              "k": 100,
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 0,
+              "k": [
+                198,
+                686.25,
+                0
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                15,
+                4.5,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 0,
+              "k": [
+                85,
+                85,
+                100
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 300,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 29,
+          "ty": 2,
+          "nm": "桌面布局.png",
+          "cl": "png",
+          "refId": "image_4",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 0,
+              "k": 100,
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 0,
+              "k": [
+                198,
+                302,
+                0
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                174,
+                270,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 0,
+              "k": [
+                85,
+                85,
+                100
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "hasMask": true,
+          "masksProperties": [
+            {
+              "inv": true,
+              "mode": "a",
+              "pt": {
+                "a": 0,
+                "k": {
+                  "i": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ]
+                  ],
+                  "o": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      0
+                    ]
+                  ],
+                  "v": [
+                    [
+                      363.888,
+                      472.353
+                    ],
+                    [
+                      274,
+                      472.353
+                    ],
+                    [
+                      274,
+                      559.412
+                    ],
+                    [
+                      363.888,
+                      559.412
+                    ]
+                  ],
+                  "c": true
+                },
+                "ix": 1
+              },
+              "o": {
+                "a": 0,
+                "k": 100,
+                "ix": 3
+              },
+              "x": {
+                "a": 0,
+                "k": 0,
+                "ix": 4
+              },
+              "nm": "蒙版 1"
+            }
+          ],
+          "ip": 0,
+          "op": 300,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 31,
+          "ty": 2,
+          "nm": "示意图元素 9.png",
+          "cl": "png",
+          "refId": "image_5",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 0,
+              "k": 100,
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 0,
+              "k": [
+                198,
+                770,
+                0
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                195,
+                45,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 0,
+              "k": [
+                85,
+                85,
+                100
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 300,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 32,
+          "ty": 4,
+          "nm": "机模边框",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 0,
+              "k": 100,
+              "ix": 11
+            },
+            "r": {
+              "a": 0,
+              "k": 0,
+              "ix": 10
+            },
+            "p": {
+              "a": 0,
+              "k": [
+                198,
+                420,
+                0
+              ],
+              "ix": 2
+            },
+            "a": {
+              "a": 0,
+              "k": [
+                0,
+                0,
+                0
+              ],
+              "ix": 1
+            },
+            "s": {
+              "a": 0,
+              "k": [
+                222,
+                222,
+                100
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "shapes": [
+            {
+              "ty": "gr",
+              "it": [
+                {
+                  "ind": 0,
+                  "ty": "sh",
+                  "ix": 1,
+                  "ks": {
+                    "a": 0,
+                    "k": {
+                      "i": [
+                        [
+                          0,
+                          -9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          9.389,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          -9.389,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ]
+                      ],
+                      "o": [
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          -9.389,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          -9.389
+                        ],
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          9.389,
+                          0
+                        ]
+                      ],
+                      "v": [
+                        [
+                          72,
+                          -143
+                        ],
+                        [
+                          72,
+                          143
+                        ],
+                        [
+                          55,
+                          160
+                        ],
+                        [
+                          -55,
+                          160
+                        ],
+                        [
+                          -72,
+                          143
+                        ],
+                        [
+                          -72,
+                          -143
+                        ],
+                        [
+                          -55,
+                          -160
+                        ],
+                        [
+                          55,
+                          -160
+                        ]
+                      ],
+                      "c": true
+                    },
+                    "ix": 2
+                  },
+                  "nm": "路径 1",
+                  "mn": "ADBE Vector Shape - Group",
+                  "hd": false
+                },
+                {
+                  "ty": "st",
+                  "c": {
+                    "a": 0,
+                    "k": [
+                      0.341176480055,
+                      0.611764729023,
+                      0.972549021244,
+                      1
+                    ],
+                    "ix": 3
+                  },
+                  "o": {
+                    "a": 0,
+                    "k": 100,
+                    "ix": 4
+                  },
+                  "w": {
+                    "a": 0,
+                    "k": 4,
+                    "ix": 5
+                  },
+                  "lc": 1,
+                  "lj": 1,
+                  "ml": 4,
+                  "bm": 0,
+                  "nm": "描边 1",
+                  "mn": "ADBE Vector Graphic - Stroke",
+                  "hd": false
+                },
+                {
+                  "ty": "fl",
+                  "c": {
+                    "a": 0,
+                    "k": [
+                      0.439215686275,
+                      0.670588235294,
+                      0.976470588235,
+                      1
+                    ],
+                    "ix": 4
+                  },
+                  "o": {
+                    "a": 0,
+                    "k": 100,
+                    "ix": 5
+                  },
+                  "r": 1,
+                  "bm": 0,
+                  "nm": "填充 1",
+                  "mn": "ADBE Vector Graphic - Fill",
+                  "hd": false
+                },
+                {
+                  "ty": "tr",
+                  "p": {
+                    "a": 0,
+                    "k": [
+                      0,
+                      0
+                    ],
+                    "ix": 2
+                  },
+                  "a": {
+                    "a": 0,
+                    "k": [
+                      0,
+                      0
+                    ],
+                    "ix": 1
+                  },
+                  "s": {
+                    "a": 0,
+                    "k": [
+                      116.667,
+                      116.667
+                    ],
+                    "ix": 3
+                  },
+                  "r": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 6
+                  },
+                  "o": {
+                    "a": 0,
+                    "k": 100,
+                    "ix": 7
+                  },
+                  "sk": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 4
+                  },
+                  "sa": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 5
+                  },
+                  "nm": "变换"
+                }
+              ],
+              "nm": "机模边框",
+              "np": 3,
+              "cix": 2,
+              "bm": 0,
+              "ix": 1,
+              "mn": "ADBE Vector Group",
+              "hd": false
+            }
+          ],
+          "ip": 0,
+          "op": 900,
+          "st": 0,
+          "bm": 0
+        }
+      ]
+    }
+  ],
+  "layers": [
+    {
+      "ddd": 0,
+      "ind": 1,
+      "ty": 0,
+      "nm": "布局2",
+      "refId": "comp_0",
+      "sr": 1,
+      "ks": {
+        "o": {
+          "a": 0,
+          "k": 100,
+          "ix": 11
+        },
+        "r": {
+          "a": 0,
+          "k": 0,
+          "ix": 10
+        },
+        "p": {
+          "a": 0,
+          "k": [
+            228,
+            492,
+            0
+          ],
+          "ix": 2
+        },
+        "a": {
+          "a": 0,
+          "k": [
+            198,
+            420,
+            0
+          ],
+          "ix": 1
+        },
+        "s": {
+          "a": 0,
+          "k": [
+            117.2,
+            117.2,
+            100
+          ],
+          "ix": 6
+        }
+      },
+      "ao": 0,
+      "w": 396,
+      "h": 840,
+      "ip": 0,
+      "op": 300,
+      "st": 0,
+      "bm": 0
+    }
+  ],
+  "markers": []
+}

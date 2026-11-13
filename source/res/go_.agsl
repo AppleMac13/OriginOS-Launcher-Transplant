@@ -1,0 +1,68 @@
+uniform shader uTex;
+uniform vec2 uCanvasSize;
+uniform half uAlpha;
+uniform half4 uBgColor;
+uniform float uBlurInnerOffset;
+
+uniform int uHideCircle0;
+uniform half4 uCircleColor0;
+uniform vec3 uCircleDir0;
+uniform float uCircleAngle0;
+
+uniform int uHideCircle1;
+uniform half4 uCircleColor1;
+uniform vec3 uCircleDir1;
+uniform float uCircleAngle1;
+
+uniform int uHideCircle2;
+uniform half4 uCircleColor2;
+uniform vec3 uCircleDir2;
+uniform float uCircleAngle2;
+
+uniform int uHideCircle3;
+uniform half4 uCircleColor3;
+uniform vec3 uCircleDir3;
+uniform float uCircleAngle3;
+
+uniform int uEnableLight;
+uniform half3 uLightColor;
+uniform vec3 uLightDir;
+uniform float uSmoothness;
+
+half4 drawSphere(float2 fragCoord) {
+    half4 color = half4(0.);
+    float radius = uCanvasSize.x / 2. - uBlurInnerOffset;
+    vec2 pos = fragCoord - uCanvasSize / 2.;
+
+    if (length(pos) < radius) {
+        float z = sqrt(radius * radius - pos.x * pos.x - pos.y * pos.y);
+        vec3 dir = vec3(pos, z);
+        dir /= length(dir);
+
+        if (uHideCircle0 != 1 && dot(dir, uCircleDir0 / length(uCircleDir0)) >= cos(radians(uCircleAngle0 / 2.))) {
+            color = uCircleColor0;
+        }
+        else if (uHideCircle1 != 1 && dot(dir, uCircleDir1 / length(uCircleDir1)) >= cos(radians(uCircleAngle1 / 2.))) {
+            color = uCircleColor1;
+        }
+        else if (uHideCircle2 != 1 && dot(dir, uCircleDir2 / length(uCircleDir2)) >= cos(radians(uCircleAngle2 / 2.))) {
+            color = uCircleColor2;
+        }
+        else if (uHideCircle3 != 1 && dot(dir, uCircleDir3 / length(uCircleDir3)) >= cos(radians(uCircleAngle3 / 2.))) {
+            color = uCircleColor3;
+        }
+        else {
+            color = uBgColor;
+        }
+
+        if (uEnableLight == 1) {
+            color.rgb += pow(dot(dir, uLightDir), uSmoothness) * uLightColor;
+        }
+    }
+
+    return color;
+}
+
+half4 main(float2 fragCoord) {
+    return drawSphere(fragCoord) * uAlpha;
+}

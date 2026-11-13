@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@dimen/originui_vtablayout_*,@color/originui_vtablayout_*,@integers/tab_*,@bool/originui_vtablayout_*,@drawable/originui_vtablayout_*" />

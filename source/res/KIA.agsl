@@ -1,0 +1,42 @@
+uniform shader inputShader;
+uniform int radius;
+const int MAX_BLUR_RADIUS = 100;
+uniform float2 texSize;
+uniform float offset[MAX_BLUR_RADIUS];
+uniform float weight[MAX_BLUR_RADIUS];
+
+bool isBeyondEdge(float2 coord) {
+    if (coord.x < 0 || coord.x > texSize.x || coord.y < 0 || coord.y > texSize.y) {
+        return true;
+    }
+    return false;
+}
+
+float noise(float2 st) {
+    return fract(sin(dot(st.xy, float2(12.9898, 78.233))) * 43758.5453);
+}
+
+float4 main(float2 fragCoord) {
+    float sum = 0.0;
+    float4 finalColor = inputShader.eval(fragCoord);
+    if (radius > 0) {
+        finalColor.rgba *= weight[0];
+        sum += weight[0];
+    }
+    for (int i = 1; i < MAX_BLUR_RADIUS; i++) {
+        if (i < radius) {
+            if (!isBeyondEdge(fragCoord + float2(offset[i], 0.0))) {
+                finalColor.rgba += inputShader.eval(fragCoord + float2(offset[i], 0.0)).rgba * weight[i];
+                sum += weight[i];
+            }
+            if (!isBeyondEdge(fragCoord - float2(offset[i], 0.0))) {
+                finalColor.rgba += inputShader.eval(fragCoord - float2(offset[i], 0.0)).rgba * weight[i];
+                sum += weight[i];
+            }
+        }
+    }
+    finalColor.rgba /= sum;
+    float n = noise(fragCoord/texSize);
+    finalColor.rgb =  mix(finalColor.rgb - float3(0.5/255.), finalColor.rgb + float3(0.5/255.), n);;
+    return finalColor;
+}

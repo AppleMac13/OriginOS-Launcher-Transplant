@@ -1,0 +1,239 @@
+.class public final enum Lapptransition/i0$a;
+.super Ljava/lang/Enum;
+.source "SourceFile"
+
+
+# annotations
+.annotation system Ldalvik/annotation/EnclosingClass;
+    value = Lapptransition/i0;
+.end annotation
+
+.annotation system Ldalvik/annotation/InnerClass;
+    accessFlags = 0x4019
+    name = "a"
+.end annotation
+
+
+# static fields
+.field public static final enum LAUNCHER_BREAK_CLOSE:Lapptransition/i0$a;
+
+.field public static final enum LAUNCHER_OA_END:Lapptransition/i0$a;
+
+.field public static final enum LAUNCHER_OA_START:Lapptransition/i0$a;
+
+.field public static final enum QUICK_AH_END:Lapptransition/i0$a;
+
+.field public static final enum QUICK_AH_START:Lapptransition/i0$a;
+
+.field public static final enum QUICK_BREAK_START:Lapptransition/i0$a;
+
+.field public static final enum QUICK_SLIDE_START:Lapptransition/i0$a;
+
+.field public static final synthetic a:[Lapptransition/i0$a;
+
+
+# instance fields
+.field public des:Ljava/lang/String;
+
+.field private value:I
+
+
+# direct methods
+.method private static synthetic $values()[Lapptransition/i0$a;
+    .locals 7
+
+    sget-object v0, Lapptransition/i0$a;->QUICK_SLIDE_START:Lapptransition/i0$a;
+
+    sget-object v1, Lapptransition/i0$a;->QUICK_BREAK_START:Lapptransition/i0$a;
+
+    sget-object v2, Lapptransition/i0$a;->QUICK_AH_START:Lapptransition/i0$a;
+
+    sget-object v3, Lapptransition/i0$a;->QUICK_AH_END:Lapptransition/i0$a;
+
+    sget-object v4, Lapptransition/i0$a;->LAUNCHER_OA_START:Lapptransition/i0$a;
+
+    sget-object v5, Lapptransition/i0$a;->LAUNCHER_OA_END:Lapptransition/i0$a;
+
+    sget-object v6, Lapptransition/i0$a;->LAUNCHER_BREAK_CLOSE:Lapptransition/i0$a;
+
+    filled-new-array/range {v0 .. v6}, [Lapptransition/i0$a;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+.method static constructor <clinit>()V
+    .locals 5
+
+    new-instance v0, Lapptransition/i0$a;
+
+    const-string v1, "QuickStep Slide Start"
+
+    const-string v2, "QUICK_SLIDE_START"
+
+    const/4 v3, 0x0
+
+    const/4 v4, 0x1
+
+    invoke-direct {v0, v2, v3, v4, v1}, Lapptransition/i0$a;-><init>(Ljava/lang/String;IILjava/lang/String;)V
+
+    sput-object v0, Lapptransition/i0$a;->QUICK_SLIDE_START:Lapptransition/i0$a;
+
+    new-instance v0, Lapptransition/i0$a;
+
+    const-string v1, "QuickStep Break OpenAnim Start"
+
+    const-string v2, "QUICK_BREAK_START"
+
+    const/4 v3, 0x2
+
+    invoke-direct {v0, v2, v4, v3, v1}, Lapptransition/i0$a;-><init>(Ljava/lang/String;IILjava/lang/String;)V
+
+    sput-object v0, Lapptransition/i0$a;->QUICK_BREAK_START:Lapptransition/i0$a;
+
+    new-instance v0, Lapptransition/i0$a;
+
+    const-string v1, "QuickStep AppToHomeAnim Start"
+
+    const-string v2, "QUICK_AH_START"
+
+    const/4 v4, 0x3
+
+    invoke-direct {v0, v2, v3, v4, v1}, Lapptransition/i0$a;-><init>(Ljava/lang/String;IILjava/lang/String;)V
+
+    sput-object v0, Lapptransition/i0$a;->QUICK_AH_START:Lapptransition/i0$a;
+
+    new-instance v0, Lapptransition/i0$a;
+
+    const-string v1, "QuickStep AppToHomeAnim End"
+
+    const-string v2, "QUICK_AH_END"
+
+    const/4 v3, 0x4
+
+    invoke-direct {v0, v2, v4, v3, v1}, Lapptransition/i0$a;-><init>(Ljava/lang/String;IILjava/lang/String;)V
+
+    sput-object v0, Lapptransition/i0$a;->QUICK_AH_END:Lapptransition/i0$a;
+
+    new-instance v0, Lapptransition/i0$a;
+
+    const-string v1, "Launcher OpenAppAnim Start"
+
+    const-string v2, "LAUNCHER_OA_START"
+
+    const/4 v4, 0x5
+
+    invoke-direct {v0, v2, v3, v4, v1}, Lapptransition/i0$a;-><init>(Ljava/lang/String;IILjava/lang/String;)V
+
+    sput-object v0, Lapptransition/i0$a;->LAUNCHER_OA_START:Lapptransition/i0$a;
+
+    new-instance v0, Lapptransition/i0$a;
+
+    const-string v1, "Launcher OpenAppAnim End"
+
+    const-string v2, "LAUNCHER_OA_END"
+
+    const/4 v3, 0x6
+
+    invoke-direct {v0, v2, v4, v3, v1}, Lapptransition/i0$a;-><init>(Ljava/lang/String;IILjava/lang/String;)V
+
+    sput-object v0, Lapptransition/i0$a;->LAUNCHER_OA_END:Lapptransition/i0$a;
+
+    new-instance v0, Lapptransition/i0$a;
+
+    const/4 v1, 0x7
+
+    const-string v2, "Launcher Break closeAnim"
+
+    const-string v4, "LAUNCHER_BREAK_CLOSE"
+
+    invoke-direct {v0, v4, v3, v1, v2}, Lapptransition/i0$a;-><init>(Ljava/lang/String;IILjava/lang/String;)V
+
+    sput-object v0, Lapptransition/i0$a;->LAUNCHER_BREAK_CLOSE:Lapptransition/i0$a;
+
+    invoke-static {}, Lapptransition/i0$a;->$values()[Lapptransition/i0$a;
+
+    move-result-object v0
+
+    sput-object v0, Lapptransition/i0$a;->a:[Lapptransition/i0$a;
+
+    return-void
+.end method
+
+.method private constructor <init>(Ljava/lang/String;IILjava/lang/String;)V
+    .locals 0
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "(I",
+            "Ljava/lang/String;",
+            ")V"
+        }
+    .end annotation
+
+    invoke-direct {p0, p1, p2}, Ljava/lang/Enum;-><init>(Ljava/lang/String;I)V
+
+    iput p3, p0, Lapptransition/i0$a;->value:I
+
+    iput-object p4, p0, Lapptransition/i0$a;->des:Ljava/lang/String;
+
+    return-void
+.end method
+
+.method public static valueOf(Ljava/lang/String;)Lapptransition/i0$a;
+    .locals 1
+
+    const-class v0, Lapptransition/i0$a;
+
+    invoke-static {v0, p0}, Ljava/lang/Enum;->valueOf(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;
+
+    move-result-object p0
+
+    check-cast p0, Lapptransition/i0$a;
+
+    return-object p0
+.end method
+
+.method public static values()[Lapptransition/i0$a;
+    .locals 1
+
+    sget-object v0, Lapptransition/i0$a;->a:[Lapptransition/i0$a;
+
+    invoke-virtual {v0}, [Lapptransition/i0$a;->clone()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, [Lapptransition/i0$a;
+
+    return-object v0
+.end method
+
+
+# virtual methods
+.method public bridge synthetic compareTo(Ljava/lang/Object;)I
+    .locals 0
+
+    check-cast p1, Ljava/lang/Enum;
+
+    invoke-super {p0, p1}, Ljava/lang/Enum;->compareTo(Ljava/lang/Enum;)I
+
+    move-result p0
+
+    return p0
+.end method
+
+.method public getDescribe()Ljava/lang/String;
+    .locals 0
+
+    iget-object p0, p0, Lapptransition/i0$a;->des:Ljava/lang/String;
+
+    return-object p0
+.end method
+
+.method public getValue()I
+    .locals 0
+
+    iget p0, p0, Lapptransition/i0$a;->value:I
+
+    return p0
+.end method

@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'> 
+<vivoHideInfos version 1.0> 
+    <info id="0x01850339" type="dimen" value="rounded_corner_content_padding" /> 
+    <info id="0x01830475" type="style" value="Widget.CompoundButton.Switch" /> 
+    <info id="0x01830475" type="style" value="Widget.CompoundButton.Switch" /> 
+    <info id="0x01830389" type="style" value="PreferencePanel.Dialog" /> 
+    <info id="0x019200d3" type="attr" value="preferencePanelStyle" /> 
+    <info id="0x01830389" type="style" value="PreferencePanel.Dialog" /> 
+    <info id="0x018202e4" type="id" value="edittext_container" /> 
+    <info id="0x01850262" type="dimen" value="navigation_bar_frame_height" /> 
+    <info id="0x01850262" type="dimen" value="navigation_bar_frame_height" /> 
+    <info id="0x01850262" type="dimen" value="navigation_bar_frame_height" /> 
+</vivoHideInfos> 

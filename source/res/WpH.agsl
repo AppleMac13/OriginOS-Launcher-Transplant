@@ -1,0 +1,24 @@
+uniform shader uTex;
+uniform vec2 uCanvasSize;
+uniform vec2 uSpriteSize;
+uniform int uShowFg;
+uniform vec2 uFgPos;
+uniform half uFgAlpha;
+uniform int uShowBg;
+uniform vec2 uBgPos;
+
+half4 main(float2 fragCoord) {
+    vec2 norCoord = fragCoord / uCanvasSize;
+    half4 color = half4(0.);
+
+    if (uShowBg == 1) { // 衔接A、恐龙蛋、衔接B
+        color = uTex.eval((uBgPos + norCoord) * uSpriteSize);
+    }
+
+    if (uShowFg == 1) { // 生成中
+        half4 fgColor = uTex.eval((uFgPos + norCoord) * uSpriteSize);
+        color = fgColor * uFgAlpha + color * (1. - uFgAlpha);
+    }
+
+    return color;
+}

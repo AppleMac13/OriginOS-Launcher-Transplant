@@ -1,0 +1,14 @@
+.class synthetic Lcom/vivo/httpdns/g/b2521$a2521;
+.super Ljava/lang/Object;
+.source "SourceFile"
+
+
+# annotations
+.annotation system Ldalvik/annotation/EnclosingClass;
+    value = Lcom/vivo/httpdns/g/b2521;
+.end annotation
+
+.annotation system Ldalvik/annotation/InnerClass;
+    accessFlags = 0x1009
+    name = null
+.end annotation

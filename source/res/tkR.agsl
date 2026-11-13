@@ -1,0 +1,82 @@
+uniform shader segmentMap;
+uniform shader highMap;
+uniform shader lowMap;
+uniform float uOpacity;
+uniform float flipIntervalPx;
+uniform half4 uColor1;
+uniform half4 uColor2;
+uniform half4 uColor3;
+uniform half4 uColor4;
+uniform half4 uColor5;
+uniform float lastLocalDistance;
+uniform float lastSegmentId;
+uniform float changeLength;
+uniform float segmentDistance;
+uniform float changeRatio;
+uniform float pathMapScale;
+
+
+float decodeDistance(float highA, float lowA) {
+    return floor(highA * 255.0 + 0.5) * 256.0 + floor(lowA * 255.0 + 0.5);
+}
+
+
+
+half4 main(float2 fragCoord) {
+    // 缩小采样坐标
+    float2 uv = fragCoord * pathMapScale;
+
+    float decodedSegmentId = floor(segmentMap.eval(uv).a * 255.0 + 0.5);
+    float high = highMap.eval(uv).a;
+    float low = lowMap.eval(uv).a;
+    float distance = decodeDistance(high, low);
+
+    // 允许误差
+    bool isCurrentSegment = abs(decodedSegmentId - lastSegmentId) < 0.5;
+    bool isPreviousSegment = abs(decodedSegmentId - (lastSegmentId - 1.0)) < 0.5;
+    if (!isCurrentSegment && !isPreviousSegment) {
+    // 不属于当前或前一段，则透明
+        return half4(0.0);
+    }
+    // 判断是否需要偏移
+    float distanceOffset = isPreviousSegment ? 0.0 : segmentDistance;
+    float distanceWithOffset = distance + distanceOffset;
+
+    float cycleIndex = floor(distanceWithOffset / flipIntervalPx);
+    float progress = mod(distanceWithOffset, flipIntervalPx) / flipIntervalPx;
+    //需要根据distance 和 flipIntervalPx 来计算 比如 flipIntervalPx是 1000 那就是 distance在 0~1000 pathAlpha是 0~1 在1000~2000 是1~0 以此内推
+    half pathAlpha = mod(cycleIndex, 2.0) == 0.0 ? progress : (1.0 - progress);
+    half colorFactor = smoothstep(0.001, 1, pathAlpha);
+
+    half4 color;
+    if (colorFactor < 0.25) {
+        float t = colorFactor / 0.25;
+        color = mix(uColor1, uColor2, t);
+    } else if (colorFactor < 0.5) {
+        float t = (colorFactor - 0.25) / 0.25;
+        color = mix(uColor2, uColor3, t);
+    } else if (colorFactor < 0.75) {
+        float t = (colorFactor - 0.5) / 0.25;
+        color = mix(uColor3, uColor4, t);
+    } else {
+        float t = (colorFactor - 0.75) / 0.25;
+        color = mix(uColor4, uColor5, t);
+    }
+
+    // 计算透明度范围
+    float start = lastLocalDistance + segmentDistance - changeLength;
+    float end = start + changeLength * changeRatio;
+    // 线性插值计算 alpha
+    float alpha = 0.0;
+    if (distanceWithOffset <= start) {
+        alpha = 0.0;
+    } else if (distanceWithOffset >= end) {
+        alpha = 1.0;
+    } else {
+        float t = (distanceWithOffset - start) / (end - start);
+        alpha = clamp(t, 0.0, 1.0);
+    }
+    color *= alpha;
+    color *= uOpacity;
+    return color;
+}

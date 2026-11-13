@@ -1,0 +1,92 @@
+// 最大球体数量
+const int MAX_BALL_NUM = 8;
+// 实际使用的球体数量
+uniform int uActualBallNum;
+// 球体位置、半径
+uniform vec3 uBallPosAndR[MAX_BALL_NUM];
+// 球体当前色彩
+uniform vec3 uBallColor[MAX_BALL_NUM];
+// 背景色
+uniform vec3 uBackColor;
+// view尺寸
+uniform vec2 uViewSize;
+// view在全局色板中的坐标
+uniform vec2 uGlobalPos;
+
+uniform float uSaturation;
+uniform float uBrightness;
+
+// 是否启用自强光混合模式
+uniform int uEnableSelfHardLight;
+
+const vec3 mLuminanceWeighting = vec3(0.2125, 0.7154, 0.0721);
+
+float noise(float2 st) {
+    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+vec3 processSaturation(vec3 color, float saturation) {
+    float luminance = dot(color.rgb, mLuminanceWeighting);
+    vec3 greyScaleColor = vec3(luminance);
+    return mix(greyScaleColor, color.rgb, saturation);
+}
+
+vec3 processBrightness(vec3 srcColor, float brightness) {
+    float gamma = 1.0 / (brightness * 0.0062 + 1.0);
+    return clamp(pow(srcColor, vec3(gamma)), 0.0, 1.0);
+}
+
+vec3 applyHardLightSelfBlend(vec3 color) {
+    vec3 hardLightResult;
+    // 对每个颜色通道应用强光混合算法
+    for (int i = 0; i < 3; i++) {
+        float channel = color[i];
+        float blendedChannel;
+
+        if (channel < 0.5) {
+            // 当颜色值 < 0.5 时：2 × color × color = 2 × color²
+            blendedChannel = 2.0 * channel * channel;
+        } else {
+            // 当颜色值 ≥ 0.5 时：1 - 2 × (1 - color)²
+            float invChannel = 1.0 - channel;
+            blendedChannel = 1.0 - 2.0 * invChannel * invChannel;
+        }
+        hardLightResult[i] = blendedChannel;
+    }
+    return hardLightResult;
+}
+
+vec3 applyColorAdjustments(vec3 color, float saturation, float brightness) {
+    vec3 adjustedColor = processSaturation(color, saturation);
+    adjustedColor = processBrightness(adjustedColor, (brightness - 1.0) * 100.0);
+    return adjustedColor;
+}
+
+vec4 computeBallColor(vec2 coord) {
+    vec3 curColor = uBackColor;
+    vec3 edgeColor = vec3(0.0);
+    for (int i=0; i<MAX_BALL_NUM; i++) {
+        if (i >= uActualBallNum) {
+            break;
+        }
+        vec2 ballPos = uBallPosAndR[i].xy;
+        float dis = distance(coord, ballPos);
+        float ballR = uBallPosAndR[i].z;
+        if (dis <= ballR) {
+            curColor = uBallColor[i];
+        }
+    }
+    curColor = applyColorAdjustments(curColor, uSaturation, uBrightness);
+    if(uEnableSelfHardLight == 1){
+        curColor = applyHardLightSelfBlend(curColor);
+    }
+    return vec4(curColor, 1.0);
+}
+
+half4 main(vec2 fragCoord) {
+    vec2 coord = fragCoord + uGlobalPos;
+    half4 finalColor = half4(computeBallColor(coord));
+    // float n = noise(fragCoord * 5.0);
+    // finalColor =  mix(finalColor - half4(1./255.), finalColor + half4(1./255.), n);
+    return finalColor;
+}

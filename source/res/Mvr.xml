@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@dimen/originui_search2_padding_top_rom15_0,
+    @dimen/originui_search2_padding_bottom_rom15_0,
+    @dimen/originui_search2_search_back_image_margin_top_rom15_0,
+    @dimen/originui_search2_search_func_btn_margin_top_rom15_0,
+    @dimen/originui_search2_search_btn_margin_top_rom15_0,
+    @dimen/originui_search2_view_min_height_rom15_0" />

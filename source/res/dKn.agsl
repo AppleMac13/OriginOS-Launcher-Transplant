@@ -1,0 +1,37 @@
+uniform float2 size;
+uniform float2 center;
+uniform float2 radius;
+uniform float rotation;
+uniform float4 centerColor;       // 中心颜色
+uniform float4 edgeColor;         // 边缘颜色
+uniform float gradientIntensity;
+uniform float uAlpha;
+half4 main(float2 fragCoord) {
+	 // 将当前点转换为相对于椭圆中心的坐标
+    float2 p = fragCoord - center;
+    // 应用旋转（围绕中心）
+    float s = sin(rotation);
+    float c = cos(rotation);
+    float2 rotated = float2(
+        p.x * c + p.y * s,
+        -p.x * s + p.y * c
+    );
+    // 计算椭圆方程的值: (x/rx)^2 + (y/ry)^2
+    float ellipse = (rotated.x * rotated.x) / (radius.x * radius.x) +
+                    (rotated.y * rotated.y) / (radius.y * radius.y);
+
+
+//    half4 color = half4(centerColor.rgb, alpha * centerColor.a);
+// 计算渐变因子 (0在中心, 1在边缘)
+    float gradientFactor = pow(ellipse, gradientIntensity);
+    gradientFactor = clamp(gradientFactor, 0.0, 1.0);
+
+    half4 color = mix(centerColor, edgeColor, gradientFactor);
+   // 基础椭圆：使用smoothstep实现抗锯齿
+    float alpha = 1.0 - smoothstep(0.95, 1.05, ellipse);
+    color = half4(color.rgb, alpha * color.a);
+    // 椭圆边缘外的颜色剔除
+    float animFactor = smoothstep(0.0, 1., 1.0 - ellipse);
+    color *= animFactor;
+    return color * uAlpha;
+}

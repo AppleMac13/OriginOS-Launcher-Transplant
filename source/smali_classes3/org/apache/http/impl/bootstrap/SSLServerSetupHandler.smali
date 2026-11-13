@@ -1,0 +1,10 @@
+.class public interface abstract Lorg/apache/http/impl/bootstrap/SSLServerSetupHandler;
+.super Ljava/lang/Object;
+.source "SourceFile"
+
+
+# virtual methods
+.method public abstract initialize(Ljavax/net/ssl/SSLServerSocket;)V
+    .annotation system Ldalvik/annotation/Throws;
+    .end annotation
+.end method

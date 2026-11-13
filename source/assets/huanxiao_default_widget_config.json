@@ -1,0 +1,82 @@
+[
+    {
+        "className": "com.mc10086.cmcc.appwidget.DashboardAppWidget",
+        "packageName": "com.greenpoint.android.mc10086.activity",
+        "screen": 0,
+        "spanX": 4,
+        "spanY": 2,
+        "widgetType": "launcher",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "className": "com.aicd.client.widget.provider.desktop.android.LauncherFWidgetProviderOne",
+        "packageName": "com.aicd.client",
+        "screen": 0,
+        "spanX": 4,
+        "spanY": 2,
+        "widgetType": "launcher",
+        "x": 0,
+        "y": 2
+    },
+    {
+        "className": "com.aicd.client.widget.provider.desktop.android.LauncherTWidgetProviderOne",
+        "packageName": "com.aicd.client",
+        "screen": 0,
+        "spanX": 2,
+        "spanY": 2,
+        "widgetType": "launcher",
+        "x": 0,
+        "y": 4
+    },
+    {
+        "className": "com.aicd.client.widget.provider.desktop.android.LauncherTWidgetProviderTwo",
+        "packageName": "com.aicd.client",
+        "screen": 0,
+        "spanX": 2,
+        "spanY": 2,
+        "widgetType": "launcher",
+        "x": 2,
+        "y": 4
+    },
+    {
+        "className": "com.aicd.client.widget.provider.desktop.android.LauncherFWidgetProviderTwo",
+        "packageName": "com.aicd.client",
+        "screen": 1,
+        "spanX": 4,
+        "spanY": 2,
+        "widgetType": "launcher",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "className": "com.cmri.universalapp.index.healthy.appwidget.AiHealthyIndicatorAppWidgetProvider",
+        "packageName": "com.cmri.universalapp",
+        "screen": 1,
+        "spanX": 4,
+        "spanY": 2,
+        "widgetType": "launcher",
+        "x": 0,
+        "y": 2
+    },
+    {
+        "className": "com.aicd.client.widget.provider.desktop.android.LauncherTWidgetProviderThree",
+        "packageName": "com.aicd.client",
+        "screen": 1,
+        "spanX": 2,
+        "spanY": 2,
+        "widgetType": "launcher",
+        "x": 0,
+        "y": 4
+    },
+    {
+        "className": "com.aicd.client.widget.provider.desktop.android.LauncherTWidgetProviderFour",
+        "packageName": "com.aicd.client",
+        "screen": 1,
+        "spanX": 2,
+        "spanY": 2,
+        "widgetType": "launcher",
+        "x": 2,
+        "y": 4
+    }
+]

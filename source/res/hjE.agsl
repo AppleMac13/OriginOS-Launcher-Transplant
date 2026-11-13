@@ -1,0 +1,44 @@
+uniform shader segmentMap;
+uniform shader highMap;
+uniform shader lowMap;
+uniform float maxDistance;
+uniform float changeLength;
+uniform float lastLocalDistance;
+uniform float lastSegmentId;
+uniform float segmentDistance;
+uniform float pathMapScale;
+
+float decodeDistance(float highA, float lowA) {
+    return floor(highA * 255.0 + 0.5) * 256.0 + floor(lowA * 255.0 + 0.5);
+}
+
+
+half4 main(float2 fragCoord) {
+    half4 color = half4(1.0);
+    // 缩小采样坐标
+    float2 uv = fragCoord * pathMapScale;
+    float decodedSegmentId = floor(segmentMap.eval(uv).a * 255.0 + 0.5);
+    float high = highMap.eval(uv).a;
+    float low = lowMap.eval(uv).a;
+    float distance = decodeDistance(high, low);
+    // 允许误差
+    bool isCurrentSegment = abs(decodedSegmentId - lastSegmentId) < 0.5;
+    bool isPreviousSegment = abs(decodedSegmentId - (lastSegmentId - 1.0)) < 0.5;
+    if (!isCurrentSegment && !isPreviousSegment) {
+     // 不属于当前或前一段，则透明
+        return half4(0.0);
+    }
+    // 判断是否需要 +25000 偏移
+    float distanceOffset = isPreviousSegment ? 0.0 : segmentDistance;
+    float distanceWithOffset = distance + distanceOffset;
+    // 计算透明度范围
+    float start = lastLocalDistance + segmentDistance - changeLength;
+    // 线性插值计算 alpha
+    float t = (distanceWithOffset - start) / changeLength;
+    float alpha = clamp(t, 0.0, 1.0);
+    if (distanceWithOffset < start) {
+        alpha = 0.0;
+    }
+    color*=alpha;
+    return color;
+}

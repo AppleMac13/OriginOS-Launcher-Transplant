@@ -1,0 +1,85 @@
+const vec4 WHITE_COLOR = vec4(1.0, 1.0, 1.0, 0.0);
+// 圆弧外边半径
+uniform float uOuterRadius;
+// 圆弧内边半径
+uniform float uInsideRadius;
+// 扫光环形区域可透明渐变的区域占圆环一半宽度的比例
+uniform float uMarkPercent;
+uniform vec2 uSize;
+uniform vec2 uStart;
+uniform shader uInput;
+uniform float uTranslateX;
+uniform float uTranslateY;
+uniform float uSnapshotSinkValue;
+uniform float uSnapshotSinkStart;
+uniform float uSnapshotSinkEnd;
+uniform float uSnapshotSinkDefault;
+
+vec4 main(in vec2 fragCoord) {
+    // 外圆弧与 Shader 顶端区域相切
+    vec2 originCoord = vec2(fragCoord.x, fragCoord.y);
+    float halfArcWidth = (uOuterRadius - uInsideRadius) / 2;
+    vec2 vecRadiusCenter = vec2(uSize.x / 2, - uOuterRadius + uTranslateY);
+    float coordDist = distance(fragCoord, vecRadiusCenter);
+    vec4 resultColor = vec4(0.0);
+    vec2 snapshotCoord = vec2(originCoord.x - uStart.x, originCoord.y - uStart.y);
+    if(coordDist >= uInsideRadius && coordDist <= uOuterRadius){
+        // 圆环范围
+        if(coordDist < (uInsideRadius + halfArcWidth * (2 - uMarkPercent))){
+            resultColor = WHITE_COLOR;
+        }else{
+            half4 color;
+            if(originCoord.y < uSnapshotSinkStart + uSnapshotSinkDefault){
+                snapshotCoord.y = snapshotCoord.y - uSnapshotSinkDefault;
+                color = uInput.eval(snapshotCoord);
+            } else if(originCoord.y <= uSnapshotSinkEnd){
+                snapshotCoord.y = snapshotCoord.y - uSnapshotSinkValue;
+                color = uInput.eval(snapshotCoord);
+            } else if(originCoord.y <= uSnapshotSinkEnd + uSnapshotSinkDefault){
+               half4 originPixcelColor = uInput.eval(snapshotCoord);
+               if(originPixcelColor.a == 0){
+                    snapshotCoord.y = snapshotCoord.y - uSnapshotSinkValue;
+                    color = uInput.eval(snapshotCoord);
+               }else{
+                    color = originPixcelColor;
+               }
+            }else{
+              color = uInput.eval(snapshotCoord);
+            }
+            resultColor = mix(color, WHITE_COLOR, (uOuterRadius - coordDist) / (halfArcWidth * uMarkPercent));
+        }
+    } else if(coordDist < uInsideRadius){
+       resultColor = WHITE_COLOR;
+    } else{
+        // 圆环平面内的所有像素下移
+        if(originCoord.y < uSnapshotSinkStart){
+            snapshotCoord.y = snapshotCoord.y - uSnapshotSinkDefault;
+            resultColor = uInput.eval(snapshotCoord);
+        } else if(originCoord.y < uSnapshotSinkStart + uSnapshotSinkDefault){
+             vec4 originPixcelColor = uInput.eval(snapshotCoord);
+             if(originPixcelColor.a == 0){
+                 // 行的上半部分空白，承接上一行文本的过界部分
+                 snapshotCoord.y = snapshotCoord.y - uSnapshotSinkDefault;
+                 resultColor = uInput.eval(snapshotCoord);
+             }else{
+                 // 按照正常像素点处理
+                 snapshotCoord.y = snapshotCoord.y - uSnapshotSinkValue;
+                 resultColor = uInput.eval(snapshotCoord);
+             }
+        } else if(originCoord.y <= uSnapshotSinkEnd){
+             snapshotCoord.y = snapshotCoord.y - uSnapshotSinkValue;
+             resultColor = uInput.eval(snapshotCoord);
+        } else if(originCoord.y <= uSnapshotSinkEnd + uSnapshotSinkDefault){
+             vec4 originPixcelColor = uInput.eval(snapshotCoord);
+             if(originPixcelColor.a == 0){
+                 snapshotCoord.y = snapshotCoord.y - uSnapshotSinkValue;
+                 resultColor = uInput.eval(snapshotCoord);
+             }else{
+                 resultColor = originPixcelColor;
+             }
+        }else{
+            resultColor = uInput.eval(snapshotCoord);
+        }
+    }
+    return vec4(resultColor.r * resultColor.a, resultColor.g * resultColor.a, resultColor.b * resultColor.a, resultColor.a);
+}

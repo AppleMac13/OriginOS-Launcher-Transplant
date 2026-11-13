@@ -1,0 +1,232 @@
+// 合并后的着色器 - 包含椭圆渐变和圆角矩形描边内阴影效果
+
+// 共享uniform变量
+uniform vec2 size;                 // 画布尺寸
+
+// 椭圆相关uniform
+uniform vec4 ovalColor1;           // 大椭圆颜色 (RGBA)
+uniform vec4 ovalColor2;           // 小椭圆颜色 (RGBA)
+uniform int enableOval;            // 是否启用椭圆效果 (0=禁用, 1=启用)
+
+// 圆角矩形相关uniform
+uniform float cornerRadius;        // 圆角半径
+uniform vec4 strokeColor1;       // 描边颜色1
+uniform vec4 strokeColor2;       // 描边颜色2
+uniform float strokeWidth;         // 固定描边宽度
+uniform float glowIntensity;       // 内发光强度 (0.0-1.0)
+uniform float glowRadius;          // 内发光半径
+uniform vec4 shadowColor;          // 内发光颜色
+uniform int enableRect;            // 是否启用矩形效果 (0=禁用, 1=启用)
+uniform float uAlpha;
+
+const float gradientWidth = 0.1; // 控制对角线分界处的渐变带宽度
+const float diagonalOffset = 0.15; // 调整对角线的偏移量
+
+// 计算点到圆角矩形的有符号距离场
+float roundedRectSDF(vec2 point, vec2 dimensions, float radius) {
+    // 计算矩形中心
+    vec2 center = dimensions * 0.5;
+
+    // 将坐标转换为以矩形中心为原点
+    vec2 p = point - center;
+
+    // 矩形的半尺寸（减去圆角半径）
+    vec2 halfSize = dimensions * 0.5 - vec2(radius);
+
+    // 计算点到圆角矩形边界的有符号距离
+    vec2 componentWise = abs(p) - halfSize;
+    float outsideDistance = length(max(componentWise, 0.0));
+    float insideDistance = min(max(componentWise.x, componentWise.y), 0.0);
+
+    return outsideDistance + insideDistance - radius;
+}
+
+//混合两个颜色，需要判断是否为已经预乘过alpha值的颜色
+vec4 blendMixed(vec4 src, bool srcIsPremultiplied, vec4 dest, bool destIsPremultiplied) {
+    // 统一转换为预乘格式
+    vec3 srcPremultiplied = srcIsPremultiplied ? src.rgb : src.rgb * src.a;
+    vec3 destPremultiplied = destIsPremultiplied ? dest.rgb : dest.rgb * dest.a;
+
+    // 预乘混合公式
+    vec3 resultRgb = srcPremultiplied + destPremultiplied * (1.0 - src.a);
+    float resultAlpha = src.a + dest.a * (1.0 - src.a);
+
+    return vec4(resultRgb, resultAlpha); // 返回预乘结果
+}
+
+// 计算椭圆渐变效果
+half4 calculateOvalEffect(vec2 fragCoord) {
+    vec2 centerPos = vec2(size.x * 0.5, size.y); // 底部中心
+
+    // 椭圆参数
+    vec2 radii1 = vec2(size.x * 0.41, size.y * 0.41);
+    vec2 radii2 = vec2(size.x * 0.31, size.y * 0.25);
+
+    // 计算距离
+    vec2 dist1 = (fragCoord - centerPos) / radii1;
+    vec2 dist2 = (fragCoord - centerPos) / radii2;
+    float d1 = dot(dist1, dist1);
+    float d2 = dot(dist2, dist2);
+
+    // 使用指数函数创建更平滑的渐变
+    float falloff = 1.0; // 可调整的衰减参数
+    float alpha1 = d1 <= 1.0 ? pow(1.0 - sqrt(d1), falloff) : 0.0;
+    float alpha2 = d2 <= 1.0 ? pow(1.0 - sqrt(d2), falloff) : 0.0;
+
+    // 应用渐变到颜色
+    half4 color1 = half4(ovalColor1.rgb, ovalColor1.a * alpha1);
+    half4 color2 = half4(ovalColor2.rgb, ovalColor2.a * alpha2);
+
+    // 混合颜色 (小椭圆在上)
+    //vec4 color = color1;
+    vec4 color = vec4(color2.rgb * color2.a, color2.a) + color1 * (1.0 - color2.a);
+
+    //颜色预乘
+    vec4 ovalColor = vec4(color.rgb * color.a, color.a);
+
+    return ovalColor;
+}
+
+half4 calculateStrokeEffect(float distance, vec2 coord) {
+    // 基础颜色
+    half4 baseColor = vec4(0, 0, 0, 0);
+
+    // 如果在圆角矩形外，返回透明色
+    if (distance > 0.0) {
+        return half4(0.0);
+    }
+
+    // 计算坐标在矩形中的归一化位置 (0-1)
+    float2 normalizedPos = coord / size;
+
+    // 计算内描边因子
+    // 使用SDF创建精确的内描边效果
+    float strokeFactor = 0.0;
+
+    // 内描边范围：从边缘(distance=0)向内strokeWidth距离
+    if (distance > -strokeWidth && distance <= 0.0) {
+        // 创建从边缘向内部渐变的描边效果
+        strokeFactor = smoothstep(0.5, -0.5, distance) -
+                        smoothstep(-strokeWidth + 0.5, -strokeWidth - 0.5, distance);
+    }
+
+    // 第一条对角线：左上到右下方向 (y = 1-x + diagonal1Offset)
+    // 计算点到第一条对角线的距离
+    float diagonal1Dist = normalizedPos.x * (1 - diagonalOffset) - normalizedPos.y + diagonalOffset;
+
+    // 第二条对角线：左下到右上方向 (y = x + diagonal2Offset)
+    // 计算点到第二条对角线的距离
+    float diagonal2Dist = (1.0 - normalizedPos.x) * (1 - diagonalOffset) - normalizedPos.y + diagonalOffset;
+
+    // 创建对角线平滑过渡区域
+    float region1Factor = smoothstep(gradientWidth, -gradientWidth, diagonal1Dist);
+    float region2Factor = smoothstep(gradientWidth, -gradientWidth, diagonal2Dist);
+
+    // 计算最终的描边不透明度
+    // 第一种颜色：左上区域
+    float strokeOpacity1 = region1Factor * strokeFactor;
+
+    // 第二种颜色：右下区域
+    float strokeOpacity2 = region2Factor * strokeFactor;
+
+    // 确定点在哪个区域
+    // 区域1：左上区域 (diagonal1Dist < 0)
+    // 区域2：右下区域 (diagonal2Dist < 0)
+    half4 finalColor = baseColor;
+
+    // 先应用右下区域描边
+    if (diagonal2Dist < 0.0) {
+        float opacity = smoothstep(gradientWidth, -gradientWidth, diagonal2Dist) * strokeFactor;
+        finalColor = mix(finalColor, half4(strokeColor2.rgb, strokeColor2.a * opacity), opacity);
+    }
+
+    // 后应用左上区域描边
+    if (diagonal1Dist < 0.0) {
+        float opacity = smoothstep(gradientWidth, -gradientWidth, diagonal1Dist) * strokeFactor;
+        finalColor = mix(finalColor, half4(strokeColor1.rgb, strokeColor1.a * opacity), opacity);
+    }
+    return finalColor;
+}
+
+// 计算圆角矩形内发光效果
+half4 calculateRectEffect(vec2 fragCoord) {
+    // 使用完整画布尺寸，不留边缘空间
+    vec2 rectDimensions = size;
+
+    // 计算点到圆角矩形边界的有符号距离
+    float distance = roundedRectSDF(fragCoord, rectDimensions, cornerRadius);
+
+    // 初始化输出颜色
+    half4 outputColor = half4(0.0);
+
+    // 确定矩形内部区域
+    if (distance <= 0.0) {
+        // 计算内描边区域
+        float innerStrokeEdge = -strokeWidth;
+
+        // 使用平滑步进函数创建抗锯齿内描边
+        float strokeAlpha = smoothstep(0.5, -0.5, distance) -
+                            smoothstep(innerStrokeEdge + 0.5, innerStrokeEdge - 0.5, distance);
+
+        // 计算内发光效果
+        // 发光从边缘开始，向内部渐变
+        float glowStart = 0;
+        float glowEnd = -glowRadius;
+
+        // 计算发光强度 - 从边缘向内部渐变衰减
+        float glowFactor = 0.0;
+        if (distance >= glowEnd) {
+            // 将距离映射到[0,1]范围
+            float t = (distance - glowEnd) / (glowStart - glowEnd);
+            t = clamp(t, 0.0, 1.0);
+
+            // 使用平滑的S形曲线创建更柔和的边缘
+            // 这是一个改进的平滑过渡函数
+            glowFactor = t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
+
+            // 应用发光强度参数
+            glowFactor *= glowIntensity;
+        }
+
+        // 计算左下角和右下角叠加的描边颜色
+        vec4 strokeColor = calculateStrokeEffect(distance, fragCoord);
+
+        // 计算垂直方向的透明度渐变
+        float glowTopOpacity = shadowColor.a * 0.3;
+        float glowBottomOpacity = shadowColor.a * 0.8;
+        float normalizedY = fragCoord.y / rectDimensions.y;
+        float verticalGradient = mix(glowTopOpacity, glowBottomOpacity, normalizedY);
+
+        // 创建发光颜色
+        vec4 glowColor = vec4(shadowColor.rgb, verticalGradient * glowFactor);
+
+        // 混合描边、发光和背景
+        // 先应用发光
+        outputColor = glowColor;
+
+        // 再应用描边
+        outputColor = vec4(strokeColor.rgb * strokeColor.a, strokeColor.a) + glowColor * (1 - strokeColor.a);
+    }
+    //颜色预乘
+    outputColor = vec4(outputColor.rgb * outputColor.a, outputColor.a);
+    return outputColor;
+}
+
+half4 main(float2 fragCoord) {
+    half4 finalColor = half4(0.0);
+
+    // 根据启用标志计算各个效果
+    if (enableRect != 0) {
+        half4 rectColor = calculateRectEffect(fragCoord);
+        finalColor = blendMixed(rectColor, true, finalColor, false);
+    }
+
+    if (enableOval != 0) {
+        half4 ovalColor = calculateOvalEffect(fragCoord);
+        // 使用alpha合成混合两种效果
+        finalColor = blendMixed(ovalColor, true, finalColor, true);
+    }
+
+    return finalColor;
+}
+

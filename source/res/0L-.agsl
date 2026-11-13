@@ -1,0 +1,88 @@
+// 定义渐变颜色常量
+const vec4 DEFAULT_TEXT_COLOR = vec4(190.0/255.0, 190.0/255.0, 190.0/255.0, 1.0);
+const vec4 COLOR1 = $COLOR1$;
+const vec4 COLOR2 = $COLOR2$;
+const vec4 COLOR3 = $COLOR3$;
+const vec4 COLOR4 = $COLOR4$;
+const vec4 WHITE_COLOR = $WHITE_COLOR$;
+
+// Shader大小（宽和高）
+uniform vec2 uSize;
+// 圆弧外边半径
+uniform float uOuterRadius;
+// 圆弧内边半径
+uniform float uInsideRadius;
+// 渐变色区距渲染器顶部距离
+uniform float uGradientPaddingTop;
+// 是否为文本渐变模式，不是的话圆环范围外没有颜色填充
+uniform int uIsTextMode;
+// Shader 窗口 Y 轴偏移量
+uniform float uTranslateY;
+
+uniform float uIsBackToOrigin;
+
+// 主函数
+vec4 main(in vec2 fragCoord) {
+    float width = uSize.x;
+    float height = uSize.y;
+    fragCoord.y = fragCoord.y - uTranslateY;
+    float coordY = fragCoord.y;
+
+    vec4 resultColor = vec4(0.0); // Initialize result color
+    if (uIsTextMode == 1) {
+        vec4 textColor;
+        float gradientStart = uGradientPaddingTop;
+        // 分区域计算颜色
+        if (coordY < gradientStart || coordY > height) {
+            // 色表范围外的文本色计算
+            textColor = DEFAULT_TEXT_COLOR;
+        } else if (coordY >= gradientStart) {
+            // 色表的渐变计算
+            float partOne = (height - gradientStart) * 0.2;
+            float partTwo = (height - gradientStart) * 0.4;
+            float partThree = (height - gradientStart) * 0.6;
+            float partFour = (height - gradientStart) * 0.8;
+            if(coordY <= gradientStart + partOne){
+                // 文本和渐变色区的融合
+                textColor = mix(DEFAULT_TEXT_COLOR, COLOR1, (coordY - gradientStart) / partOne);
+            }else if(coordY <= gradientStart + partTwo){
+                float percent = (coordY - gradientStart - partOne) / (partTwo - partOne);
+                textColor = mix(COLOR1, COLOR2, percent);
+            }else if(coordY <= gradientStart + partThree){
+                float percent = (coordY - gradientStart - partTwo) / (partThree - partTwo);
+                textColor = mix(COLOR2, COLOR3, percent);
+            } else if(coordY <= gradientStart + partFour){
+                float percent = (coordY - gradientStart - partThree) / (partFour - partThree);
+                textColor = mix(COLOR3, COLOR4, percent);
+            }  else {
+                // 文本和渐变色区的融合用一格完成
+                float percent = (coordY - gradientStart - partFour) / (height - gradientStart - partFour);
+                textColor = mix(COLOR4, DEFAULT_TEXT_COLOR, percent);
+            }
+        }
+        resultColor = textColor;
+    }
+
+    float radiusCenterY = uOuterRadius;
+    // 圆环效果计算
+    vec2 vecRadiusCenter = vec2(width / 2.0, radiusCenterY);
+    float dist = distance(fragCoord, vecRadiusCenter);
+
+    // 只混合渲染器窗口范围内的圆弧
+    if (coordY < height && coordY < radiusCenterY && dist <= uOuterRadius && dist >= uInsideRadius ) {
+        // 确认当前像素是否在圆环范围内，如果在，则进行颜色二次混合
+        float radiusRangeCenter = (uOuterRadius - uInsideRadius) / 2.0 + uInsideRadius;
+        float percent = abs(dist - radiusRangeCenter) / ((uOuterRadius - uInsideRadius) / 2.0);
+        if(percent < 0.3){
+            percent = 0.3;
+        }
+        resultColor = mix(WHITE_COLOR, resultColor, percent);
+    }
+
+    if(uIsBackToOrigin > 0){
+        resultColor = mix(resultColor, DEFAULT_TEXT_COLOR, uIsBackToOrigin);
+    }
+
+
+    return vec4(resultColor.r * resultColor.a, resultColor.g * resultColor.a, resultColor.b * resultColor.a, resultColor.a);
+}

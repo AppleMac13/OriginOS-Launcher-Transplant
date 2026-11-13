@@ -1,0 +1,88 @@
+// 定义渐变颜色常量
+const vec4 TRANSPARENT_COLOR = vec4(0.0, 0.0, 0.0, 0.0);
+const vec4 DEFAULT_TEXT_COLOR = vec4(190.0/255.0, 190.0/255.0, 190.0/255.0, 1.0);
+const vec4 DEFAULT_LOADING_TEXT_COLOR = vec4(190.0/255.0, 190.0/255.0, 190.0/255.0, 1.0);
+const vec4 COLOR1 = $COLOR1$;
+const vec4 COLOR2 = $COLOR2$;
+const vec4 COLOR3 = $COLOR3$;
+const vec4 COLOR4 = $COLOR4$;
+const vec4 WHITE_COLOR = $WHITE_COLOR$;
+
+// Shader大小（宽和高）
+uniform vec2 uSize;
+// 圆弧外边半径
+uniform float uOuterRadius;
+// 圆弧内边半径
+uniform float uInsideRadius;
+// 扫光环形区域可透明渐变的区域占圆环一半宽度的比例
+uniform float uMarkPercent;
+// 渐变色区高度
+uniform float uColorsHeight;
+// 文本原色
+uniform vec4 uOriginTextColor;
+// 是否为文本渐变模式，不是的话圆环范围外没有颜色填充
+uniform int uIsTextMode;
+// Shader 窗口 Y 轴偏移量
+uniform float uTranslateY;
+
+// 主函数
+vec4 main(in vec2 fragCoord) {
+    float width = uSize.x;
+    float height = uSize.y;
+    fragCoord.y = fragCoord.y - uTranslateY;
+    float coordY = fragCoord.y;
+    float maskPercent = uMarkPercent;
+    float arcHalfWidth = (uOuterRadius - uInsideRadius) / 2.0;
+    float radiusCenterX = width / 2.0;
+    float radiusCenterY = height - uOuterRadius;
+    vec4 resultColor = TRANSPARENT_COLOR; // Initialize result color
+    vec4 textColor;
+    float textBottomLimit = height - arcHalfWidth * maskPercent;
+    float gradientStart = textBottomLimit - uColorsHeight;
+    float gradientBottom = textBottomLimit;
+    if (coordY < gradientStart) {
+        // 色表移动反向范围之后，设置文本原色
+        textColor = uOriginTextColor;
+    }else if(coordY > height){
+        // 色表移动正向范围之前，设置透明色
+        textColor = TRANSPARENT_COLOR;
+    } else if(coordY > gradientBottom && coordY <= height){
+        textColor = DEFAULT_LOADING_TEXT_COLOR;
+    }else {
+        // 色表的渐变计算 这里的色表不均匀分布
+        float partOne = (gradientBottom - gradientStart) * 0.4;
+        float partTwo = (gradientBottom - gradientStart) * 0.6;
+        float partThree = (gradientBottom - gradientStart) * 0.8;
+        if(coordY <= gradientStart + partOne){
+            textColor = mix(uOriginTextColor, COLOR1, (coordY - gradientStart) / partOne);
+        } else if(coordY <= gradientStart + partTwo){
+            textColor = mix(COLOR1, COLOR2,  (coordY - partOne - gradientStart) / (partTwo - partOne));
+        } else if(coordY <= gradientStart + partThree){
+            textColor = mix(COLOR2, COLOR3,  (coordY - partTwo - gradientStart) / (partThree - partTwo));
+        }else {
+            textColor = mix(COLOR3, COLOR4,  (coordY - partThree - gradientStart) / (gradientBottom - gradientStart - partThree));
+        }
+    }
+    resultColor = textColor;
+
+    // 圆环效果计算
+    vec2 vecRadiusCenter = vec2(radiusCenterX, radiusCenterY);
+    float dist = distance(fragCoord, vecRadiusCenter);
+    if (coordY > 0 && dist <= uOuterRadius && dist >= uInsideRadius && coordY > radiusCenterY) {
+        // 确认当前像素是否在圆环范围内，如果在，则进行颜色二次混合
+        float arcCenterDistance = dist - uInsideRadius;
+        if(arcCenterDistance > arcHalfWidth * maskPercent){
+            resultColor = WHITE_COLOR;
+        }else{
+            float percent = (arcHalfWidth * maskPercent - arcCenterDistance) / (arcHalfWidth * maskPercent);
+            if(percent < 0.3){
+                percent = 0.3;
+            }
+            resultColor = mix(WHITE_COLOR, resultColor, percent);
+        }
+    } else if(dist > uOuterRadius){
+        resultColor = WHITE_COLOR;
+    }
+
+    return vec4(resultColor.r * resultColor.a, resultColor.g * resultColor.a, resultColor.b * resultColor.a, resultColor.a);
+}

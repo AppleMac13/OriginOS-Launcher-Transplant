@@ -1,0 +1,78 @@
+// 该渲染器的模型是以一个 uStartX 为起始位置的 Shader 窗口，通过 uTranslateX 将目标 View 的左起始点与 Shader 窗口尾部对齐，随时间逐步向左移动，完成从右->左着色色表颜色的过程
+// HDR 起始位置百分比
+uniform float uHdrStartPercent;
+uniform float uTranslateX;
+uniform float uTranslateY;
+uniform float uStartX;
+uniform float uEndX;
+$DYNAMIC_COLOR_PARAMS$
+
+// 主函数
+vec4 main(in vec2 fragCoord) {
+    float startX = uStartX;
+    float startY = $START_Y$;
+    float endX = uEndX;
+    float endY = $END_Y$;
+    float width = endX - startX;
+    float height = endY - startY;
+    float coordX = fragCoord.x - uTranslateX;
+    float coordY = fragCoord.y - uTranslateY;
+    vec4 resultColor = vec4(0.0);
+    $GRADIENT_COLOR_CODE$
+    $HDR_GRADIENT_CODE$
+    else if(uHdrStartPercent > 0.0 && coordY > (startY + height * uHdrStartPercent) && coordY < endY){
+        half3 col = resultColor.rgb;
+        col = toLinearSrgb(col);
+        col = col * (($HDR_START$ - $HDR_END$) * (coordY - height * uHdrStartPercent - startY) / (height * (1 - uHdrStartPercent)) + $HDR_END$);
+        col = fromLinearSrgb(col);
+        return vec4(col * resultColor.a , resultColor.a);
+    }
+    return vec4(resultColor.r * resultColor.a, resultColor.g * resultColor.a, resultColor.b * resultColor.a, resultColor.a);
+}
+
+//上层生成代码示例
+//vec4 color1 = vec4(0.2, 0.2, 0.2, 1.0);
+//vec4 color2 = vec4(0.48235294, 0.72156864, 1.0, 1.0);
+//vec4 color3 = vec4(0.70980394, 0.6509804, 0.9882353, 1.0);
+//vec4 color4 = vec4(0.99215686, 0.6392157, 0.7019608, 1.0);
+//vec4 color5 = vec4(1.0, 0.654902, 0.54901963, 1.0);
+//vec4 color6 = vec4(1.0, 0.654902, 0.54901963, 0.0);
+//float position1 = 0.0*(endX - startX) + startX;
+//float position2 = 0.5*(endX - startX) + startX;
+//float position3 = 0.65*(endX - startX) + startX;
+//float position4 = 0.8*(endX - startX) + startX;
+//float position5 = 0.9*(endX - startX) + startX;
+//float position6 = 1.0*(endX - startX) + startX;
+//if(coordX < position1){
+//    resultColor = color1;
+//}else if(coordX < position2){
+//    resultColor = mix(color1, color2, (coordX - position1) / (position2 - position1));
+//}else if(coordX < position3){
+//    resultColor = mix(color2, color3, (coordX - position2) / (position3 - position2));
+//}else if(coordX < position4){
+//    resultColor = mix(color3, color4, (coordX - position3) / (position4 - position3));
+//}else if(coordX < position5){
+//    resultColor = mix(color4, color5, (coordX - position4) / (position5 - position4));
+//}else if(coordX < position6){
+//    resultColor = mix(color5, color6, (coordX - position5) / (position6 - position5));
+//}else{
+//    resultColor = color6;
+//}
+
+// HDR_GRADIENT_CODE
+//LTR:
+//if(uHdrStartPercent > 0.0 && coordX > (startX + width * uHdrStartPercent) && coordX < endX){
+//    half3 col = resultColor.rgb;
+//    col = toLinearSrgb(col);
+//    col = col * (($HDR_START$ - $HDR_END$) * (coordX - width * uHdrStartPercent - startX) / (width * (1 - uHdrStartPercent)) + $HDR_END$);
+//    col = fromLinearSrgb(col);
+//    return vec4(col * resultColor.a , resultColor.a);
+//}
+//RTL:
+//if(uHdrStartPercent > 0.0 && coordX > startX && coordX < (startX + width * (1 - uHdrStartPercent))){
+//    half3 col = resultColor.rgb;
+//    col = toLinearSrgb(col);
+//    col = col * (($HDR_START$ - $HDR_END$) * (1- (coordX - startX) / (width * (1 - uHdrStartPercent)) + $HDR_END$));
+//    col = fromLinearSrgb(col);
+//    return vec4(col * resultColor.a , resultColor.a);
+//}

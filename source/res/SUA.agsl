@@ -1,0 +1,125 @@
+
+uniform vec2 u_resolution;      // 屏幕分辨率
+uniform float u_angle;          // 环境光角度参数（0-360度）
+uniform vec2 u_angleTail;       // 左右渐变角度
+uniform float u_rotateAngle;    // 陀螺仪旋转角度参数（0-360度）
+uniform int u_rotateType;       // 旋转模式：0=双边, 1=单边
+uniform int u_shape;            // 形状类型：1=圆形, 2=圆角矩形
+uniform int u_effect;           // 形状类型：0=渐变,2=月牙渐变
+uniform float u_radius;         // 圆角半径（仅用于圆角矩形）
+uniform float u_borderWidth;    // 边框宽度（从外部传入）
+uniform float u_circleRadius;   // 圆形半径
+uniform vec2 u_size;            // 矩形/圆角矩形尺寸
+
+
+const float PI = 3.14159265359;   // 圆周率
+const float4 stroke_color = float4(1.0, 1.0, 1.0, 1.0); // 描边颜色
+
+// SDF计算
+float sdRoundedShape(vec2 p, vec2 b, float r) {
+    vec2 d = abs(p) - b + r;
+    return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0) - r;
+}
+
+// G2连续的圆角矩形有向距离场
+float sdRoundedBoxG2(vec2 p, vec2 b, float r) {
+    // 1. 归一化坐标到第一象限
+    vec2 q = abs(p);
+    vec2 rectBound = b - r;
+
+    // 2. 计算主体矩形距离（负值表示内部）
+    float rectDist = min(max(q.x - rectBound.x, q.y - rectBound.y), 0.0);
+
+    // 3. 计算超椭圆区域距离
+    vec2 corner = max(q - rectBound, 0.0);
+    float cornerDist = pow(pow(corner.x, 3.0) + pow(corner.y, 3.0), 1.0/3.0) - r;
+
+    // 4. 组合距离场
+    return rectDist + cornerDist;
+}
+
+float sdBox(vec2 p, vec2 b) {
+    return sdRoundedShape(p, b, 0.0);
+}
+
+float sdCircle(vec2 p, float r) {
+    return length(p) - r;
+}
+
+float visibleArcWith(float start, float end, float degrees, float startAngle, float endAngle) {
+    float t = (degrees - start) / (end - start);
+    return mix(endAngle, startAngle, t);
+}
+
+float calculateGradientAlpha(float deg, float arcL, float arcR) {
+    deg = mod(deg, 360.0);
+    if (deg > 360.0 - arcL) {
+        return smoothstep(arcL, 0.0, 360.0 - deg);
+    }
+    else if (deg < arcR) {
+        return smoothstep(arcR, 0.0, deg);
+    }
+    return 0.0;
+}
+
+float4 main(vec2 fragCoord) {
+    // 坐标归一化
+    vec2 uv;
+    if (1 == u_shape) {
+        uv = fragCoord / u_resolution.xy;
+    } else {
+        uv = (fragCoord - 0.5 * u_resolution.xy) / u_resolution.y;
+    }
+
+    float borderWidth = u_borderWidth / u_resolution.y;
+
+    // 旋转变换
+    float rad = radians(u_rotateAngle);
+    vec2 rotatedUV = mat2(cos(rad), -sin(rad), sin(rad), cos(rad)) * uv;
+
+    // 角度计算（内联convertDegrees）
+    float convertDegrees = degrees(atan(rotatedUV.x, rotatedUV.y));
+
+    // 可见弧计算（根据需求可调整）
+    float visibleArcL = u_angleTail.x;
+    float visibleArcR = u_angleTail.y;
+
+    // 渐变alpha计算
+    float alpha = calculateGradientAlpha(convertDegrees, visibleArcL, visibleArcR);
+
+    // 对角线模式处理
+    convertDegrees += 180.0;
+    if (u_rotateType == 1) {
+        convertDegrees = mod(degrees(atan(uv.x, uv.y)) + u_angle + 180.0, 360.0);
+    }
+    float alpha2 = calculateGradientAlpha(convertDegrees, visibleArcL, visibleArcR);
+    alpha = max(alpha, alpha2);
+
+
+    // 月牙效果边框调整
+    if (u_effect == 2 && alpha <= 0.8) {
+        borderWidth *= pow(smoothstep(0.0, 0.8, alpha), 0.3);
+    }
+
+    // 形状距离计算
+    float outerShape, innerShape;
+    if (u_shape == 1) {
+        // 圆形
+        float normCircleRadius = u_circleRadius / u_resolution.y;
+        outerShape = sdCircle(uv, normCircleRadius);
+        innerShape = sdCircle(uv, normCircleRadius - borderWidth);
+    } else {
+        // 圆角矩形
+        vec2 normSize = (u_size - 0.5 * u_resolution.xy) / u_resolution.y;
+        float normRadius = u_radius / u_resolution.y;
+        outerShape = sdRoundedShape(uv, normSize, normRadius);
+        innerShape = sdRoundedShape(uv, normSize - borderWidth, max(normRadius - borderWidth, 0.0));
+    }
+
+    // 边框检测
+    if (!(outerShape <= 0.0 && innerShape > 0.0)) {
+        return vec4(0.0);
+    }
+
+    return vec4(stroke_color.rgb * alpha, alpha);
+}

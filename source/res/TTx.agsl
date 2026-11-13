@@ -1,0 +1,51 @@
+uniform vec2 uSize;
+uniform float uAlpha;
+// 隆起的弧形数量
+const int HUMP_ACCOUNT = 5;
+// 水平面高度（y坐标）
+uniform float uBaseLevel;
+// 隆起的弧形X坐标
+uniform float uHumpX[HUMP_ACCOUNT];
+// 隆起的弧形相比水平面的高度
+uniform float uHumpHeight[HUMP_ACCOUNT];
+// 隆起的弧形宽度/标准差
+uniform float uHumpSigma[HUMP_ACCOUNT];
+// 整体收窄渐变
+uniform float uGradientFactor;
+
+//水平线下面的渐变系数
+uniform float downGradientFactor;
+
+// 高斯函数叠加，模拟隆起效果
+float computeCurveCoord(float x) {
+    float y = uBaseLevel;
+    for (int i = 0; i < HUMP_ACCOUNT; i++) {
+        float deviation = x - uHumpX[i];
+        y += uHumpHeight[i] * exp(-(deviation * deviation) / (2.0 * uHumpSigma[i] * uHumpSigma[i]));
+    }
+    return y;
+}
+
+float4 main(float2 fragCoord) {
+    // 参数配置
+    float upGradient = uSize.y * 0.1 * uGradientFactor;
+    float midGradient = uSize.y * 0.02 * uGradientFactor;
+    float downGradient = uSize.y * downGradientFactor * uGradientFactor;
+    float midAlpha = 0.8;
+    float topAlpha = 1.0;
+
+    float4 finalColor = float4(1.0, 1.0, 1.0, 1.0);
+    float finalAlpha = 1.0;
+
+    float dis = fragCoord.y - computeCurveCoord(fragCoord.x);
+    if (dis < -upGradient - midGradient / 2.0 || dis > downGradient + midGradient / 2.0) {
+        finalAlpha = 0.0;
+    } else if (dis <= -midGradient / 2.0) {
+        finalAlpha = midAlpha * (1.0 - abs(dis + midGradient / 2.0) / upGradient);
+    } else if (dis >= midGradient / 2.0) {
+        finalAlpha = midAlpha * (1.0 - abs(dis - midGradient / 2.0) / downGradient);
+    } else {
+        finalAlpha = (topAlpha - midAlpha) * (1.0 - abs(dis) / (midGradient / 2.0)) + midAlpha;
+    }
+    return finalColor * smoothstep(0.0, 1.0, finalAlpha) * uAlpha;
+}

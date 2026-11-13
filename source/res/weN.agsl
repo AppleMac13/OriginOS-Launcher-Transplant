@@ -1,0 +1,31 @@
+uniform vec4 uColor;
+uniform vec2 uCircleCenter;
+uniform float uCircleRadius;
+uniform float uAlpha;
+uniform float uDiffusionProgress;
+uniform float uInitialRadius;
+uniform float uTargetRadius;
+uniform float uInitialFeather;
+uniform float uTargetFeather;
+
+float4 main(float2 fragCoord) {
+    // 计算当前半径（基于扩散进度）
+    float currentRadius = mix(uInitialRadius, uTargetRadius, uDiffusionProgress);
+
+    // 计算当前羽化值（基于扩散进度）
+    float currentFeather = mix(uInitialFeather, uTargetFeather, uDiffusionProgress);
+
+    // 计算像素到圆心的距离
+    float dist = distance(fragCoord, uCircleCenter);
+
+    // 计算透明度：圆心到边缘的平滑过渡
+    float alpha = 1.0 - smoothstep(currentRadius - currentFeather, currentRadius, dist);
+
+    // 应用整体透明度
+    alpha *= uAlpha;
+
+    // 确保透明度在有效范围内
+    alpha = clamp(alpha, 0.0, 1.0);
+
+    return uColor * alpha;
+}

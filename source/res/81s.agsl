@@ -1,0 +1,98 @@
+uniform vec4 uColor;
+uniform vec2 uDiffusionPos;
+uniform vec2 uDiffusionSize;
+uniform float uDiffusionWidthScale;
+uniform float uDiffusionHeightScale;
+uniform float uDiffusionInGradientWidth;
+uniform float uOuterAlpha;
+uniform int uEffectType;
+
+// Debug参数
+uniform int uDebugMode;
+uniform float uStartDiameterX; // X轴直径起始值
+uniform float uStartDiameterY; // Y轴直径起始值
+uniform float uEndDiameterXPart1; // 第一阶段X轴直径结束值
+uniform float uEndDiameterYPart1; // 第一阶段Y轴直径结束值
+uniform float uEndDiameterXPart2; // 第二阶段X轴直径结束值
+uniform float uEndDiameterYPart2; // 第二阶段Y轴直径结束值
+
+float getAlphaInDebugMode(vec2 fragCoord, vec2 pos, vec2 size, float widthScale, float heightScale, float gradientWidth) {
+    vec2 center = vec2(pos.x + size.x * 0.5, pos.y + size.y);
+    float radiusX;
+    if (widthScale < 0.5) {
+        // 第一阶段
+        float gapTarget = uEndDiameterXPart1 - uStartDiameterX;
+        radiusX = (uStartDiameterX + gapTarget * widthScale * 2) * 0.5;
+    } else {
+        // 第二阶段
+        float gapTarget = uEndDiameterXPart2 - uEndDiameterXPart1;
+        radiusX = (uEndDiameterXPart1 + gapTarget * ((widthScale - 0.5) * 2)) * 0.5;
+    }
+    float radiusY;
+    if (heightScale < 0.5) {
+        // 第一阶段
+        float gapTarget = uEndDiameterYPart1 - uStartDiameterY;
+        radiusY = (uStartDiameterY + gapTarget * heightScale * 2) * 0.5;
+    } else {
+        // 第二阶段
+        float gapTarget = uEndDiameterYPart2 - uEndDiameterYPart1;
+        radiusY = (uEndDiameterYPart1 + gapTarget * ((heightScale - 0.5) * 2.0)) * 0.5;
+    }
+    vec2 normalized = (fragCoord - center) / vec2(radiusX, radiusY);
+    float dist = length(normalized);
+    float startSmooth = uEffectType == 1 ? min(1.0, widthScale * 2.0) : 1.0;
+    float alpha = max(1.0 - smoothstep(startSmooth, 1.0 + gradientWidth / max(radiusX, radiusY), dist), uOuterAlpha);
+    alpha = clamp(alpha, 0.0, 1.0);
+    return alpha;
+}
+
+float getAlpha(vec2 fragCoord, vec2 pos, vec2 size, float widthScale, float heightScale, float gradientWidth) {
+    // 计算椭圆中心点 - 水平居中，垂直底部
+    vec2 center = vec2(pos.x + size.x * 0.5, pos.y + size.y);
+    float radiusX;
+    if (widthScale < 0.5) {
+        // 第一阶段：直径为卡片宽的一半到卡片宽
+        radiusX = (size.x * (widthScale + 0.5)) * 0.5;
+    } else {
+        // 第二阶段：直径为卡片宽到（卡片高+300px）*2，如果（卡片高+300px）*2小于卡片宽度，那么目标直径为卡片宽度+200px
+        float targetRadius = (size.y + 300.0) * 2.0;
+        if (targetRadius < size.x) {
+            targetRadius = size.x + 200.0;
+        }
+        float gapTarget = targetRadius - size.x;
+        radiusX = (size.x + gapTarget * ((widthScale - 0.5) * 2)) * 0.5;
+    }
+    float radiusY;
+    if (heightScale < 0.5) {
+        // 第一阶段：直径为0到卡片高-50px
+        radiusY = ((size.y - 50.0) * (heightScale * 2.0)) * 0.5;
+    } else {
+        // 第二阶段：直径为卡片高-50px到（卡片高+300px）*2，如果（卡片高+300px）*2小于卡片宽度，那么目标直径为卡片宽度+200px
+        float targetRadius = (size.y + 300.0) * 2.0;
+        if (targetRadius < size.x) {
+            targetRadius = size.x + 200.0;
+        }
+        float gapTarget = targetRadius - size.y + 50.0;
+        radiusY = ((size.y - 50.0) + gapTarget * ((heightScale - 0.5) * 2.0)) * 0.5;
+    }
+    vec2 normalized = (fragCoord - center) / vec2(radiusX, radiusY);
+    float dist = length(normalized);
+    float startSmooth = min(1.0, widthScale * 1.3);
+    float alpha = max(1.0 - smoothstep(startSmooth, 1.0 + gradientWidth / max(radiusX, radiusY), dist), uOuterAlpha);
+    alpha = clamp(alpha, 0.0, 1.0);
+    return alpha;
+}
+
+float4 main(float2 fragCoord) {
+    if (uDiffusionWidthScale >= 1.0 && uDiffusionHeightScale >= 1.0) {
+        // 扩散完成无需额外计算透明度直接返回颜色
+        return uColor;
+    }
+    float alpha;
+    if (uDebugMode == 1) {
+        alpha = getAlphaInDebugMode(fragCoord, uDiffusionPos, uDiffusionSize, uDiffusionWidthScale, uDiffusionHeightScale, uDiffusionInGradientWidth);
+    } else {
+        alpha = getAlpha(fragCoord, uDiffusionPos, uDiffusionSize, uDiffusionWidthScale, uDiffusionHeightScale, uDiffusionInGradientWidth);
+    }
+    return uColor * alpha;
+}

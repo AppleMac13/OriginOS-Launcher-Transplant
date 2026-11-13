@@ -1,0 +1,19 @@
+uniform float2 size;
+uniform float4 innerColor;
+uniform float4 outerColor;
+uniform float blend;      // 混合系数（0=纯方形，1=圆形渐变，建议0.3~0.7）
+
+half4 main(float2 pos) {
+    // 坐标转换
+    float2 uv = (pos / size - 0.5);
+
+    // 计算两种距离场
+    float chebyshev = max(abs(uv.x), abs(uv.y));  // 方形距离
+    float euclidean = length(uv);                 // 圆形距离
+
+    // 混合距离场
+    float gradient = mix(chebyshev, euclidean, blend);
+    gradient = clamp(gradient, 0.0, 1.0);
+
+    return mix(innerColor, outerColor, gradient);
+}

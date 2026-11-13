@@ -1,0 +1,12 @@
+[
+  {
+    "className": "com.mc10086.cmcc.appwidget.DashboardAppWidget",
+    "packageName": "com.greenpoint.android.mc10086.activity",
+    "screen": 2,
+    "spanX": 4,
+    "spanY": 2,
+    "widgetType": "launcher",
+    "x": 0,
+    "y": 0
+  }
+]

@@ -1,0 +1,32 @@
+uniform shader pathMap;
+uniform float pathMapScale;
+uniform half4 uColor1;
+uniform half4 uColor2;
+uniform half4 uColor3;
+uniform half4 uColor4;
+uniform half4 uColor5;
+uniform float progress;
+
+
+half4 main(float2 fragCoord) {
+    // 缩小采样坐标
+    float2 sampleCoord = fragCoord * pathMapScale;
+    half alpha = pathMap.eval(sampleCoord).a;
+    half wrappedAlpha = fract(alpha + progress);
+    half segment = wrappedAlpha * 5.0;
+    half index = floor(segment);
+    half t = fract(segment);
+    half4 color;
+    if (index < 1.0) {
+        color = mix(uColor1, uColor2, t);
+    } else if (index < 2.0) {
+        color = mix(uColor2, uColor3, t);
+    } else if (index < 3.0) {
+        color = mix(uColor3, uColor4, t);
+    } else if (index < 4.0) {
+        color = mix(uColor4, uColor5, t);
+    } else {
+        color = mix(uColor5, uColor1, t);
+    }
+    return color;
+}

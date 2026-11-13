@@ -1,0 +1,5 @@
+build/
+*.apk
+*.dex
+*.idsig
+local.properties

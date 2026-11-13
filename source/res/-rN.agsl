@@ -1,0 +1,245 @@
+uniform shader uContext; // 控件内容
+uniform shader uBackground; // 底层控件背景
+uniform int uType; // 2：分层模糊 1: 文字模糊 0: 透彩色
+uniform float uSaturation;  //饱和度
+uniform float uMask_1[3];
+uniform float uMask_2[3];
+uniform float uOpacity[3];
+uniform int uFusion[3];
+// 自定义参数
+uniform float uRadius[4];
+uniform float uHeight;
+uniform float uWidth;
+uniform int uCustomFusion[5];
+uniform float uCustomOpacity[5];
+uniform half3 uCustomMask1;
+uniform half3 uCustomMask2;
+uniform half3 uCustomMask3;
+uniform half3 uCustomMask4;
+uniform half3 uCustomMask5;
+// 抗锯齿过渡层宽度
+float antiAliasOffset = 3;
+
+
+// 饱和度计算
+half3 saturation(half4 O) {
+    if (uSaturation == 0.0) return O.rgb;
+
+    half maxC = max(max(O.r, O.g), O.b);
+    half minC = min(min(O.r, O.g), O.b);
+    half delta = maxC - minC;
+    if (delta < 1e-6) return O.rgb;
+
+    half L = maxC + minC;
+    half S = delta / (L < 1.0 ? L : (2.0 - L));
+    L = L / 2.0;
+    if (uSaturation > 0.0) {
+        half A = (uSaturation + S) >= 1.0 ? (1.0 - S) / S : uSaturation / (1.0 - uSaturation);
+        return (O.rgb + (O.rgb - L) * A);
+    }
+    return (L + (O.rgb - L) * (1.0 + uSaturation));
+}
+
+half3 luminosity(half3 O, half3 M, half opacity) {
+    float oLum = dot(O, half3(0.3, 0.59, 0.11));
+    float mLum = dot(M, half3(0.3, 0.59, 0.11));
+    float lum = mLum - oLum;
+    half3 B = O + lum;
+    half3 D = half3(0.0);
+    float minC = min(min(O.r, O.g), O.b);
+    float maxC = max(max(O.r, O.g), O.b);
+
+    D = minC < 0.0
+            ? mix(O, mLum + (B - mLum) * mLum / (mLum - minC), opacity)
+            : (maxC > 1.0 ? mix(O, mLum + (B - mLum) * (1.0 - mLum) / (maxC - mLum), opacity)
+                        : mix(O, B, opacity));
+    return D;
+}
+
+half3 rgb2hsb(half3 rgb) {
+    half maxVal = max(max(rgb.r, rgb.g), rgb.b);
+    half minVal = min(min(rgb.r, rgb.g), rgb.b);
+    half delta = maxVal - minVal;
+    half h = 0.0;
+    if (delta > 0.0) {
+        if (maxVal == rgb.r) {
+            h = mod((rgb.g - rgb.b) / delta + (rgb.g < rgb.b ? 6.0 : 0.0), 6.0);
+        } else if (maxVal == rgb.g) {
+            h = (rgb.b - rgb.r) / delta + 2.0;
+        } else {
+            h = (rgb.r - rgb.g) / delta + 4.0;
+        }
+        h /= 6.0;
+    }
+
+    half s = maxVal > 0.0 ? delta / maxVal : 0.0;
+    half b = maxVal;
+    return half3(h, s, b);
+}
+
+half3 hsb2rgb(half3 hsb) {
+    half c = hsb.z * hsb.y;
+    half x = c * (1.0 - abs(mod(hsb.x * 6.0, 2.0) - 1.0));
+    half m = hsb.z - c;
+    half3 rgb = half3(0.0);
+    if (hsb.x < 1.0 / 6.0) {
+        rgb = half3(c, x, 0.0);
+    } else if (hsb.x < 2.0/6.0) {
+        rgb = half3(x, c, 0.0);
+    } else if (hsb.x < 3.0/6.0) {
+        rgb = half3(0.0, c, x);
+    } else if (hsb.x < 4.0/6.0) {
+        rgb = half3(0.0, x, c);
+    } else if (hsb.x < 5.0/6.0) {
+        rgb = half3(x, 0.0, c);
+    } else {
+        rgb = half3(c, 0.0, x);
+    }
+    rgb += m;
+    return rgb;
+}
+
+half3 sat(half3 O, half3 M, half opacity) {
+    half3 hsb_O = rgb2hsb(O);
+    half3 hsb_M = rgb2hsb(M);
+    if(hsb_O.x < 0 || hsb_O.y < 0 || hsb_O.z < 0){
+        return O;
+    }
+    half3 rgb_C = hsb2rgb(half3(hsb_O.x, hsb_M.y, hsb_O.z));
+    return mix(O, rgb_C, opacity);
+}
+
+half3 hue(half3 O, half3 M, half opacity) {
+    half3 hsb_O = rgb2hsb(O);
+    half3 hsb_M = rgb2hsb(M);
+    half3 rgb_C = hsb2rgb(half3(hsb_M.x, hsb_O.y, hsb_O.z));
+    return mix(O, rgb_C, opacity);
+}
+
+half3 color(half3 O, half3 M, half opacity) {
+    half3 hsb_O = rgb2hsb(O);
+    half3 hsb_M = rgb2hsb(M);
+    half3 rgb_C = hsb2rgb(half3(hsb_M.x, hsb_M.y, hsb_O.z));
+    return mix(O, rgb_C, opacity);
+}
+
+// 0 正常, 1 加亮, 2 压暗, 3 颜色加深, 4 明度, 5 强光, 6 叠加, 7 颜色减淡, 8 柔光, 9 正片叠底, 10 线性减淡/提亮, 11 线性加深/加暗,12滤色，13 饱和度,14色相,15颜色
+half3 fusion(int type, half3 O, half3 M, half opacity) {
+    if (type == 1) {
+        return mix(O, half3(max(O.r, M.r), max(O.g, M.g), max(O.b, M.b)), opacity); // lighten
+    } else if (type == 2) {
+        return mix(O, half3(min(O.r, M.r), min(O.g, M.g), min(O.b, M.b)), opacity); // darken
+    } else if (type == 3) {
+        return mix(O, half3((O + M - 1.0) / (M + 0.0000001)), opacity); // colorBurn
+    } else if (type == 4) {
+        return luminosity(O, M, opacity); // luminosity
+    } else if (type == 5) {
+        return mix(O, mix(O * M * 2.0, 1.0 - 2.0 * (1.0 - O) * (1.0 - M), step(0.5, M)), opacity); // hardLight
+    } else if (type == 6) {
+        return mix(O, mix(O * M * 2.0, 1.0 - 2.0 * (1.0 - O) * (1.0 - M), step(0.5, O)), opacity); // overlay
+    } else if (type == 7) {
+        return mix(O, O / (1.0 - M + 0.0000001), opacity); // colorDodge
+    } else if (type == 8) {
+        return mix(O, mix((2.0 * M - 1.0) * (O - O * O) + O, (2 * M - 1.0) * (sqrt(O) - O) + O, step(M, half3(0.5, 0.5, 0.5))), opacity); // softLight
+    } else if (type == 9) {
+        return mix(O, O * M, opacity); // multiply
+    } else if (type == 10) {
+        return mix(O, O + M, opacity); // linearDodge
+    } else if (type == 11) {
+        return mix(O, O + M - 1.0, opacity); // linearBurn
+    } else if (type == 12) {
+        return mix(O, 1.0 - (1.0 - O) * (1.0 - M), opacity); // colorFilter
+    } else if (type == 13) {
+        return sat(O, M, opacity); // sat
+    } else if (type == 14) {
+        return hue(O, M, opacity); // hue
+    } else if (type == 15) {
+        return color(O, M, opacity); // color
+    } else {
+        return mix(O, M, opacity);
+    }
+}
+
+half3 fusionCompute(half3 O) {
+      // 依次遍历 uFusionType, 传入上一级颜色，MaskColor 和 透明度
+      half3 origin = O;
+      half3 first = O;
+      half3 second = O;
+      half3 third = O;
+      half3 fourth = O;
+      half3 result = O;
+      first = saturate(fusion(uCustomFusion[0], origin, uCustomMask1, uCustomOpacity[0]));
+      second = saturate(fusion(uCustomFusion[1], first, uCustomMask2, uCustomOpacity[1]));
+      third = saturate(fusion(uCustomFusion[2], second, uCustomMask3, uCustomOpacity[2]));
+      fourth = saturate(fusion(uCustomFusion[3], third, uCustomMask4, uCustomOpacity[3]));
+      result = saturate(fusion(uCustomFusion[4], fourth, uCustomMask5, uCustomOpacity[4]));
+      return result;
+}
+
+// 处理四边圆角，圆角范围外的坐标都返回透明色
+half2 handleRadius(vec2 xy){
+    vec2 leftTopCenter = vec2(uRadius[0], uRadius[0]);
+    float dist = 0;
+    float radius = 0;
+    if(leftTopCenter.x >= xy.x && leftTopCenter.y >= xy.y){
+        // 在左上角范围
+        dist = distance(xy, leftTopCenter);
+        radius = uRadius[0];
+    }else{
+        vec2 rightTopCenter = vec2(uWidth - uRadius[1], uRadius[1]);
+        if(rightTopCenter.x <= xy.x && rightTopCenter.y >= xy.y){
+            dist = distance(xy, rightTopCenter);
+            radius = uRadius[1];
+        }else{
+            vec2 leftBottomCenter = vec2(uRadius[2], uHeight - uRadius[2]);
+            if(leftBottomCenter.x >= xy.x && leftBottomCenter.y <= xy.y){
+                dist = distance(xy, leftBottomCenter);
+                radius = uRadius[2];
+            }else{
+                vec2 rightBottomCenter = vec2(uWidth - uRadius[3], uHeight - uRadius[3]);
+                if(rightBottomCenter.x <= xy.x && rightBottomCenter.y <= xy.y){
+                    dist = distance(xy, rightBottomCenter);
+                    radius = uRadius[3];
+                }else{
+                     // 标准圆角范围之外的边缘需要处理
+                     if(xy.x <= antiAliasOffset || xy.x >= uWidth - antiAliasOffset){
+                         return half2(abs(xy.x - uWidth/2), uWidth/2);
+                     }else if(xy.y <= antiAliasOffset || xy.y >= uHeight - antiAliasOffset){
+                         return half2(abs(xy.y - uHeight/2), uHeight/2);
+                     }else{
+                         // 这里的值没有太大意义，只是为了不要触发抗锯齿逻辑，同时能正常渲染
+                         return half2(0, 1000);
+                     }
+                }
+            }
+        }
+    }
+    if(dist > radius + 1){
+        // 在圆角范围外的内容直接返回透明色
+        return half2(0, 0);
+    }else{
+        return half2(dist, radius);
+    }
+}
+
+vec4 main(in vec2 xy) {
+    half2 radiusMatched = handleRadius(xy);
+    float dist = radiusMatched.x;
+    float radius = radiusMatched.y;
+    if(radius == 0){
+        return vec4(0,0,0,0);
+    }
+    half3 origin = saturation(uBackground.eval(xy));
+    // 当前无前景层，直接对背景层叠加滤镜
+    half3 C = fusionCompute(origin);
+    vec4 mixResult = vec4(C, 1.0);
+    // 为了减弱锯齿效果，在这里手动做一个渐变过渡层
+    if(dist >= radius - antiAliasOffset){
+        float edge = smoothstep(radius - antiAliasOffset, radius + 1.0, dist);
+        vec4 smoothResult = vec4(mixResult.rgb, mixResult.a * (1 - edge));
+        vec4 result = saturate(vec4(smoothResult.rgb * smoothResult.a, smoothResult.a));
+        return result;
+    }
+    vec4 result = saturate(vec4(mixResult.rgb * mixResult.a, mixResult.a));
+    return result;
+}

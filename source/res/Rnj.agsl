@@ -1,0 +1,29 @@
+uniform float2 size;
+uniform float uAlpha;
+uniform float startPos;
+uniform float endPos;
+uniform float midPos;
+uniform float startAlpha;
+uniform float midAlpha;
+uniform float endAlpha;
+half4 main(float2 fragCoord) {
+    float2 uv = fragCoord / size;
+    // 计算垂直方向的位置（1=底部, 0=顶部）
+    float yPos = uv.y;
+    float t =yPos;
+    // 计算分段线性渐变alpha值
+    float alpha = 0.0;
+    if (t <= endPos) {
+        // 0% -> 53%: 完全透明
+        alpha = endAlpha;
+    } else if (t <= midPos) {
+        // 53% -> 84%: 从0到0.3线性渐变
+        alpha = mix(0.0, midAlpha, (t - endPos) / (midPos - endPos));
+    } else {
+        // 84% -> 100%: 从0.3到0.9线性渐变
+        alpha = mix(midAlpha, startAlpha, (t - midPos) / (startPos - midPos));
+    }
+    // 应用整体透明度控制
+    float finalAlpha = alpha * uAlpha;
+    return half4(0., 0., 0., finalAlpha);
+}

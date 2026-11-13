@@ -1,0 +1,9 @@
+uniform shader uTex;
+uniform vec2 uTexSize;
+uniform vec2 uCanvasSize;
+uniform float uAlpha;
+
+half4 main(float2 fragCoord) {
+    vec2 texCoord = fragCoord / uCanvasSize * uTexSize;
+    return uTex.eval(texCoord) * uAlpha;
+}

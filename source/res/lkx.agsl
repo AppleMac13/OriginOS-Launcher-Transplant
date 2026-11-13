@@ -1,0 +1,202 @@
+uniform shader inputShader;
+uniform float2 size;
+uniform float4 startColor;
+uniform float4 endColor;
+uniform float blurRadius;  // 建议范围 1~20
+uniform int direction;     // 0=水平, 1=垂直, 2=径向
+uniform float uAlpha;
+const int KERNEL_SIZE = 5;
+// 多颜色渐变参数
+uniform vec4 colors1[1];
+uniform vec4 colors2[2];
+uniform float steps2[2];
+
+uniform vec4 colors3[3];
+uniform float steps3[3];
+
+uniform vec4 colors4[4];
+uniform float steps4[4];
+
+uniform vec4 colors5[5];
+uniform float steps5[5];
+
+uniform vec4 colors6[6];
+uniform float steps6[6];
+
+uniform vec4 colors7[7];
+uniform float steps7[7];
+
+uniform vec4 colors8[8];
+uniform float steps8[8];
+
+uniform vec4 colors9[9];
+uniform float steps9[9];
+
+uniform vec4 colors10[10];
+uniform float steps10[10];
+uniform int colorCount;
+
+// 多颜色渐变计算
+vec4 evaluateGradient(float factor) {
+    if (colorCount == 0) return vec4(0.0);
+    if (colorCount == 1) return colors1[0];
+    if (colorCount == 2) {
+        for (int i = 0; i < 1; i++) {
+            if (factor >= steps2[i] && factor <= steps2[i+1]) {
+                float range = steps2[i+1] - steps2[i];
+                float weight = (factor - steps2[i]) / range;
+                return mix(colors2[i], colors2[i+1], weight);
+            }
+        }
+        return colors2[1];
+    }else if(colorCount == 3){
+        for (int i = 0; i < 2; i++) {
+            if (factor >= steps3[i] && factor <= steps3[i+1]) {
+                float range = steps3[i+1] - steps3[i];
+                float weight = (factor - steps3[i]) / range;
+                return mix(colors3[i], colors3[i+1], weight);
+            }
+        }
+        return colors3[2];
+    }
+    else if(colorCount == 4){
+        for (int i = 0; i < 3; i++) {
+            if (factor >= steps4[i] && factor <= steps4[i+1]) {
+                float range = steps4[i+1] - steps4[i];
+                float weight = (factor - steps4[i]) / range;
+                return mix(colors4[i], colors4[i+1], weight);
+            }
+        }
+        return colors4[3];
+    }
+    else if(colorCount == 5){
+        for (int i = 0; i < 4; i++) {
+            if (factor >= steps5[i] && factor <= steps5[i+1]) {
+                float range = steps5[i+1] - steps5[i];
+                float weight = (factor - steps5[i]) / range;
+                return mix(colors5[i], colors5[i+1], weight);
+            }
+        }
+        return colors5[4];
+    }else if(colorCount == 6){
+         for (int i = 0; i < 5; i++) {
+             if (factor >= steps6[i] && factor <= steps6[i+1]) {
+                 float range = steps6[i+1] - steps6[i];
+                 float weight = (factor - steps6[i]) / range;
+                 return mix(colors6[i], colors6[i+1], weight);
+             }
+         }
+         return colors6[2];
+    }else if(colorCount == 7){
+         for (int i = 0; i < 6; i++) {
+             if (factor >= steps7[i] && factor <= steps7[i+1]) {
+                 float range = steps7[i+1] - steps7[i];
+                 float weight = (factor - steps7[i]) / range;
+                 return mix(colors7[i], colors7[i+1], weight);
+             }
+         }
+         return colors7[2];
+    }else if(colorCount == 8){
+         for (int i = 0; i < 7; i++) {
+             if (factor >= steps8[i] && factor <= steps8[i+1]) {
+                 float range = steps8[i+1] - steps8[i];
+                 float weight = (factor - steps8[i]) / range;
+                 return mix(colors8[i], colors8[i+1], weight);
+             }
+         }
+         return colors8[2];
+    }else if(colorCount == 9){
+         for (int i = 0; i < 8; i++) {
+             if (factor >= steps9[i] && factor <= steps9[i+1]) {
+                 float range = steps9[i+1] - steps9[i];
+                 float weight = (factor - steps9[i]) / range;
+                 return mix(colors9[i], colors9[i+1], weight);
+             }
+         }
+         return colors9[8];
+    }else if(colorCount == 3){
+         for (int i = 0; i < 9; i++) {
+             if (factor >= steps10[i] && factor <= steps10[i+1]) {
+                 float range = steps10[i+1] - steps10[i];
+                 float weight = (factor - steps10[i]) / range;
+                 return mix(colors10[i], colors10[i+1], weight);
+             }
+         }
+         return colors10[9];
+    }
+    return vec4(0.0);
+}
+
+// 高质量渐变计算（消除波纹）
+float calculateGradient(float2 fragCoord) {
+    float2 uv = fragCoord / size;
+    float factor;
+    if (direction == 0) { //从左往右
+        factor = uv.x;
+    } else if (direction == 1) { //从上往下
+        factor = uv.y;
+    } else if(direction == 2) { //从右往左}
+        factor = 1.0- uv.x;
+    }else if (direction == 3) { //从下往上
+        factor = 1.0 -uv.y;
+    }else if(direction == 4){//圆形，径向
+        factor = distance(uv, float2(0., 0.)) * 1.;
+    }else if (direction == 5){//方形，径向
+        uv = (fragCoord / size - 0.5);
+        // 计算两种距离场
+        float chebyshev = max(abs(uv.x), abs(uv.y));  // 方形距离
+        float euclidean = length(uv);                 // 圆形距离
+        // 混合距离场
+        float gradient = mix(chebyshev, euclidean, 1);
+        factor = clamp(gradient, 0.0, 1.0);
+    }
+    return smoothstep(0.0, 1.0, factor); // 平滑过渡
+}
+
+// 优化高斯模糊（5×5 采样）
+half4 blurSample(float2 uv, float radius) {
+
+    float kernel[KERNEL_SIZE];
+//     = {0.0625, 0.25, 0.375, 0.25, 0.0625}
+    kernel[0] = 0.0625;
+    kernel[1] = 0.25;
+    kernel[2] = 0.375;
+    kernel[3] = 0.25;
+    kernel[4] = 0.0625;
+    half4 color = half4(0.0);
+    float totalWeight = 0.0;
+
+    for (int i = 0; i < KERNEL_SIZE; i++) {
+        for (int j = 0; j < KERNEL_SIZE; j++) {
+            float2 offset = float2(i - 2, j - 2) * (radius / size.x);
+            float weight = kernel[i] * kernel[j];
+            color += inputShader.eval(uv + offset) * weight;
+            totalWeight += weight;
+        }
+    }
+    return color / totalWeight;
+}
+float noise(float2 st) {
+  return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+
+half4 main(float2 fragCoord) {
+
+
+    // 计算渐变因子（抗波纹）
+    float gradientFactor = calculateGradient(fragCoord);
+
+    // 颜色插值（使用更平滑的 mix）
+//    half4 gradientColor = mix(startColor, endColor, gradientFactor);
+    vec4 gradientColor = evaluateGradient(gradientFactor);
+    float n = noise(fragCoord * 5.0);
+    //随机插值
+    gradientColor =  mix(gradientColor - half4(1./255.), gradientColor + half4(1./255.), n);
+    // 应用高质量模糊
+//    half4 blurredColor = blurSample(uv, blurRadius);
+    half4 blurredColor = half4(0.0);
+    // 混合结果（避免边缘锯齿）
+    half4 result = mix(blurredColor, gradientColor, smoothstep(0.0, 0.1, gradientColor.a));
+    return half4(result.rgb * result.a, result.a);
+}

@@ -1,0 +1,11 @@
+
+uniform float feather;       // 羽化范围(0-1)
+
+half4 main(float2 fragCoord) {
+  float length = distance(fragCoord, float2(0.5, 0.5));
+  float alpha = max(0.5 - length, 0) * 2.;
+  half4 color = half4(1, 1, 1, 1) * alpha;
+  float featherFactor = smoothstep(0.0, feather, alpha);
+  color = mix(color, half4(1, 1, 1, 1), featherFactor);
+  return color ;
+}
