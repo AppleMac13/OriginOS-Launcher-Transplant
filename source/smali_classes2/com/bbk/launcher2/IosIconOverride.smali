@@ -229,3 +229,89 @@
 
     return-object v1
 .end method
+
+.method public static getDock(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+    .locals 12
+
+    const/4 v0, 0x0
+
+    if-eqz p1, :ret_null
+
+    :try_start_0
+    invoke-virtual {p0}, Landroid/content/Context;->getAssets()Landroid/content/res/AssetManager;
+    move-result-object v1
+
+    new-instance v2, Ljava/lang/StringBuilder;
+    invoke-direct {v2}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v3, "ios_icons/"
+
+    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v2, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    const-string v3, ".png"
+
+    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v2}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+    move-result-object v2
+
+    invoke-virtual {v1, v2}, Landroid/content/res/AssetManager;->open(Ljava/lang/String;)Ljava/io/InputStream;
+    move-result-object v1
+
+    const/4 v2, 0x0
+
+    invoke-static {v1, v2, v2}, Landroid/graphics/BitmapFactory;->decodeStream(Ljava/io/InputStream;Landroid/graphics/Rect;Landroid/graphics/BitmapFactory$Options;)Landroid/graphics/Bitmap;
+    move-result-object v3
+
+    invoke-virtual {v1}, Ljava/io/InputStream;->close()V
+
+    if-nez v3, :ret_null
+
+    const/16 v4, 0x88
+
+    const/16 v5, 0xb4
+
+    const/4 v6, 0x1
+
+    invoke-static {v3, v4, v4, v6}, Landroid/graphics/Bitmap;->createScaledBitmap(Landroid/graphics/Bitmap;IIZ)Landroid/graphics/Bitmap;
+    move-result-object v7
+
+    sget-object v8, Landroid/graphics/Bitmap$Config;->ARGB_8888:Landroid/graphics/Bitmap$Config;
+
+    invoke-static {v5, v5, v8}, Landroid/graphics/Bitmap;->createBitmap(IILandroid/graphics/Bitmap$Config;)Landroid/graphics/Bitmap;
+    move-result-object v9
+
+    new-instance v10, Landroid/graphics/Canvas;
+    invoke-direct {v10, v9}, Landroid/graphics/Canvas;-><init>(Landroid/graphics/Bitmap;)V
+
+    new-instance v11, Landroid/graphics/Paint;
+    invoke-direct {v11}, Landroid/graphics/Paint;-><init>()V
+
+    invoke-virtual {v11, v6}, Landroid/graphics/Paint;->setFilterBitmap(Z)V
+
+    const/16 v0, 0x16
+
+    int-to-float v0, v0
+
+    invoke-virtual {v10, v7, v0, v0, v11}, Landroid/graphics/Canvas;->drawBitmap(Landroid/graphics/Bitmap;FFLandroid/graphics/Paint;)V
+
+    invoke-virtual {p0}, Landroid/content/Context;->getResources()Landroid/content/res/Resources;
+    move-result-object v1
+
+    new-instance v2, Landroid/graphics/drawable/BitmapDrawable;
+    invoke-direct {v2, v1, v9}, Landroid/graphics/drawable/BitmapDrawable;-><init>(Landroid/content/res/Resources;Landroid/graphics/Bitmap;)V
+    :try_end_0
+    .catch Ljava/lang/Throwable; {:try_start_0 .. :try_end_0} :catch_0
+
+    return-object v2
+
+    :catch_0
+    move-exception v1
+
+    :ret_null
+    const/4 v0, 0x0
+
+    return-object v0
+.end method

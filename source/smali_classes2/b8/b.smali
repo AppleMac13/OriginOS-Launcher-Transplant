@@ -2185,7 +2185,7 @@
     :ios_have_pkg
     iget-object v1, p0, Lb8/b;->d:Landroid/content/Context;
 
-    invoke-static {v1, v0}, Lcom/bbk/launcher2/IosIconOverride;->get(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+    invoke-static {v1, v0}, Lcom/bbk/launcher2/IosIconOverride;->getDock(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
     move-result-object v0
 
     if-eqz v0, :ios_ret_skip

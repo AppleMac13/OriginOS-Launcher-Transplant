@@ -2628,7 +2628,7 @@
     invoke-static {}, Lcom/bbk/launcher2/launcherCommon/BaseApplication;->d()Lcom/bbk/launcher2/launcherCommon/BaseApplication;
     move-result-object v1
 
-    invoke-static {v1, v0}, Lcom/bbk/launcher2/IosIconOverride;->get(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+    invoke-static {v1, v0}, Lcom/bbk/launcher2/IosIconOverride;->getDock(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
     move-result-object v1
 
     if-eqz v1, :ios_skip
