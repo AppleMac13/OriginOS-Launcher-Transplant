@@ -30,8 +30,8 @@ public class Hook implements IXposedHookLoadPackage {
     private static final float CURVE_N = 5.0f;
     private static int COUNT = 0;
     private static int COUNT2 = 0;
-    private static int DRAWS = 0;
     private static final float DRAW_SCALE = 0.7576f;
+    private static final float FOLDER_SCALE = 1.08696f;
     private static final java.util.WeakHashMap<Object, Object[]> HIDDEN = new java.util.WeakHashMap<Object, Object[]>();
     private static final java.util.Map<Object, Boolean> DRAWN = java.util.Collections.synchronizedMap(new java.util.WeakHashMap<Object, Boolean>());
     private static int HITS = 0;
@@ -40,7 +40,6 @@ public class Hook implements IXposedHookLoadPackage {
     @Override
     public void handleLoadPackage(LoadPackageParam lpparam) {
         if (!TARGET.equals(lpparam.packageName)) return;
-        XposedBridge.log("IOSDOCK: hooked into " + lpparam.packageName);
 
         hookPmIcon(lpparam);
         hookIconManager(lpparam);
@@ -62,7 +61,6 @@ public class Hook implements IXposedHookLoadPackage {
                         if (!inDock(param.thisObject)) return;
                         hideIcon(param.thisObject);
                     } catch (Throwable t) {
-                        XposedBridge.log("IOSDOCK HIDE err " + t);
                     }
                 }
 
@@ -71,13 +69,11 @@ public class Hook implements IXposedHookLoadPackage {
                     try {
                         drawOverride(param);
                     } catch (Throwable t) {
-                        XposedBridge.log("IOSDOCK DRAW err " + t);
                     } finally {
                         restoreIcon(param.thisObject);
                     }
                 }
             });
-            XposedBridge.log("IOSDOCK: MorphItemIcon.onDraw hooked");
 
             try {
                 Class<?> itemIcon = XposedHelpers.findClass("com.bbk.launcher2.launcherIcon.ui.icon.ItemIcon", lpparam.classLoader);
@@ -88,16 +84,12 @@ public class Hook implements IXposedHookLoadPackage {
                             Object mv = findMorphParent(param.thisObject);
                             if (mv != null && DRAWN.containsKey(mv)) {
                                 param.setResult(null);
-                                XposedBridge.log("IOSDOCK ITEMICON skip");
                             }
                         } catch (Throwable t) {
-                            XposedBridge.log("IOSDOCK ITEMICON err " + t);
                         }
                     }
                 });
-                XposedBridge.log("IOSDOCK: ItemIcon.onDraw hooked");
             } catch (Throwable t2) {
-                XposedBridge.log("IOSDOCK: ItemIcon hook fail " + t2);
             }
 
             Class<?> dr = XposedHelpers.findClass("android.graphics.drawable.Drawable", lpparam.classLoader);
@@ -107,15 +99,79 @@ public class Hook implements IXposedHookLoadPackage {
                     try {
                         if (!inDock(param.thisObject)) return;
                         param.args[0] = new android.graphics.drawable.ColorDrawable(0);
-                        XposedBridge.log("IOSDOCK C9 clear");
                     } catch (Throwable t) {
-                        XposedBridge.log("IOSDOCK C9 err " + t);
                     }
                 }
             });
-            XposedBridge.log("IOSDOCK: MorphItemIcon.C9 hooked");
+
+            try {
+                Class<?> ofi = XposedHelpers.findClass("com.bbk.launcher2.ui.originfolder.OriginFolderIcon", lpparam.classLoader);
+                XposedHelpers.findAndHookMethod(ofi, "onDraw", android.graphics.Canvas.class, new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) {
+                        try {
+                            Object v = param.thisObject;
+                            android.graphics.Canvas cc = (android.graphics.Canvas) param.args[0];
+                            android.graphics.Rect clip = new android.graphics.Rect();
+                            if (!cc.getClipBounds(clip)) return;
+                            android.view.View view = (android.view.View) v;
+                            int w = view.getWidth();
+                            int h = view.getHeight();
+                            if (w <= 0 || h <= 0) return;
+                            float cx = clip.left + w / 2f;
+                            float cy = clip.top + h / 2f;
+                            int sc = cc.save();
+                            cc.scale(FOLDER_SCALE, FOLDER_SCALE, cx, cy);
+                            param.setObjectExtra("fsc", Integer.valueOf(sc));
+                        } catch (Throwable t) {
+                        }
+                    }
+
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) {
+                        Object sc = param.getObjectExtra("fsc");
+                        if (sc == null) return;
+                        try {
+                            ((android.graphics.Canvas) param.args[0]).restoreToCount((Integer) sc);
+                        } catch (Throwable ignored) {
+                        }
+                    }
+                });
+
+                XposedHelpers.findAndHookMethod(ofi, "dispatchDraw", android.graphics.Canvas.class, new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) {
+                        try {
+                            Object v = param.thisObject;
+                            android.graphics.Canvas cc = (android.graphics.Canvas) param.args[0];
+                            android.graphics.Rect clip = new android.graphics.Rect();
+                            if (!cc.getClipBounds(clip)) return;
+                            android.view.View view = (android.view.View) v;
+                            int w = view.getWidth();
+                            int h = view.getHeight();
+                            if (w <= 0 || h <= 0) return;
+                            float cx = clip.left + w / 2f;
+                            float cy = clip.top + h / 2f;
+                            int sc = cc.save();
+                            cc.scale(FOLDER_SCALE, FOLDER_SCALE, cx, cy);
+                            param.setObjectExtra("fsc", Integer.valueOf(sc));
+                        } catch (Throwable t) {
+                        }
+                    }
+
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) {
+                        Object sc = param.getObjectExtra("fsc");
+                        if (sc == null) return;
+                        try {
+                            ((android.graphics.Canvas) param.args[0]).restoreToCount((Integer) sc);
+                        } catch (Throwable ignored) {
+                        }
+                    }
+                });
+            } catch (Throwable t2) {
+            }
         } catch (Throwable t) {
-            XposedBridge.log("IOSDOCK: onDraw hook fail " + t);
         }
     }
 
@@ -160,10 +216,8 @@ public class Hook implements IXposedHookLoadPackage {
             HIDDEN.put(view, new Object[]{list});
             if (HIDES < 4) {
                 HIDES++;
-                XposedBridge.log("IOSDOCK HIDE n=" + list.size() + " " + sb);
             }
         } catch (Throwable t) {
-            XposedBridge.log("IOSDOCK HIDE err " + t);
         }
     }
 
@@ -179,8 +233,30 @@ public class Hook implements IXposedHookLoadPackage {
                 }
             }
         } catch (Throwable t) {
-            XposedBridge.log("IOSDOCK RESTORE err " + t);
         }
+    }
+
+    private static String titleOf(Object v) {
+        try {
+            Class<?> c = v.getClass();
+            while (c != null) {
+                for (Field f : c.getDeclaredFields()) {
+                    if (f.getType() != String.class) continue;
+                    try {
+                        f.setAccessible(true);
+                        Object val = f.get(v);
+                        if (val instanceof String) {
+                            String s = (String) val;
+                            if (s.length() > 0 && s.length() < 60) return f.getName() + "=" + s;
+                        }
+                    } catch (Throwable ignored) {
+                    }
+                }
+                c = c.getSuperclass();
+            }
+        } catch (Throwable ignored) {
+        }
+        return "?";
     }
 
     private static void drawOverride(XC_MethodHook.MethodHookParam param) {
@@ -188,7 +264,9 @@ public class Hook implements IXposedHookLoadPackage {
         DRAWN.remove(self);
         if (!inDock(self)) return;
         String pkg = pkgOf(param.thisObject);
-        if (pkg == null) return;
+        if (pkg == null) {
+            return;
+        }
         Bitmap bm = curved(pkg);
         if (bm == null) return;
         Object v = param.thisObject;
@@ -199,10 +277,6 @@ public class Hook implements IXposedHookLoadPackage {
         android.graphics.Canvas c = (android.graphics.Canvas) param.args[0];
         android.graphics.Rect clip = new android.graphics.Rect();
         boolean hasClip = c.getClipBounds(clip);
-        DRAWS++;
-        if (DRAWS < 20) XposedBridge.log("IOSDOCK DRAW " + pkg + " " + w + "x" + h
-                + " clip=" + (hasClip ? clip.toString() : "empty")
-                + " hw=" + c.isHardwareAccelerated());
         int sc = c.save();
         int ox = clip.left;
         int oy = clip.top;
@@ -239,19 +313,14 @@ public class Hook implements IXposedHookLoadPackage {
                         String st = stackOf(6);
                         if (!st.contains("bbk")) return;
                         COUNT2++;
-                        XposedBridge.log("IOSDOCK IV " + mn + " view=" + param.thisObject.getClass().getName()
-                                + " st=" + st);
                     }
                 }};
                 try {
                     XposedHelpers.findAndHookMethod(iv, mn, p);
                 } catch (Throwable t) {
-                    XposedBridge.log("IOSDOCK IV hook fail " + mn + " " + t);
                 }
             }
-            XposedBridge.log("IOSDOCK: ImageView hooked");
         } catch (Throwable t) {
-            XposedBridge.log("IOSDOCK: IV group fail " + t);
         }
     }
 
@@ -291,18 +360,14 @@ public class Hook implements IXposedHookLoadPackage {
                             if (pkg == null) return;
                             Bitmap bm = bitmapFor(pkg);
                             if (bm == null) return;
-                            XposedBridge.log("IOSDOCK SETIB " + pkg + " " + ((Bitmap) param.args[0]).getWidth()
-                                    + "->" + bm.getWidth());
                             param.args[0] = bm;
                         } catch (Throwable t) {
-                            XposedBridge.log("IOSDOCK SETIB err " + t);
                         }
                     }
                 };
                 try {
                     XposedHelpers.findAndHookMethod(ivam, "setIconBitmap", params);
                 } catch (Throwable t) {
-                    XposedBridge.log("IOSDOCK SETIB hook fail " + sig.length + " " + t);
                 }
             }
             Object[] u = new Object[]{Bitmap.class, new XC_MethodHook() {
@@ -314,16 +379,13 @@ public class Hook implements IXposedHookLoadPackage {
                         if (pkg == null) return;
                         Bitmap bm = bitmapFor(pkg);
                         if (bm == null) return;
-                        XposedBridge.log("IOSDOCK UPDIB " + pkg);
                         param.args[0] = bm;
                     } catch (Throwable t) {
                     }
                 }
             }};
             XposedHelpers.findAndHookMethod(ivam, "updateIconBitmap", u);
-            XposedBridge.log("IOSDOCK: setIconBitmap hooked");
         } catch (Throwable t) {
-            XposedBridge.log("IOSDOCK: SETIB group fail " + t);
         }
     }
 
@@ -337,24 +399,18 @@ public class Hook implements IXposedHookLoadPackage {
                     try {
                         String pkg = pkgOf(param.args[0]);
                         if (pkg == null) {
-                            if (COUNT++ < 6) XposedBridge.log("IOSDOCK E nopkg");
                             return;
                         }
                         Bitmap bm = bitmapFor(pkg);
                         if (bm == null) {
-                            XposedBridge.log("IOSDOCK E pkg=" + pkg + " nobitmap");
                             return;
                         }
-                        XposedBridge.log("IOSDOCK E HIT " + pkg);
                         param.setResult(bm);
                     } catch (Throwable t) {
-                        XposedBridge.log("IOSDOCK E err " + t);
                     }
                 }
             });
-            XposedBridge.log("IOSDOCK: hooked b8.b.E");
         } catch (Throwable t) {
-            XposedBridge.log("IOSDOCK: b8.b.E hook fail " + t);
         }
     }
 
@@ -384,7 +440,6 @@ public class Hook implements IXposedHookLoadPackage {
             XposedHelpers.findAndHookMethod("android.app.ApplicationPackageManager",
                     lpparam.classLoader, "getApplicationIcon", params);
         } catch (Throwable t) {
-            XposedBridge.log("IOSDOCK: pm hook fail " + t);
         }
     }
 
@@ -393,21 +448,18 @@ public class Hook implements IXposedHookLoadPackage {
         try {
             im = XposedHelpers.findClass("com.bbk.launcher2.launcherIcon.data.iconcache.IconManager", lpparam.classLoader);
         } catch (Throwable t) {
-            XposedBridge.log("IOSDOCK: IconManager not found " + t);
             return;
         }
         Class<?> itemCls;
         try {
             itemCls = XposedHelpers.findClass("com.bbk.launcher2.launcherCommon.mode.e", lpparam.classLoader);
         } catch (Throwable t) {
-            XposedBridge.log("IOSDOCK: mode.e not found " + t);
             return;
         }
 
         hookGetDrawable(im, new Class[]{itemCls}, "getDrawable#1");
         hookGetDrawable(im, new Class[]{itemCls, boolean.class}, "getDrawable#2");
 
-        XposedBridge.log("IOSDOCK: IconManager hooked, methods=" + im.getDeclaredMethods().length);
     }
 
     private void hookGetDrawable(Class<?> im, Class[] sig, String tag) {
@@ -419,7 +471,6 @@ public class Hook implements IXposedHookLoadPackage {
                 try {
                     String pkg = pkgOf(param.args[0]);
                     if (pkg == null) {
-                        if (COUNT++ < 12) XposedBridge.log("IOSDOCK DUMP " + dump(param.args[0]));
                         return;
                     }
                     Bitmap bm = bitmapFor(pkg);
@@ -427,19 +478,27 @@ public class Hook implements IXposedHookLoadPackage {
                     Context ctx = AndroidAppHelper.currentApplication();
                     if (ctx == null) return;
                     HITS++;
-                    XposedBridge.log("IOSDOCK HIT " + pkg + " #" + HITS);
                     param.setResult(new BitmapDrawable(ctx.getResources(), bm));
                 } catch (Throwable t) {
-                    XposedBridge.log("IOSDOCK: getDrawable hook err " + t);
                 }
             }
         };
         try {
             XposedHelpers.findAndHookMethod(im, "getDrawable", params);
-            XposedBridge.log("IOSDOCK: hooked " + tag);
         } catch (Throwable t) {
-            XposedBridge.log("IOSDOCK: hook " + tag + " fail " + t);
         }
+    }
+
+    private static boolean underHotseat(Object v) {
+        Object p = v;
+        for (int i = 0; i < 12 && p != null; i++) {
+            if (p.getClass().getName().contains("Hotseat")) return true;
+            if (!(p instanceof android.view.View)) return false;
+            android.view.ViewParent vp = ((android.view.View) p).getParent();
+            if (vp == null) return false;
+            p = vp;
+        }
+        return false;
     }
 
     private static boolean inDock(Object v) {
@@ -566,7 +625,6 @@ public class Hook implements IXposedHookLoadPackage {
             if (r < 0) { l = 0; t = 0; r = w - 1; b = h - 1; }
             float[] box = {l, t, r + 1, b + 1};
             BOXES.put(pkg, box);
-            XposedBridge.log("IOSDOCK: bbox " + pkg + " " + l + "," + t + "-" + r + "," + b);
             return box;
         }
     }
@@ -580,10 +638,8 @@ public class Hook implements IXposedHookLoadPackage {
                 File f = new File("/data/local/tmp/ios_icons/" + pkg + ".png");
                 if (f.exists()) bm = BitmapFactory.decodeFile(f.getAbsolutePath());
             } catch (Throwable t) {
-                XposedBridge.log("IOSDOCK: decode fail " + pkg + " " + t);
             }
             CACHE.put(pkg, bm);
-            if (bm != null) XposedBridge.log("IOSDOCK: loaded " + pkg + " " + bm.getWidth() + "x" + bm.getHeight());
             return bm;
         }
     }
@@ -622,7 +678,6 @@ public class Hook implements IXposedHookLoadPackage {
             c.drawPath(curvePath(0f, 0f, w, h), p);
             return out;
         } catch (Throwable t) {
-            XposedBridge.log("IOSDOCK: curve fail " + t);
             return src;
         }
     }
