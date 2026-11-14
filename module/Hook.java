@@ -32,6 +32,8 @@ public class Hook implements IXposedHookLoadPackage {
     private static int COUNT2 = 0;
     private static final float DRAW_SCALE = 0.7576f;
     private static final float FOLDER_SCALE = 1.08696f;
+    private static final float FOLDER_VSCALE = 1.132f;
+    private static final float FOLDER_DY = 26.0f;
     private static final java.util.WeakHashMap<Object, Object[]> HIDDEN = new java.util.WeakHashMap<Object, Object[]>();
     private static final java.util.Map<Object, Boolean> DRAWN = java.util.Collections.synchronizedMap(new java.util.WeakHashMap<Object, Boolean>());
     private static int HITS = 0;
@@ -121,7 +123,8 @@ public class Hook implements IXposedHookLoadPackage {
                             float cx = clip.left + w / 2f;
                             float cy = clip.top + h / 2f;
                             int sc = cc.save();
-                            cc.scale(FOLDER_SCALE, FOLDER_SCALE, cx, cy);
+                            cc.translate(0, FOLDER_DY);
+                            cc.scale(FOLDER_SCALE, FOLDER_VSCALE, cx, cy);
                             param.setObjectExtra("fsc", Integer.valueOf(sc));
                         } catch (Throwable t) {
                         }
@@ -131,8 +134,20 @@ public class Hook implements IXposedHookLoadPackage {
                     protected void afterHookedMethod(MethodHookParam param) {
                         Object sc = param.getObjectExtra("fsc");
                         if (sc == null) return;
+                        android.graphics.Canvas cc2 = (android.graphics.Canvas) param.args[0];
                         try {
-                            ((android.graphics.Canvas) param.args[0]).restoreToCount((Integer) sc);
+                            cc2.restoreToCount((Integer) sc);
+                            android.graphics.Rect cb = new android.graphics.Rect();
+                            if (cc2.getClipBounds(cb)) {
+                                android.view.View vv = (android.view.View) param.thisObject;
+                                int vw = vv.getWidth();
+                                int vh = vv.getHeight();
+                                if (vw > 0 && vh > 0) {
+                                    float fc = cb.left + vw / 2f;
+                                    float fd = cb.top + vh / 2f;
+                                    glassOverlay(cc2, fc - 75f, fd - 75f, 150f, 150f);
+                                }
+                            }
                         } catch (Throwable ignored) {
                         }
                     }
@@ -153,7 +168,8 @@ public class Hook implements IXposedHookLoadPackage {
                             float cx = clip.left + w / 2f;
                             float cy = clip.top + h / 2f;
                             int sc = cc.save();
-                            cc.scale(FOLDER_SCALE, FOLDER_SCALE, cx, cy);
+                            cc.translate(0, FOLDER_DY);
+                            cc.scale(FOLDER_SCALE, FOLDER_VSCALE, cx, cy);
                             param.setObjectExtra("fsc", Integer.valueOf(sc));
                         } catch (Throwable t) {
                         }
@@ -163,8 +179,20 @@ public class Hook implements IXposedHookLoadPackage {
                     protected void afterHookedMethod(MethodHookParam param) {
                         Object sc = param.getObjectExtra("fsc");
                         if (sc == null) return;
+                        android.graphics.Canvas cc2 = (android.graphics.Canvas) param.args[0];
                         try {
-                            ((android.graphics.Canvas) param.args[0]).restoreToCount((Integer) sc);
+                            cc2.restoreToCount((Integer) sc);
+                            android.graphics.Rect cb = new android.graphics.Rect();
+                            if (cc2.getClipBounds(cb)) {
+                                android.view.View vv = (android.view.View) param.thisObject;
+                                int vw = vv.getWidth();
+                                int vh = vv.getHeight();
+                                if (vw > 0 && vh > 0) {
+                                    float fc = cb.left + vw / 2f;
+                                    float fd = cb.top + vh / 2f;
+                                    glassOverlay(cc2, fc - 75f, fd - 75f, 150f, 150f);
+                                }
+                            }
                         } catch (Throwable ignored) {
                         }
                     }
@@ -295,6 +323,9 @@ public class Hook implements IXposedHookLoadPackage {
         android.graphics.RectF dst3 = new android.graphics.RectF(left, top,
                 left + bm.getWidth() * scale, top + bm.getHeight() * scale);
         c.drawBitmap(bm, null, dst3, paint);
+
+        glassOverlay(c, dst3.left, dst3.top, dst3.width(), dst3.height());
+
         c.restoreToCount(sc);
         DRAWN.put(v, Boolean.TRUE);
     }
@@ -662,6 +693,38 @@ public class Hook implements IXposedHookLoadPackage {
         }
         path.close();
         return path;
+    }
+
+    private static void glassOverlay(android.graphics.Canvas c, float l, float t, float w, float h) {
+        int sc = c.save();
+        c.translate(l, t);
+
+        android.graphics.Path glass = curvePath(0, 0, w, h);
+
+        android.graphics.Paint sheen = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+        sheen.setShader(new android.graphics.LinearGradient(0, 0, 0, h * 0.62f,
+                new int[]{0x44FFFFFF, 0x1CFFFFFF, 0x02FFFFFF, 0x0AFFFFFF},
+                new float[]{0f, 0.26f, 0.62f, 1f},
+                android.graphics.Shader.TileMode.CLAMP));
+        c.drawPath(glass, sheen);
+
+        android.graphics.Path rimPath = curvePath(Math.min(1.5f, w / 6f), Math.min(1.5f, h / 6f),
+                w - Math.min(1.5f, w / 6f), h - Math.min(1.5f, h / 6f));
+        android.graphics.Paint rim = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+        rim.setStyle(android.graphics.Paint.Style.STROKE);
+        rim.setStrokeWidth(2.0f);
+        rim.setShader(new android.graphics.SweepGradient(w / 2f, h / 2f,
+                new int[]{0x5EFFFFFF, 0x1A00FFFF, 0x52FFFFFF, 0x1800E5FF, 0x5EFFFFFF},
+                new float[]{0f, 0.26f, 0.52f, 0.76f, 1f}));
+        c.drawPath(rimPath, rim);
+
+        android.graphics.Paint shade = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+        shade.setShader(new android.graphics.LinearGradient(0, h * 0.68f, 0, h,
+                new int[]{0x00000000, 0x24000000},
+                null, android.graphics.Shader.TileMode.CLAMP));
+        c.drawPath(glass, shade);
+
+        c.restoreToCount(sc);
     }
 
     private static Bitmap withCurve(Bitmap src) {
