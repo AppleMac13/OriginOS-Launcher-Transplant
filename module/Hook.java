@@ -445,7 +445,9 @@ public class Hook implements IXposedHookLoadPackage {
     private static boolean inDock(Object v) {
         Object p = v;
         for (int i = 0; i < 8 && p != null; i++) {
-            if (p.getClass().getName().contains("Hotseat")) return true;
+            String cn = p.getClass().getName();
+            if (cn.contains("Folder")) return false;
+            if (cn.contains("Hotseat")) return true;
             try {
                 p = XposedHelpers.callMethod(p, "getParent");
             } catch (Throwable t) {
