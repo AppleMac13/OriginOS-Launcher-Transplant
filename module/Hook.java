@@ -818,12 +818,12 @@ public class Hook implements IXposedHookLoadPackage {
             }
             int sc2 = c.save();
             c.clipPath(path);
-            p.setColor(0x14FFFFFF);
+            p.setColor(0x99707070);
             c.drawRect(rf, p);
             c.restoreToCount(sc2);
             p.setStyle(android.graphics.Paint.Style.STROKE);
             p.setStrokeWidth(1.2f);
-            p.setColor(0x10FFFFFF);
+            p.setColor(0x33FFFFFF);
             c.drawPath(path, p);
             p.setStyle(android.graphics.Paint.Style.FILL);
         }
