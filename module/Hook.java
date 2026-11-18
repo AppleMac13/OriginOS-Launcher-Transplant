@@ -793,7 +793,7 @@ public class Hook implements IXposedHookLoadPackage {
         public void draw(android.graphics.Canvas c) {
             android.graphics.Rect b = getBounds();
             if (b.width() <= 0 || b.height() <= 0) return;
-            float padX = b.height() * 0.070f;
+            float padX = b.height() * 0.155f;
             float padT = b.height() * 0.293f;
             float padB = b.height() * 0.244f;
             rf.set(b.left + padX, b.top + padT, b.right - padX, b.bottom - padB);
