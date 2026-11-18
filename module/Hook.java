@@ -14,6 +14,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
@@ -26,6 +29,8 @@ public class Hook implements IXposedHookLoadPackage {
     private static final String TARGET = "com.bbk.launcher2";
     private static final String MOOD = "com.vivo.moodcube";
     private static final String DFM = "com.vivo.deformer";
+    private static final String THEME = "com.bbk.theme";
+    private static final String THEME_PROVIDER = "com.bbk.theme.provider";
     private static final String L3 = "com.android.launcher3";
     private static final HashMap<String, Bitmap> CACHE = new HashMap<String, Bitmap>();
     private static final HashMap<String, Bitmap> CURVED = new HashMap<String, Bitmap>();
@@ -103,15 +108,67 @@ public class Hook implements IXposedHookLoadPackage {
             return;
         }
         if (MOOD.equals(lpparam.packageName)) {
+            hookFtBuild(lpparam);
             hookMood(lpparam);
             return;
         }
         if (DFM.equals(lpparam.packageName)) {
             hookFtBuild(lpparam);
+            hookMmkv(lpparam);
+            hookDeformerExtras(lpparam);
+            return;
+        }
+        if (THEME.equals(lpparam.packageName)
+                || THEME_PROVIDER.equals(lpparam.packageName)) {
+            hookFtBuild(lpparam);
+            hookMmkv(lpparam);
             return;
         }
         if (!TARGET.equals(lpparam.packageName)) return;
 
+        hookFtBuild(lpparam);
+        hookMmkv(lpparam);
+        hookDeformerEntry();
+        try {
+            XposedHelpers.findAndHookMethod(android.content.ContextWrapper.class, "startActivity",
+                    android.content.Intent.class, new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam p) {
+                            try {
+                                android.content.Intent i = (android.content.Intent) p.args[0];
+                                if (i == null) return;
+                                String a = i.getAction();
+                                String c = i.getComponent() == null ? null : i.getComponent().flattenToString();
+                                boolean hit = (a != null && (a.contains("deformer") || a.contains("moodcube")))
+                                        || (c != null && (c.contains("deformer") || c.contains("moodcube")));
+                                if (hit) XposedBridge.log("[iosdock] startAct a=" + a + " c=" + c
+                                        + " t=" + (i.getType() == null ? "" : i.getType()));
+                            } catch (Throwable t) {
+                            }
+                        }
+                    });
+        } catch (Throwable t) {
+            XposedBridge.log("[iosdock] startActivity hook failed: " + t);
+        }
+        try {
+            XposedHelpers.findAndHookMethod("android.app.SharedPreferencesImpl$EditorImpl",
+                    lpparam.classLoader, "putInt", String.class, int.class, new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam p) {
+                            try {
+                                String k = (String) p.args[0];
+                                if (!"corner".equals(k)) return;
+                                StackTraceElement[] se = new Throwable().getStackTrace();
+                                StringBuilder sb = new StringBuilder("[iosdock] WRITE corner=" + p.args[1] + " at");
+                                for (int i = 0; i < se.length && i < 14; i++) sb.append(" | ").append(se[i]);
+                                XposedBridge.log(sb.toString());
+                            } catch (Throwable t) {
+                            }
+                        }
+                    });
+        } catch (Throwable t) {
+            XposedBridge.log("[iosdock] putint hook failed: " + t);
+        }
         hookPmIcon(lpparam);
         hookIconManager(lpparam);
         hookB8E(lpparam);
@@ -124,7 +181,7 @@ public class Hook implements IXposedHookLoadPackage {
         hookWidgetRemove(lpparam);
     }
 
-    private static final String FTB_B64 = "ZGV4CjAzOAB9gAqUjC6tvDMBhdPQu91BzoxcP5wHveAsAwAAcAAAAHhWNBIAAAAAAAAAAKQCAAAMAAAAcAAAAAUAAACgAAAAAwAAALQAAAAAAAAAAAAAAAQAAADYAAAAAQAAAPgAAAAUAgAAGAEAAGwBAAB0AQAAdwEAAIUBAACIAQAAngEAALIBAADGAQAA0gEAANUBAADjAQAA8gEAAAEAAAAEAAAABQAAAAYAAAAIAAAAAQAAAAAAAAAAAAAAAwAAAAMAAAAAAAAACAAAAAQAAAAAAAAAAQACAAAAAAABAAEACQAAAAEAAAAKAAAAAgACAAAAAAABAAAAAQAAAAIAAAAAAAAAAgAAAAAAAACRAgAAAAAAAAEAAAAAAAAAYAEAAAMAAAAVAMBADwAAAAEAAAAAAAAAZAEAAAMAAAAaAAcAEQAAAAEAAQABAAAAaAEAAAQAAABwEAMAAAAOAAkADgAFAA4AAwAOAAY8aW5pdD4AAUYADEZ0QnVpbGQuamF2YQABTAAUTGFuZHJvaWQvb3MvRnRCdWlsZDsAEkxqYXZhL2xhbmcvT2JqZWN0OwASTGphdmEvbGFuZy9TdHJpbmc7AApPcmlnaW5PUyA2AAFWAAxnZXRPc1ZlcnNpb24ADWdldFJvbVZlcnNpb24AnAF+fkQ4eyJiYWNrZW5kIjoiZGV4IiwiY29tcGlsYXRpb24tbW9kZSI6ImRlYnVnIiwiaGFzLWNoZWNrc3VtcyI6ZmFsc2UsIm1pbi1hcGkiOjI2LCJzaGEtMSI6IjA4NGE4OTEyNmFlMDU5NmM1OTkxNDNkZjU3YTY1NDY0NmFmMjgzMTMiLCJ2ZXJzaW9uIjoiOS4yLjQtZGV2In0AAAADAACBgATIAgEJsAIBCZgCAAsAAAAAAAAAAQAAAAAAAAABAAAADAAAAHAAAAACAAAABQAAAKAAAAADAAAAAwAAALQAAAAFAAAABAAAANgAAAAGAAAAAQAAAPgAAAABIAAAAwAAABgBAAADIAAAAwAAAGABAAACIAAADAAAAGwBAAAAIAAAAQAAAJECAAAAEAAAAQAAAKQCAAA=";
+    private static final String FTB_B64 =  "ZGV4CjAzOAB9gAqUjC6tvDMBhdPQu91BzoxcP5wHveAsAwAAcAAAAHhWNBIAAAAAAAAAAKQCAAAMAAAAcAAAAAUAAACgAAAAAwAAALQAAAAAAAAAAAAAAAQAAADYAAAAAQAAAPgAAAAUAgAAGAEAAGwBAAB0AQAAdwEAAIUBAACIAQAAngEAALIBAADGAQAA0gEAANUBAADjAQAA8gEAAAEAAAAEAAAABQAAAAYAAAAIAAAAAQAAAAAAAAAAAAAAAwAAAAMAAAAAAAAACAAAAAQAAAAAAAAAAQACAAAAAAABAAEACQAAAAEAAAAKAAAAAgACAAAAAAABAAAAAQAAAAIAAAAAAAAAAgAAAAAAAACRAgAAAAAAAAEAAAAAAAAAYAEAAAMAAAAVAMBADwAAAAEAAAAAAAAAZAEAAAMAAAAaAAcAEQAAAAEAAQABAAAAaAEAAAQAAABwEAMAAAAOAAkADgAFAA4AAwAOAAY8aW5pdD4AAUYADEZ0QnVpbGQuamF2YQABTAAUTGFuZHJvaWQvb3MvRnRCdWlsZDsAEkxqYXZhL2xhbmcvT2JqZWN0OwASTGphdmEvbGFuZy9TdHJpbmc7AApPcmlnaW5PUyA2AAFWAAxnZXRPc1ZlcnNpb24ADWdldFJvbVZlcnNpb24AnAF+fkQ4eyJiYWNrZW5kIjoiZGV4IiwiY29tcGlsYXRpb24tbW9kZSI6ImRlYnVnIiwiaGFzLWNoZWNrc3VtcyI6ZmFsc2UsIm1pbi1hcGkiOjI2LCJzaGEtMSI6IjA4NGE4OTEyNmFlMDU5NmM1OTkxNDNkZjU3YTY1NDY0NmFmMjgzMTMiLCJ2ZXJzaW9uIjoiOS4yLjQtZGV2In0AAAADAACBgATIAgEJsAIBCZgCAAsAAAAAAAAAAQAAAAAAAAABAAAADAAAAHAAAAACAAAABQAAAKAAAAADAAAAAwAAALQAAAAFAAAABAAAANgAAAAGAAAAAQAAAPgAAAABIAAAAwAAABgBAAADIAAAAwAAAGABAAACIAAADAAAAGwBAAAAIAAAAQAAAJECAAAAEAAAAQAAAKQCAAA=";
 
     private void hookFtBuild(LoadPackageParam lpparam) {
         try {
@@ -144,6 +201,9 @@ public class Hook implements IXposedHookLoadPackage {
         } catch (Throwable t) {
             XposedBridge.log("[iosdock] ftbuild hook failed: " + t);
         }
+    }
+
+    private void hookDeformerExtras(LoadPackageParam lpparam) {
         try {
             XposedHelpers.findAndHookMethod("android.app.SharedPreferencesImpl$EditorImpl",
                     lpparam.classLoader, "putBoolean", String.class, boolean.class,
@@ -188,10 +248,102 @@ public class Hook implements IXposedHookLoadPackage {
                                 if (sab != null) XposedHelpers.callMethod(sab, "hide");
                             } catch (Throwable t) {
                             }
+                            try {
+                                int sb = 0;
+                                int rid = a.getResources().getIdentifier("status_bar_height", "dimen", "android");
+                                if (rid > 0) sb = a.getResources().getDimensionPixelSize(rid);
+                                if (sb <= 0) sb = 84;
+                                android.view.View root = a.getWindow().getDecorView();
+                                root.setPadding(root.getPaddingLeft(), root.getPaddingTop() + sb,
+                                        root.getPaddingRight(), root.getPaddingBottom());
+                            } catch (Throwable t) {
+                                XposedBridge.log("[iosdock] deformer inset failed: " + t);
+                            }
                         }
                     });
         } catch (Throwable t) {
             XposedBridge.log("[iosdock] actionbar hook failed: " + t);
+        }
+    }
+
+    private void hookDeformerEntry() {
+        try {
+            XposedHelpers.findAndHookMethod(ViewGroup.class, "dispatchTouchEvent",
+                    MotionEvent.class, new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam p) {
+                            try {
+                                MotionEvent e = (MotionEvent) p.args[0];
+                                if (e.getAction() != MotionEvent.ACTION_UP) return;
+                                ViewGroup vg = (ViewGroup) p.thisObject;
+                                View target = findById(vg, "unit_launcher_personalise");
+                                if (target == null) return;
+                                int[] loc = new int[2];
+                                target.getLocationOnScreen(loc);
+                                float x = e.getRawX();
+                                float y = e.getRawY();
+                                if (x < loc[0] || x > loc[0] + target.getWidth()) return;
+                                if (y < loc[1] || y > loc[1] + target.getHeight()) return;
+                                p.setResult(true);
+                                Intent it = new Intent();
+                                it.setClassName("com.vivo.deformer", "com.vivo.deformer.DeformerSettings");
+                                it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                vg.getContext().startActivity(it);
+                                XposedBridge.log("[iosdock] deformer entry -> activity");
+                            } catch (Throwable t) {
+                            }
+                        }
+                    });
+        } catch (Throwable t) {
+            XposedBridge.log("[iosdock] deformer entry hook failed: " + t);
+        }
+    }
+
+    private static View findById(View v, String name) {
+        try {
+            int id = v.getId();
+            if (id != View.NO_ID) {
+                try {
+                    if (name.equals(v.getResources().getResourceEntryName(id))) return v;
+                } catch (Throwable ignore) {
+                }
+            }
+        } catch (Throwable ignore) {
+        }
+        if (v instanceof ViewGroup) {
+            ViewGroup g = (ViewGroup) v;
+            for (int i = 0; i < g.getChildCount(); i++) {
+                View r = findById(g.getChildAt(i), name);
+                if (r != null) return r;
+            }
+        }
+        return null;
+    }
+
+    private void hookMmkv(LoadPackageParam lpparam) {        try {
+            XposedHelpers.findAndHookMethod(android.app.Application.class, "onCreate",
+                    new XC_MethodHook() {
+                        @Override
+                        protected void afterHookedMethod(MethodHookParam p) {
+                            try {
+                                Context ctx = (Context) p.thisObject;
+                                ClassLoader cl = p.thisObject.getClass().getClassLoader();
+                                Class<?> mmkv = Class.forName("com.tencent.mmkv.MMKV", false, cl);
+                                for (java.lang.reflect.Method m : mmkv.getDeclaredMethods()) {
+                                    if (!"initialize".equals(m.getName())) continue;
+                                    Class<?>[] ps = m.getParameterTypes();
+                                    if (ps.length != 1 || ps[0] != Context.class) continue;
+                                    m.invoke(null, ctx);
+                                    XposedBridge.log("[iosdock] mmkv initialized");
+                                    return;
+                                }
+                            } catch (Throwable t) {
+                                XposedBridge.log("[iosdock] mmkv init failed: " + t);
+                            }
+                        }
+                    });
+        } catch (Throwable t) {
+            XposedBridge.log("[iosdock] mmkv hook failed: " + t);
         }
     }
 
@@ -269,7 +421,6 @@ public class Hook implements IXposedHookLoadPackage {
                     protected void beforeHookedMethod(MethodHookParam param) {
                         try {
                             putInt("mc_icon_style", (Integer) param.args[0]);
-                            putInt("mc_icon_corner", (Integer) param.args[1]);
                             putInt("mc_icon_size", (Integer) param.args[2]);
                         } catch (Throwable t) {
                         }
@@ -291,7 +442,7 @@ public class Hook implements IXposedHookLoadPackage {
                         String name = ((android.view.View) v).getResources().getResourceEntryName(id);
                         int val = (Integer) param.args[0];
                         if (name.contains("icon_shape")) {
-                            putInt("mc_icon_corner", val);
+                            return;
                         } else if (name.contains("icon_size")) {
                             putInt("mc_icon_size", val);
                         } else if (name.contains("corner_group")) {
@@ -450,6 +601,13 @@ public class Hook implements IXposedHookLoadPackage {
                         if (k == null || v < -1) return;
                         if ("mc_icon_corner".equals(k)) {
                             CORNER = v;
+                            try {
+                                StackTraceElement[] se = new Throwable().getStackTrace();
+                                StringBuilder sb = new StringBuilder("[iosdock] corner=" + v + " from");
+                                for (int qi = 0; qi < se.length && qi < 8; qi++) sb.append(" | ").append(se[qi].toString());
+                                XposedBridge.log(sb.toString());
+                            } catch (Throwable t2) {
+                            }
                             c.getSharedPreferences("mc_state", 0).edit().putInt("corner", v).apply();
                             clearIconCache();
                             scheduleRestart();
