@@ -303,6 +303,29 @@ public class Hook implements IXposedHookLoadPackage {
         }
     }
 
+    private static void clearIconCache() {
+        try {
+            CACHE.clear();
+            CURVED.clear();
+            BOXES.clear();
+            LIVE_CACHE.clear();
+        } catch (Throwable t) {
+        }
+    }
+
+    private static void scheduleRestart() {
+        try {
+            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    XposedBridge.log("[iosdock] icon params applied, restarting launcher");
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                }
+            }, 1500);
+        } catch (Throwable t) {
+        }
+    }
+
     private static void ensureRecv() {
         if (REC != null) return;
         try {
@@ -318,12 +341,18 @@ public class Hook implements IXposedHookLoadPackage {
                         if ("mc_icon_corner".equals(k)) {
                             CORNER = v;
                             c.getSharedPreferences("mc_state", 0).edit().putInt("corner", v).apply();
+                            clearIconCache();
+                            scheduleRestart();
                         } else if ("mc_icon_size".equals(k)) {
                             ISIZE = v;
                             c.getSharedPreferences("mc_state", 0).edit().putInt("size", v).apply();
+                            clearIconCache();
+                            scheduleRestart();
                         } else if ("mc_icon_style".equals(k)) {
                             ISTYLE = v;
                             c.getSharedPreferences("mc_state", 0).edit().putInt("style", v).apply();
+                            clearIconCache();
+                            scheduleRestart();
                         } else if ("mc_widget_hide".equals(k)) {
                             String p = it.getStringExtra("p");
                             if (p != null) hideWidgetEntries(p);
@@ -1727,7 +1756,9 @@ public class Hook implements IXposedHookLoadPackage {
             c.clipPath(path);
             android.graphics.Paint p = new android.graphics.Paint();
             p.setFlags(android.graphics.Paint.ANTI_ALIAS_FLAG | android.graphics.Paint.FILTER_BITMAP_FLAG);
-            c.drawBitmap(src, 0f, 0f, p);
+            float inset = 0f;
+            android.graphics.RectF dst = new android.graphics.RectF(-inset, -inset, w + inset, h + inset);
+            c.drawBitmap(src, null, dst, p);
             if (DUMP_MASK && DUMPS < 2) {
                 DUMPED = true;
                 try {
