@@ -715,8 +715,32 @@ public class Hook implements IXposedHookLoadPackage {
         }
     }
 
+    private static long WP_SYNC_TS = 0L;
+
+    private static void maybeRootSync() {
+        long now = android.os.SystemClock.elapsedRealtime();
+        if (now - WP_SYNC_TS < 60000L) return;
+        WP_SYNC_TS = now;
+        try {
+            String cmd = "cp /data/system/users/0/wallpaper /data/data/com.bbk.launcher2/files/wp.png; "
+                    + "U=$(stat -c %u /data/data/com.bbk.launcher2); "
+                    + "chown $U:$U /data/data/com.bbk.launcher2/files/wp.png 2>/dev/null; "
+                    + "chmod 600 /data/data/com.bbk.launcher2/files/wp.png";
+            Process p = Runtime.getRuntime().exec(new String[]{"/system/bin/su", "-c", cmd});
+            int rc = p.waitFor();
+            if (rc != 0 && WP_SYNC_TS > 0) {
+                XposedBridge.log("[iosdock] wp root sync rc=" + rc);
+            } else {
+                XposedBridge.log("[iosdock] wp root sync ok");
+            }
+        } catch (Throwable t) {
+            XposedBridge.log("[iosdock] wp root sync failed: " + t);
+        }
+    }
+
     private static void loadWallpaper() {
         if (WP != null) return;
+        maybeRootSync();
         try {
             Bitmap local = android.graphics.BitmapFactory.decodeFile(
                     "/data/data/com.bbk.launcher2/files/wp.png");
