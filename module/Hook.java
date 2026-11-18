@@ -349,6 +349,7 @@ public class Hook implements IXposedHookLoadPackage {
                                         public void run() {
                                             act.getWindow().setBackgroundDrawable(
                                                     new android.graphics.drawable.ColorDrawable(0));
+                                            transparentRoot(act);
                                             OVL = null;
                                             WDEC = null;
                                         }
@@ -633,7 +634,13 @@ public class Hook implements IXposedHookLoadPackage {
                         protected void afterHookedMethod(MethodHookParam param) {
                             String cn = param.thisObject.getClass().getName();
                             if (!cn.equals("com.bbk.launcher2.Launcher")) return;
-                            attachOverlay((android.app.Activity) param.thisObject);
+                            android.app.Activity act = (android.app.Activity) param.thisObject;
+                            try {
+                                act.getWindow().addFlags(
+                                        android.view.WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
+                            } catch (Throwable t) {
+                            }
+                            attachOverlay(act);
                         }
                     });
             XposedBridge.log("[iosdock] activity onResume hooked");
@@ -642,14 +649,35 @@ public class Hook implements IXposedHookLoadPackage {
         }
     }
 
+    private static void transparentRoot(android.app.Activity act) {
+        try {
+            android.view.ViewGroup c = (android.view.ViewGroup)
+                    act.findViewById(android.R.id.content);
+            if (c == null) return;
+            c.setBackgroundColor(0);
+            for (int i = 0; i < c.getChildCount(); i++) {
+                android.view.View v = c.getChildAt(i);
+                v.setBackgroundColor(0);
+                if (v instanceof android.view.ViewGroup) {
+                    android.view.ViewGroup g = (android.view.ViewGroup) v;
+                    for (int j = 0; j < g.getChildCount(); j++) {
+                        g.getChildAt(j).setBackgroundColor(0);
+                    }
+                }
+            }
+        } catch (Throwable t) {
+        }
+    }
+
     private static void attachOverlay(android.app.Activity act) {
         try {
             loadPrefs();
             if (WIN < 0) {
                 ACT = act;
+                act.getWindow().setBackgroundDrawable(
+                        new android.graphics.drawable.ColorDrawable(0));
+                transparentRoot(act);
                 if (OVL != null) {
-                    act.getWindow().setBackgroundDrawable(
-                            new android.graphics.drawable.ColorDrawable(0));
                     OVL = null;
                     WDEC = null;
                 }
