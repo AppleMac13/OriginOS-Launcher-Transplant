@@ -812,18 +812,33 @@ public class Hook implements IXposedHookLoadPackage {
                 m.postTranslate(b.left - loc[0] - padX, b.top - loc[1] - padT);
                 int sc = c.save();
                 c.clipPath(path);
-                p.setAlpha(255);
+                p.setAlpha(150);
                 c.drawBitmap(blur, m, p);
+                p.setAlpha(255);
                 c.restoreToCount(sc);
             }
             int sc2 = c.save();
             c.clipPath(path);
-            p.setColor(0x99505050);
+            p.setShader(null);
+            p.setColor(0xF2505050);
             c.drawRect(rf, p);
+            p.setShader(new android.graphics.RadialGradient(
+                    rf.left + rf.width() * 0.5f, rf.top + rf.height() * 0.28f,
+                    rf.width() * 0.72f,
+                    new int[]{0x35FFFFFF, 0x12FFFFFF, 0x00FFFFFF},
+                    new float[]{0f, 0.55f, 1f},
+                    android.graphics.Shader.TileMode.CLAMP));
+            c.drawRect(rf, p);
+            p.setShader(new android.graphics.LinearGradient(0f, rf.top, 0f, rf.bottom,
+                    new int[]{0x1AFFFFFF, 0x00FFFFFF, 0x00000000, 0x2E000000},
+                    new float[]{0f, 0.22f, 0.62f, 1f},
+                    android.graphics.Shader.TileMode.CLAMP));
+            c.drawRect(rf, p);
+            p.setShader(null);
             c.restoreToCount(sc2);
             p.setStyle(android.graphics.Paint.Style.STROKE);
             p.setStrokeWidth(1.2f);
-            p.setColor(0x33FFFFFF);
+            p.setColor(0x38FFFFFF);
             c.drawPath(path, p);
             p.setStyle(android.graphics.Paint.Style.FILL);
         }
