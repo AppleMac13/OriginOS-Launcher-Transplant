@@ -25,6 +25,7 @@ public class Hook implements IXposedHookLoadPackage {
 
     private static final String TARGET = "com.bbk.launcher2";
     private static final String MOOD = "com.vivo.moodcube";
+    private static final String DFM = "com.vivo.deformer";
     private static final String L3 = "com.android.launcher3";
     private static final HashMap<String, Bitmap> CACHE = new HashMap<String, Bitmap>();
     private static final HashMap<String, Bitmap> CURVED = new HashMap<String, Bitmap>();
@@ -105,6 +106,10 @@ public class Hook implements IXposedHookLoadPackage {
             hookMood(lpparam);
             return;
         }
+        if (DFM.equals(lpparam.packageName)) {
+            hookFtBuild(lpparam);
+            return;
+        }
         if (!TARGET.equals(lpparam.packageName)) return;
 
         hookPmIcon(lpparam);
@@ -119,33 +124,138 @@ public class Hook implements IXposedHookLoadPackage {
         hookWidgetRemove(lpparam);
     }
 
-    private void hookMood(LoadPackageParam lpparam) {
+    private static final String FTB_B64 = "ZGV4CjAzOAB9gAqUjC6tvDMBhdPQu91BzoxcP5wHveAsAwAAcAAAAHhWNBIAAAAAAAAAAKQCAAAMAAAAcAAAAAUAAACgAAAAAwAAALQAAAAAAAAAAAAAAAQAAADYAAAAAQAAAPgAAAAUAgAAGAEAAGwBAAB0AQAAdwEAAIUBAACIAQAAngEAALIBAADGAQAA0gEAANUBAADjAQAA8gEAAAEAAAAEAAAABQAAAAYAAAAIAAAAAQAAAAAAAAAAAAAAAwAAAAMAAAAAAAAACAAAAAQAAAAAAAAAAQACAAAAAAABAAEACQAAAAEAAAAKAAAAAgACAAAAAAABAAAAAQAAAAIAAAAAAAAAAgAAAAAAAACRAgAAAAAAAAEAAAAAAAAAYAEAAAMAAAAVAMBADwAAAAEAAAAAAAAAZAEAAAMAAAAaAAcAEQAAAAEAAQABAAAAaAEAAAQAAABwEAMAAAAOAAkADgAFAA4AAwAOAAY8aW5pdD4AAUYADEZ0QnVpbGQuamF2YQABTAAUTGFuZHJvaWQvb3MvRnRCdWlsZDsAEkxqYXZhL2xhbmcvT2JqZWN0OwASTGphdmEvbGFuZy9TdHJpbmc7AApPcmlnaW5PUyA2AAFWAAxnZXRPc1ZlcnNpb24ADWdldFJvbVZlcnNpb24AnAF+fkQ4eyJiYWNrZW5kIjoiZGV4IiwiY29tcGlsYXRpb24tbW9kZSI6ImRlYnVnIiwiaGFzLWNoZWNrc3VtcyI6ZmFsc2UsIm1pbi1hcGkiOjI2LCJzaGEtMSI6IjA4NGE4OTEyNmFlMDU5NmM1OTkxNDNkZjU3YTY1NDY0NmFmMjgzMTMiLCJ2ZXJzaW9uIjoiOS4yLjQtZGV2In0AAAADAACBgATIAgEJsAIBCZgCAAsAAAAAAAAAAQAAAAAAAAABAAAADAAAAHAAAAACAAAABQAAAKAAAAADAAAAAwAAALQAAAAFAAAABAAAANgAAAAGAAAAAQAAAPgAAAABIAAAAwAAABgBAAADIAAAAwAAAGABAAACIAAADAAAAGwBAAAAIAAAAQAAAJECAAAAEAAAAQAAAKQCAAA=";
+
+    private void hookFtBuild(LoadPackageParam lpparam) {
         try {
-            Class<?> p = XposedHelpers.findClass("e6.a", lpparam.classLoader);
-            for (final Method m : p.getDeclaredMethods()) {
-                Class<?>[] ps = m.getParameterTypes();
-                if (ps.length != 1 || ps[0] != int.class) continue;
-                final String key;
-                if ("h".equals(m.getName())) key = "mc_icon_style";
-                else if ("i".equals(m.getName())) key = "mc_icon_corner";
-                else continue;
-                try {
-                    XposedBridge.hookMethod(m, new XC_MethodHook() {
+            XposedHelpers.findAndHookMethod("android.app.LoadedApk", lpparam.classLoader,
+                    "getClassLoader", new XC_MethodHook() {
                         @Override
                         protected void afterHookedMethod(MethodHookParam param) {
+                            ClassLoader cl = (ClassLoader) param.getResult();
+                            if (cl == null) return;
                             try {
-                                int v = (Integer) param.args[0];
-                                putInt(key, v);
+                                injectFtBuild(cl, param.thisObject);
+                            } catch (Throwable t) {
+                                XposedBridge.log("[iosdock] ftbuild inject failed: " + t);
+                            }
+                        }
+                    });
+        } catch (Throwable t) {
+            XposedBridge.log("[iosdock] ftbuild hook failed: " + t);
+        }
+        try {
+            XposedHelpers.findAndHookMethod("android.app.SharedPreferencesImpl$EditorImpl",
+                    lpparam.classLoader, "putBoolean", String.class, boolean.class,
+                    new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam p) {
+                            try {
+                                String k = (String) p.args[0];
+                                boolean v = (Boolean) p.args[1];
+                                int win;
+                                if ("preferences_button_weather".equals(k)) win = v ? 2 : -1;
+                                else if ("preferences_button_light".equals(k)) win = v ? 3 : -1;
+                                else return;
+                                Context c = AndroidAppHelper.currentApplication();
+                                if (c == null) return;
+                                Intent i = new Intent("com.example.iosdock.MC");
+                                i.setPackage(TARGET);
+                                i.putExtra("k", "mc_win_style");
+                                i.putExtra("v", win);
+                                c.sendBroadcast(i);
+                                XposedBridge.log("[iosdock] deformer " + k + "=" + v + " -> win " + win);
                             } catch (Throwable t) {
                             }
                         }
                     });
-                } catch (Throwable t) {
-                }
-            }
+        } catch (Throwable t) {
+            XposedBridge.log("[iosdock] deformer prefs hook failed: " + t);
+        }
+        try {
+            XposedHelpers.findAndHookMethod("com.vivo.deformer.DeformerSettings",
+                    lpparam.classLoader, "onCreate", android.os.Bundle.class, new XC_MethodHook() {
+                        @Override
+                        protected void afterHookedMethod(MethodHookParam p) {
+                            android.app.Activity a = (android.app.Activity) p.thisObject;
+                            try {
+                                android.app.ActionBar ab = a.getActionBar();
+                                if (ab != null) ab.hide();
+                            } catch (Throwable t) {
+                            }
+                            try {
+                                Object sab = XposedHelpers.callMethod(a, "getSupportActionBar");
+                                if (sab != null) XposedHelpers.callMethod(sab, "hide");
+                            } catch (Throwable t) {
+                            }
+                        }
+                    });
+        } catch (Throwable t) {
+            XposedBridge.log("[iosdock] actionbar hook failed: " + t);
+        }
+    }
+
+    private static void injectFtBuild(ClassLoader cl, Object loadedApk) {
+        try {
+            XposedHelpers.findClass("android.os.FtBuild", cl);
+            return;
+        } catch (Throwable ignored) {
+        }
+        try {
+            java.lang.reflect.Field plF = Class.forName("dalvik.system.BaseDexClassLoader")
+                    .getDeclaredField("pathList");
+            plF.setAccessible(true);
+            Object pl = plF.get(cl);
+            java.lang.reflect.Field elF = pl.getClass().getDeclaredField("dexElements");
+            elF.setAccessible(true);
+            Object[] old = (Object[]) elF.get(pl);
+            byte[] b = android.util.Base64.decode(FTB_B64, 0);
+            java.nio.ByteBuffer buf = java.nio.ByteBuffer.wrap(b);
+            dalvik.system.InMemoryDexClassLoader dcl = new dalvik.system.InMemoryDexClassLoader(
+                    buf, cl);
+            Object npl = plF.get(dcl);
+            Object[] nw = (Object[]) elF.get(npl);
+            Object[] merged = (Object[]) java.lang.reflect.Array.newInstance(
+                    old.getClass().getComponentType(), nw.length + old.length);
+            System.arraycopy(nw, 0, merged, 0, nw.length);
+            System.arraycopy(old, 0, merged, nw.length, old.length);
+            elF.set(pl, merged);
+            XposedHelpers.findClass("android.os.FtBuild", cl);
+            XposedBridge.log("[iosdock] ftbuild injected ok");
+        } catch (Throwable t) {
+            XposedBridge.log("[iosdock] ftbuild inject failed: " + t);
+        }
+    }
+
+    private void hookMood(LoadPackageParam lpparam) {
+        try {
             XposedBridge.log("[iosdock] moodcube hooked");
         } catch (Throwable t) {
             XposedBridge.log("[iosdock] moodcube hook failed: " + t);
+        }
+        try {
+            for (String cls : new String[]{"com.vivo.moodcube.settings.MoodCubeSettingsPreference",
+                    "com.vivo.moodcube.settings.MoodCubeFunctionManagerPreference"}) {
+                XposedHelpers.findAndHookMethod(cls, lpparam.classLoader, "onCreate",
+                        android.os.Bundle.class, new XC_MethodHook() {
+                            @Override
+                            protected void afterHookedMethod(MethodHookParam p) {
+                                android.app.Activity a = (android.app.Activity) p.thisObject;
+                                try {
+                                    android.app.ActionBar ab = a.getActionBar();
+                                    if (ab != null) ab.hide();
+                                } catch (Throwable t) {
+                                }
+                                try {
+                                    Object sab = XposedHelpers.callMethod(a, "getSupportActionBar");
+                                    if (sab != null) XposedHelpers.callMethod(sab, "hide");
+                                } catch (Throwable t) {
+                                }
+                            }
+                        });
+            }
+        } catch (Throwable t) {
+            XposedBridge.log("[iosdock] moodcube actionbar hook failed: " + t);
         }
         try {
             Class<?> md = XposedHelpers.findClass("m6.d", lpparam.classLoader);
