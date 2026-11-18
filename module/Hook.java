@@ -793,12 +793,12 @@ public class Hook implements IXposedHookLoadPackage {
         public void draw(android.graphics.Canvas c) {
             android.graphics.Rect b = getBounds();
             if (b.width() <= 0 || b.height() <= 0) return;
-            float padX = b.height() * 0.035f;
-            float padT = b.height() * 0.215f;
-            float padB = b.height() * 0.151f;
+            float padX = b.height() * 0.030f;
+            float padT = b.height() * 0.293f;
+            float padB = b.height() * 0.244f;
             rf.set(b.left + padX, b.top + padT, b.right - padX, b.bottom - padB);
             if (rf.width() <= 0 || rf.height() <= 0) return;
-            float r = rf.height() * 0.22f;
+            float r = rf.height() * 0.28f;
             path.reset();
             path.addRoundRect(rf, r, r, android.graphics.Path.Direction.CW);
             Bitmap blur = wallpaperBlur();
@@ -820,25 +820,12 @@ public class Hook implements IXposedHookLoadPackage {
             int sc2 = c.save();
             c.clipPath(path);
             p.setShader(null);
-            p.setColor(0xD9505050);
+            p.setColor(0x9E3C3C3C);
             c.drawRect(rf, p);
-            p.setShader(new android.graphics.RadialGradient(
-                    rf.left + rf.width() * 0.5f, rf.top + rf.height() * 0.28f,
-                    rf.width() * 0.72f,
-                    new int[]{0x35FFFFFF, 0x12FFFFFF, 0x00FFFFFF},
-                    new float[]{0f, 0.55f, 1f},
-                    android.graphics.Shader.TileMode.CLAMP));
-            c.drawRect(rf, p);
-            p.setShader(new android.graphics.LinearGradient(0f, rf.top, 0f, rf.bottom,
-                    new int[]{0x1AFFFFFF, 0x00FFFFFF, 0x00000000, 0x2E000000},
-                    new float[]{0f, 0.22f, 0.62f, 1f},
-                    android.graphics.Shader.TileMode.CLAMP));
-            c.drawRect(rf, p);
-            p.setShader(null);
             c.restoreToCount(sc2);
             p.setStyle(android.graphics.Paint.Style.STROKE);
-            p.setStrokeWidth(1.2f);
-            p.setColor(0x38FFFFFF);
+            p.setStrokeWidth(1f);
+            p.setColor(0x14FFFFFF);
             c.drawPath(path, p);
             p.setStyle(android.graphics.Paint.Style.FILL);
         }
