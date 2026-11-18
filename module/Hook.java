@@ -347,7 +347,8 @@ public class Hook implements IXposedHookLoadPackage {
                                     act.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            act.getWindow().setBackgroundDrawable(null);
+                                            act.getWindow().setBackgroundDrawable(
+                                                    new android.graphics.drawable.ColorDrawable(0));
                                             OVL = null;
                                             WDEC = null;
                                         }
@@ -647,7 +648,8 @@ public class Hook implements IXposedHookLoadPackage {
             if (WIN < 0) {
                 ACT = act;
                 if (OVL != null) {
-                    act.getWindow().setBackgroundDrawable(null);
+                    act.getWindow().setBackgroundDrawable(
+                            new android.graphics.drawable.ColorDrawable(0));
                     OVL = null;
                     WDEC = null;
                 }
@@ -688,6 +690,18 @@ public class Hook implements IXposedHookLoadPackage {
     private static void loadWallpaper() {
         if (WP != null) return;
         try {
+            Bitmap local = android.graphics.BitmapFactory.decodeFile(
+                    "/data/data/com.bbk.launcher2/files/wp.png");
+            if (local != null) {
+                WP = local;
+                Bitmap lo = Bitmap.createScaledBitmap(local, 1, 1, true);
+                WP_COLOR = lo.getPixel(0, 0) | 0xFF000000;
+                XposedBridge.log("[iosdock] wallpaper local " + local.getWidth() + "x" + local.getHeight());
+                return;
+            }
+        } catch (Throwable t) {
+        }
+        try {
             Context ctx = AndroidAppHelper.currentApplication();
             if (ctx == null) return;
             android.app.WallpaperManager wm = android.app.WallpaperManager.getInstance(ctx);
@@ -702,6 +716,13 @@ public class Hook implements IXposedHookLoadPackage {
                     android.graphics.Canvas cc = new android.graphics.Canvas(bm);
                     d.setBounds(0, 0, dw, dh);
                     d.draw(cc);
+                }
+            }
+            if (bm == null) {
+                try {
+                    bm = android.graphics.BitmapFactory.decodeFile(
+                            "/data/data/com.bbk.launcher2/files/wp.png");
+                } catch (Throwable t2) {
                 }
             }
             if (bm == null) return;
@@ -780,6 +801,12 @@ public class Hook implements IXposedHookLoadPackage {
                 c.drawBitmap(blur, null, b, p);
             } else if (WP != null) {
                 c.drawBitmap(WP, null, b, p);
+            } else {
+                android.graphics.Paint fp = new android.graphics.Paint();
+                fp.setShader(new android.graphics.LinearGradient(0, b.top, 0, b.bottom,
+                        new int[]{0xFF1C2530, 0xFF2B3A4A, 0xFF16202A}, null,
+                        android.graphics.Shader.TileMode.CLAMP));
+                c.drawRect(b, fp);
             }
             return;
         }

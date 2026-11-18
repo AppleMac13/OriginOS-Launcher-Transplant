@@ -1,3 +1,0 @@
-.class public abstract Lwh/k;
-.super Ljava/lang/Object;
-.source "SourceFile"
