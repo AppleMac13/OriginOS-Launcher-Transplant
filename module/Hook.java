@@ -794,8 +794,8 @@ public class Hook implements IXposedHookLoadPackage {
             android.graphics.Rect b = getBounds();
             if (b.width() <= 0 || b.height() <= 0) return;
             float padX = b.height() * 0.035f;
-            float padT = b.height() * 0.245f;
-            float padB = b.height() * 0.12f;
+            float padT = b.height() * 0.215f;
+            float padB = b.height() * 0.151f;
             rf.set(b.left + padX, b.top + padT, b.right - padX, b.bottom - padB);
             if (rf.width() <= 0 || rf.height() <= 0) return;
             float r = rf.height() * 0.22f;
@@ -818,7 +818,7 @@ public class Hook implements IXposedHookLoadPackage {
             }
             int sc2 = c.save();
             c.clipPath(path);
-            p.setColor(0x99707070);
+            p.setColor(0x99505050);
             c.drawRect(rf, p);
             c.restoreToCount(sc2);
             p.setStyle(android.graphics.Paint.Style.STROKE);
