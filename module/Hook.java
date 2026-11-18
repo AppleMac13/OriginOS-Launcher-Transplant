@@ -820,7 +820,7 @@ public class Hook implements IXposedHookLoadPackage {
             int sc2 = c.save();
             c.clipPath(path);
             p.setShader(null);
-            p.setColor(0xF2505050);
+            p.setColor(0xD9505050);
             c.drawRect(rf, p);
             p.setShader(new android.graphics.RadialGradient(
                     rf.left + rf.width() * 0.5f, rf.top + rf.height() * 0.28f,
