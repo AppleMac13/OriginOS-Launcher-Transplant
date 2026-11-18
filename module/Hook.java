@@ -456,7 +456,7 @@ public class Hook implements IXposedHookLoadPackage {
             CURVE_TS = now;
             int v = CORNER;
             float n = CURVE_N;
-            if (v >= 0 && v <= 100) n = v >= 100 ? 2.2f : 2.2f + (100 - v) * 0.2f;
+            if (v >= 0 && v <= 100) n = v >= 100 ? 2.02f : 2.02f + (100 - v) * 0.22f;
             CURVE_LAST = n;
             return n;
         }
@@ -472,7 +472,7 @@ public class Hook implements IXposedHookLoadPackage {
                 CORNER = v;
                 ISIZE = sp.getInt("size", -1);
                 ISTYLE = sp.getInt("style", -1);
-                if (v >= 0 && v <= 100) n = v >= 100 ? 2.2f : 2.2f + (100 - v) * 0.2f;
+                if (v >= 0 && v <= 100) n = v >= 100 ? 2.02f : 2.02f + (100 - v) * 0.22f;
             }
         } catch (Throwable t) {
         }
@@ -703,6 +703,7 @@ public class Hook implements IXposedHookLoadPackage {
             loadPrefs();
             if (WIN < 0) {
                 ACT = act;
+                applyDockPlate(act);
                 act.getWindow().setBackgroundDrawable(
                         new android.graphics.drawable.ColorDrawable(0));
                 transparentRoot(act);
@@ -714,6 +715,7 @@ public class Hook implements IXposedHookLoadPackage {
             }
             if (OVL != null && WDEC != null) return;
             ACT = act;
+            applyDockPlate(act);
             android.graphics.drawable.Drawable d = new android.graphics.drawable.Drawable() {
                 @Override
                 public void draw(android.graphics.Canvas c) {
@@ -741,6 +743,102 @@ public class Hook implements IXposedHookLoadPackage {
             XposedBridge.log("[iosdock] window bg set win=" + WIN);
         } catch (Throwable t) {
             XposedBridge.log("[iosdock] overlay attach failed: " + t);
+        }
+    }
+
+    private static android.view.View findHotseat(android.view.View v) {
+        if (v == null) return null;
+        if (v.getClass().getName().contains("Hotseat")) return v;
+        if (v instanceof android.view.ViewGroup) {
+            android.view.ViewGroup g = (android.view.ViewGroup) v;
+            for (int i = 0; i < g.getChildCount(); i++) {
+                android.view.View r = findHotseat(g.getChildAt(i));
+                if (r != null) return r;
+            }
+        }
+        return null;
+    }
+
+    private static void applyDockPlate(android.app.Activity act) {
+        try {
+            android.view.View hot = findHotseat(act.getWindow().getDecorView());
+            if (hot == null) return;
+            Object cur = hot.getBackground();
+            if (cur instanceof DockPlate && ((DockPlate) cur).owner() == hot) return;
+            hot.setBackground(new DockPlate(hot));
+            XposedBridge.log("[iosdock] dock plate attached");
+        } catch (Throwable t) {
+            XposedBridge.log("[iosdock] dock plate failed: " + t);
+        }
+    }
+
+    private static class DockPlate extends android.graphics.drawable.Drawable {
+        private final android.view.View owner;
+        private final android.graphics.Paint p = new android.graphics.Paint();
+        private final android.graphics.Path path = new android.graphics.Path();
+        private final android.graphics.RectF rf = new android.graphics.RectF();
+        private final int[] loc = new int[2];
+
+        DockPlate(android.view.View v) {
+            owner = v;
+            p.setFlags(android.graphics.Paint.ANTI_ALIAS_FLAG
+                    | android.graphics.Paint.FILTER_BITMAP_FLAG);
+        }
+
+        android.view.View owner() {
+            return owner;
+        }
+
+        @Override
+        public void draw(android.graphics.Canvas c) {
+            android.graphics.Rect b = getBounds();
+            if (b.width() <= 0 || b.height() <= 0) return;
+            float padX = b.height() * 0.035f;
+            float padT = b.height() * 0.24f;
+            float padB = b.height() * 0.075f;
+            rf.set(b.left + padX, b.top + padT, b.right - padX, b.bottom - padB);
+            if (rf.width() <= 0 || rf.height() <= 0) return;
+            float r = rf.height() * 0.22f;
+            path.reset();
+            path.addRoundRect(rf, r, r, android.graphics.Path.Direction.CW);
+            Bitmap blur = wallpaperBlur();
+            if (blur != null) {
+                owner.getLocationOnScreen(loc);
+                android.view.View root = owner.getRootView();
+                float sw = (float) root.getWidth() / blur.getWidth();
+                float sh = (float) root.getHeight() / blur.getHeight();
+                android.graphics.Matrix m = new android.graphics.Matrix();
+                m.setScale(sw, sh);
+                m.postTranslate(b.left - loc[0] - padX, b.top - loc[1] - padT);
+                int sc = c.save();
+                c.clipPath(path);
+                p.setAlpha(255);
+                c.drawBitmap(blur, m, p);
+                c.restoreToCount(sc);
+            }
+            int sc2 = c.save();
+            c.clipPath(path);
+            p.setColor(0x26FFFFFF);
+            c.drawRect(rf, p);
+            c.restoreToCount(sc2);
+            p.setStyle(android.graphics.Paint.Style.STROKE);
+            p.setStrokeWidth(1.2f);
+            p.setColor(0x1EFFFFFF);
+            c.drawPath(path, p);
+            p.setStyle(android.graphics.Paint.Style.FILL);
+        }
+
+        @Override
+        public void setAlpha(int a) {
+        }
+
+        @Override
+        public void setColorFilter(android.graphics.ColorFilter cf) {
+        }
+
+        @Override
+        public int getOpacity() {
+            return android.graphics.PixelFormat.TRANSLUCENT;
         }
     }
 
