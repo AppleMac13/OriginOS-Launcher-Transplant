@@ -721,20 +721,20 @@ public class Hook implements IXposedHookLoadPackage {
         long now = android.os.SystemClock.elapsedRealtime();
         if (now - WP_SYNC_TS < 60000L) return;
         WP_SYNC_TS = now;
-        try {
-            String cmd = "cp /data/system/users/0/wallpaper /data/data/com.bbk.launcher2/files/wp.png; "
-                    + "U=$(stat -c %u /data/data/com.bbk.launcher2); "
-                    + "chown $U:$U /data/data/com.bbk.launcher2/files/wp.png 2>/dev/null; "
-                    + "chmod 600 /data/data/com.bbk.launcher2/files/wp.png";
-            Process p = Runtime.getRuntime().exec(new String[]{"/system/bin/su", "-c", cmd});
-            int rc = p.waitFor();
-            if (rc != 0 && WP_SYNC_TS > 0) {
-                XposedBridge.log("[iosdock] wp root sync rc=" + rc);
-            } else {
-                XposedBridge.log("[iosdock] wp root sync ok");
+        String cmd = "cp /data/system/users/0/wallpaper /data/data/com.bbk.launcher2/files/wp.png; "
+                + "U=$(stat -c %u /data/data/com.bbk.launcher2); "
+                + "chown $U:$U /data/data/com.bbk.launcher2/files/wp.png 2>/dev/null; "
+                + "chmod 600 /data/data/com.bbk.launcher2/files/wp.png";
+        String[] paths = {"/product/bin/su", "/debug_ramdisk/su", "/system/bin/su"};
+        for (int i = 0; i < paths.length; i++) {
+            try {
+                Process p = Runtime.getRuntime().exec(new String[]{paths[i], "-c", cmd});
+                int rc = p.waitFor();
+                XposedBridge.log("[iosdock] wp root sync via " + paths[i] + " rc=" + rc);
+                if (rc == 0) return;
+            } catch (Throwable t) {
+                XposedBridge.log("[iosdock] wp root sync failed on " + paths[i] + ": " + t);
             }
-        } catch (Throwable t) {
-            XposedBridge.log("[iosdock] wp root sync failed: " + t);
         }
     }
 
